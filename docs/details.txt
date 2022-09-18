@@ -1,0 +1,28 @@
+# Structure
+
+At its base, the map is composed of a 2-Dimensional array containg a set number of chunks
+
+## Chunks 
+
+Chunks are used to simplify how the simulated world works and to eliminate the need of a fixed grid lifeworld (like it is in Conway's Game of Life)
+
+They contain all the information that is used to model a local segment of the world:
+
+* list of al game objects in this local space (ants, pheromons, food etc)
+* chunk index 
+* chunk size
+* pointers to nearby chunks
+* (?) pointers to sub-chunks  
+
+
+## How searching works
+
+For any given object, we need to know with which other objects it interacts. This would be trivial if we used a grid like structure, but because we don't we resort to another option.
+
+We check all other objects in the current chunk and if our main object is located on the edge (or corner) with another chunk, we also check all objects of the nearby chunk.
+
+(?) I might introduce sub-chunks which further divide the world. This might help performance by eliminating unnecesarry comparisons
+(?) These sub-chunks might be dinamically created and deleted on the fly, with dynamic sizes.
+  
+
+
