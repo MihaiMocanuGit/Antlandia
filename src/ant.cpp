@@ -1,6 +1,10 @@
 #include "ant.h"
 #include <iostream>
 
+Ant::Ant() : GenericObject( -1, -1, NULL)
+{
+
+}
 
 Ant::Ant(float aX, float aY, void *aPHomeChunk) : GenericObject(aX, aY, aPHomeChunk)
 {
