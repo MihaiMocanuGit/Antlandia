@@ -14,7 +14,7 @@ class Ant : public  GenericObject
 		int getStatusCode();
 		void setStatusCode(int statusCode);
 
-
+		Ant();
 		Ant(float aX, float aY, void *aPHomeChunk);// : GenericObject(aX, aY, pHomeChunk);
 		void initAnt(float aHealth, float aEnergy, float aVelDirX, float aVelDirY);
 
