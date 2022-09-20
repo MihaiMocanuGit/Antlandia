@@ -3,7 +3,7 @@
 //int Chunk::m_MAX_ANTS_CHUNK = 255;
 
 
-Chunk::Chunk(int aChunkIndexX, int aChunkIndexY) : chunkIndexX{aChunkIndexX}, chunkIndexY{aChunkIndexY}
+Chunk::Chunk(int aChunkIndexX, int aChunkIndexY) : chunkIndexX(aChunkIndexX), chunkIndexY(aChunkIndexY)
 {
 }
 
