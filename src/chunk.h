@@ -1,3 +1,7 @@
+#ifndef CHUNK_H
+#define CHUNK_H
+
+
 #include <array>
 #include "ant.h"
 
@@ -19,3 +23,4 @@ class Chunk
 			
 };
 
+#endif

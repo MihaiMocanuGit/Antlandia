@@ -1,3 +1,7 @@
+#ifndef ANT_H
+#define ANT_H
+
+
 #include "genericObject.h"
 
 
@@ -20,4 +24,4 @@ class Ant : public  GenericObject
 
 };
 
-
+#endif

@@ -1,4 +1,5 @@
-
+#ifndef GENERIC_OBJECT_H
+#define GENERIC_OBJECT_H
 
 class GenericObject
 {
@@ -20,4 +21,4 @@ class GenericObject
 		void initGenericObject(int aColorCode, float aColorIntensity, float aSize);
 };
 
-
+#endif
