@@ -1,5 +1,11 @@
 #include <iostream>
 #include "ant.h"
+#include "chunk.h"
+
+void initChunks()
+{
+    
+}
 
 int main()
 {
