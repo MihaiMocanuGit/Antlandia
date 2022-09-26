@@ -25,4 +25,7 @@ chunk.o: src/chunk.cpp
 	mv chunk.o builds/objects/
 
 clean:
-	$(RM) builds/$(TARGET) builds/objects/*.o 
+	$(RM) builds/$(TARGET) builds/objects/*.o
+
+run:
+	make && builds/./antSim
