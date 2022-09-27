@@ -1,7 +1,5 @@
 #include "chunk.h"
 
-//int Chunk::m_MAX_ANTS_CHUNK = 255;
-
 Chunk::Chunk() 
 {
 }
@@ -25,11 +23,12 @@ void Chunk::initNearbyChunks(int noOfChunksY, int noOfChunksX)
 		}
 }
 
-
-void Chunk::chunksInit(std::array<std::array<Chunk, m_MAX_CHUNKS_X>, m_MAX_CHUNKS_Y> &chunks)
+/*
+template<std::size_t SIZE_X, std::size_t SIZE_Y>
+void Chunk::chunksInit(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunks)
 {
     for(auto &chunksY : chunks)
         for(auto &chunkYX : chunksY)
-            chunkYX.initNearbyChunks(chunksY.size(), chunks.size() );
+            chunkYX.initNearbyChunks(chunksY.size(), chunks.size());
 }
-
+*/

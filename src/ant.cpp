@@ -1,7 +1,7 @@
 #include "ant.h"
 #include <iostream>
 
-Ant::Ant() : GenericObject( -1, -1, NULL)
+Ant::Ant() : GenericObject( -1, -1, nullptr)
 {
 
 }

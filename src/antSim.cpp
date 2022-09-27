@@ -4,7 +4,8 @@
 #include "ant.h"
 #include "chunk.h"
 
-void initChunks(std::array<std::array<Chunk, 8>, 8> &chunks) 
+template<std::size_t SIZE_X, std::size_t SIZE_Y>
+void initChunks(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunks) 
 {
     for(int y = 0; y < chunks.size(); y++)
     {
@@ -17,10 +18,12 @@ void initChunks(std::array<std::array<Chunk, 8>, 8> &chunks)
     Chunk::chunksInit(chunks);    
 }
 
-void initSFML(std::array<std::array<Chunk, 8>, 8> &chunks)
+
+template<std::size_t SIZE_X, std::size_t SIZE_Y>
+void initSFML(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunks)
 {
 
-    sf::RenderWindow window(sf::VideoMode(8 * Chunk::chunkSizeX, 8 * Chunk::chunkSizeY), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode(SIZE_X * Chunk::CHUNK_SIZE_X, SIZE_Y * Chunk::CHUNK_SIZE_Y), "SFML works!");
 
     while (window.isOpen())
     {
@@ -32,13 +35,13 @@ void initSFML(std::array<std::array<Chunk, 8>, 8> &chunks)
         }
         
         int colorCount = 0;
-        for (int y = 0; y < 8; y++)
+        for (int y = 0; y < SIZE_Y; y++)
         {
-                for(int x = 0; x < 8; x++)
+                for(int x = 0; x < SIZE_X; x++)
                 {
-                    sf::RectangleShape rectangle(sf::Vector2f(Chunk::chunkSizeX, Chunk::chunkSizeY));
+                    sf::RectangleShape rectangle(sf::Vector2f(Chunk::CHUNK_SIZE_X, Chunk::CHUNK_SIZE_Y));
                     
-                    rectangle.setPosition(x * Chunk::chunkSizeX, y * Chunk::chunkSizeY);                    
+                    rectangle.setPosition(x * Chunk::CHUNK_SIZE_X, y * Chunk::CHUNK_SIZE_Y);                    
                     
                     sf::Color colors[6] = {sf::Color::Red, sf::Color::Green, sf::Color::Blue, sf::Color::Yellow, sf::Color::Magenta, sf::Color::Cyan};
                     
@@ -66,7 +69,7 @@ int main()
 
 	std::cout << ant.size << '\n';
     
-    std::array<std::array<Chunk, 8>, 8> chunks;
+    std::array<std::array<Chunk, 8>, 9> chunks;
     initChunks(chunks);  
 
     initSFML(chunks);   
