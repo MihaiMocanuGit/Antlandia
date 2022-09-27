@@ -16,8 +16,10 @@ class Chunk
 		void initNearbyChunks(int noOfChunksY, int noOfChunksX);
 	public:
 		std::array<Ant, m_MAX_ANTS_CHUNK> antsInChunk;
-	       	int chunkIndexX, chunkIndexY;
+	    int chunkIndexX, chunkIndexY;
 		
+        static constexpr int chunkSizeX = 128, chunkSizeY = 128;
+
 		Chunk *pNearbyChunks[3][3];
         
         Chunk();       

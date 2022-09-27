@@ -2,11 +2,11 @@ CC = g++
 CFLAGS = -g -Wall
 OBJECTS = antSim.o genericObject.o ant.o chunk.o
 TARGET = antSim
-
+LIBS = -lsfml-graphics -lsfml-window -lsfml-system
 all: $(TARGET)
 
 $(TARGET): antSim.o genericObject.o ant.o chunk.o
-	$(CC) $(CFLAGS) -o builds/$(TARGET) builds/objects/antSim.o builds/objects/genericObject.o builds/objects/ant.o builds/objects/chunk.o 
+	$(CC) $(CFLAGS) -o builds/$(TARGET) $(LIBS)  builds/objects/antSim.o builds/objects/genericObject.o builds/objects/ant.o builds/objects/chunk.o 
 
 antSim.o: src/antSim.cpp
 	$(CC) $(CFLAGS) -c src/antSim.cpp
