@@ -5,8 +5,13 @@ TARGET = antSim
 LIBS = -lsfml-graphics -lsfml-window -lsfml-system
 all: $(TARGET)
 
+<<<<<<< HEAD
 $(TARGET): antSim.o genericObject.o ant.o chunk.o
 	$(CC) $(CFLAGS) -o builds/$(TARGET) $(LIBS)  builds/objects/antSim.o builds/objects/genericObject.o builds/objects/ant.o builds/objects/chunk.o 
+=======
+$(TARGET): antSim.o genericObject.o ant.o
+	$(CC) $(CFLAGS) -o builds/$(TARGET) builds/objects/antSim.o builds/objects/genericObject.o builds/objects/ant.o 
+>>>>>>> main
 
 antSim.o: src/antSim.cpp
 	$(CC) $(CFLAGS) -c src/antSim.cpp
@@ -20,6 +25,7 @@ genericObject.o: src/genericObject.cpp
 	$(CC) $(CFLAGS) -c src/genericObject.cpp 
 	mv genericObject.o builds/objects/
 
+<<<<<<< HEAD
 chunk.o: src/chunk.cpp
 	$(CC) $(CFLAGS) -c src/chunk.cpp
 	mv chunk.o builds/objects/
@@ -29,3 +35,8 @@ clean:
 
 run:
 	make && builds/./antSim
+=======
+
+clean:
+	$(RM) builds/$(TARGET) builds/objects/*.o 
+>>>>>>> main
