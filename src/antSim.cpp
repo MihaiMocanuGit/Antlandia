@@ -4,6 +4,8 @@
 #include "ant.h"
 #include "chunk.h"
 
+
+/*
 template<std::size_t SIZE_X, std::size_t SIZE_Y>
 void initChunks(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunks) 
 {
@@ -57,22 +59,31 @@ void initSFML(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunks)
     }
 }
 
+template<std::size_t SIZE_X, std::size_t SIZE_Y>
+void createSomeAnts(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunks)
+{
+    constexpr int NO_ANTS = 64;
+    std::array<Ant, NO_ANTS> ants;
+
+    int colorCode = 5;
+    for( auto & ant : ants)
+    {   
+        sf::Color colors[6] = {sf::Color::Red, sf::Color::Green, sf::Color::Blue, sf::Color::Yellow, sf::Color::Magenta, sf::Color::Cyan};
+        if(colorCode == -1) colorCode = 0;
+    }
+}
+*/
+
 int main()
 {
-	std::cout << "It works!\n";
+
 	
-
-
-	Ant ant(2, 3, NULL);
-	ant.initAnt(99.9f, 69, 2, 0);
-	ant.initGenericObject(1, 0.5, 3);
-
-	std::cout << ant.size << '\n';
     
     std::array<std::array<Chunk, 8>, 9> chunks;
+    /*
     initChunks(chunks);  
 
     initSFML(chunks);   
-
+    */
     return 0;
 }

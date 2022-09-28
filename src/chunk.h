@@ -9,7 +9,7 @@
 class Chunk
 {
 	private:
-		static constexpr unsigned int m_MAX_ANTS_CHUNK;
+		static constexpr unsigned int m_MAX_ANTS_CHUNK = 255;
 
 		void initNearbyChunks(int noOfChunksY, int noOfChunksX);
 	public:
