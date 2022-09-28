@@ -1,24 +1,27 @@
 #ifndef GENERIC_OBJECT_H
 #define GENERIC_OBJECT_H
 
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+
 class GenericObject
 {
 	private:
-		void* pHomeChunk;
-	public:
-		float coordX;
-	       	float coordY;
+		void* m_pHomeChunk;
 
-		int colorCode;
-		float colorIntensity; //alpha channel
+	public:
+		sf::Vector2f position;
+
+		sf::Color color;
 
 		int size;
 
 		void* getPtrHomeChunk();
 		void setPtrHomeChunk(void * pChunk);
 		
-		GenericObject(float aX, float aY, void *pHomeChunk);
-		void initGenericObject(int aColorCode, float aColorIntensity, float aSize);
+		GenericObject();
+		GenericObject(sf::Vector2f aPosition, sf::Color aColor, float aSize);
+
 };
 
 #endif

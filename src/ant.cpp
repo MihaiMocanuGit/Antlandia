@@ -1,21 +1,16 @@
 #include "ant.h"
 #include <iostream>
 
-Ant::Ant() : GenericObject( -1, -1, nullptr)
+Ant::Ant() : GenericObject({-1,-1}, sf::Color::Magenta, 1)
 {
 
 }
 
-Ant::Ant(float aX, float aY, void *aPHomeChunk) : GenericObject(aX, aY, aPHomeChunk)
+Ant::Ant(sf::Vector2f aPosition, sf::Vector2f aVelocity, sf::Color aColor, float aSize, float aHealth, float aEnergy) 
+		: GenericObject(aPosition, aColor, aSize), health{aHealth}, energy{aEnergy}
 {
 
 }
 
-void Ant::initAnt(float aHealth, float aEnergy, float aVelDirX, float aVelDirY)
-{
-	health = aHealth;
-	energy = aEnergy;
-	velDirX = aVelDirX;
-	velDirY = aVelDirY;
-}
+
 

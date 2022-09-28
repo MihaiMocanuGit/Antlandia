@@ -4,31 +4,22 @@ Chunk::Chunk()
 {
 }
 
-Chunk::Chunk(int aChunkIndexX, int aChunkIndexY) : chunkIndexX(aChunkIndexX), chunkIndexY(aChunkIndexY)
+Chunk::Chunk(sf::Vector2i aChunkIndex) : chunkIndex{aChunkIndex}
 {
 }
 
-void Chunk::initNearbyChunks(int noOfChunksY, int noOfChunksX)
+void Chunk::initNearbyChunkMap(sf::Vector2i noOfChunks)
 {
 
 	for (int y = -1; y <= 1; y++)
 		for(int x = -1; x <= 1; x++)
 		{
-			if(chunkIndexX + x >= 0 and chunkIndexX + x < noOfChunksX and
-			   chunkIndexY + y >= 0 and chunkIndexY + y < noOfChunksY)
-				pNearbyChunks[1 + y][1 + x] = this + x + noOfChunksX * y;
+			if(chunkIndex.x + x >= 0 and chunkIndex.x + x < noOfChunks.x and
+			   chunkIndex.y + y >= 0 and chunkIndex.y + y < noOfChunks.y)
+				pNearbyChunks[1 + y][1 + x] = this + x + noOfChunks.x * y;
             else
                 pNearbyChunks[1 + y][1 + x] = nullptr;
 
 		}
 }
 
-/*
-template<std::size_t SIZE_X, std::size_t SIZE_Y>
-void Chunk::chunksInit(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunks)
-{
-    for(auto &chunksY : chunks)
-        for(auto &chunkYX : chunksY)
-            chunkYX.initNearbyChunks(chunksY.size(), chunks.size());
-}
-*/
