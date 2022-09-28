@@ -21,7 +21,7 @@ void initEmptyChunks(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunks)
     Chunk::initAllChunks(chunks);    
 }
 
-void closeWindowOnEvent(sf::RenderWindow &window)
+void closeWindowIfEvent(sf::RenderWindow &window)
 {
     sf::Event event;
     while (window.pollEvent(event))
@@ -32,17 +32,25 @@ void closeWindowOnEvent(sf::RenderWindow &window)
 }
 
 template<std::size_t SIZE_X, std::size_t SIZE_Y>
-void startApp(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunks, const sf::Vector2u &windowSize, const std::string &windowTitle)
+void startApp(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunkMap, const sf::Vector2u &windowSize, const std::string &windowTitle)
 {
+    initEmptyChunks(chunkMap);  
+
 
     sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), windowTitle);
+    window.setFramerateLimit(60);
 
     while (window.isOpen())
     {
-        closeWindowOnEvent(window);
+        closeWindowIfEvent(window);
+
+        //clear screen and fill with background color
+        window.clear(sf::Color::White);
 
         window.display();
     }
+
+    window.close();
 }
 
 /*
@@ -64,13 +72,10 @@ void createSomeAnts(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunks)
 int main()
 {
 
-	
-    constexpr int CHUNK_MAP_SIZE_X = 8;
-    constexpr int CHUNK_MAP_SIZE_Y = 8;
-    std::array<std::array<Chunk, CHUNK_MAP_SIZE_X>, CHUNK_MAP_SIZE_Y> chunkMap;
+    constexpr int CHUNK_MAP_SIZE_X = 5;
+    constexpr int CHUNK_MAP_SIZE_Y = 10;
+    std::array<std::array<Chunk, CHUNK_MAP_SIZE_X>, CHUNK_MAP_SIZE_Y> chunkMap; 
     
-    initEmptyChunks(chunkMap);  
-
     const sf::Vector2u windowSize = {CHUNK_MAP_SIZE_X * Chunk::CHUNK_SIZE.x, CHUNK_MAP_SIZE_Y * Chunk::CHUNK_SIZE.y};
     startApp(chunkMap, windowSize, "AntLandia :)");   
 
