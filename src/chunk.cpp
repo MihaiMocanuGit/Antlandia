@@ -4,11 +4,11 @@ Chunk::Chunk()
 {
 }
 
-Chunk::Chunk(sf::Vector2i aChunkIndex) : chunkIndex{aChunkIndex}
+Chunk::Chunk(sf::Vector2u aChunkIndex) : chunkIndex{aChunkIndex}
 {
 }
 
-void Chunk::initNearbyChunkMap(sf::Vector2i noOfChunks)
+void Chunk::initNearbyChunkMap(sf::Vector2<long unsigned int> noOfChunks)
 {
 
 	for (int y = -1; y <= 1; y++)
@@ -22,4 +22,3 @@ void Chunk::initNearbyChunkMap(sf::Vector2i noOfChunks)
 
 		}
 }
-

@@ -1,64 +1,51 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <string>
 
 #include "ant.h"
 #include "chunk.h"
 
 
-/*
+
 template<std::size_t SIZE_X, std::size_t SIZE_Y>
-void initChunks(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunks) 
+void initEmptyChunks(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunks) 
 {
-    for(int y = 0; y < chunks.size(); y++)
+    for(unsigned int y = 0; y < chunks.size(); y++)
     {
-        for(int x = 0; x < chunks[y].size(); x++)
+        for(unsigned int x = 0; x < chunks[y].size(); x++)
         {
-            chunks[y][x] = Chunk(x,y);
+            chunks[y][x] = Chunk({x,y});
         }
     }
     
-    Chunk::chunksInit(chunks);    
+    Chunk::initAllChunks(chunks);    
 }
 
+void closeWindowOnEvent(sf::RenderWindow &window)
+{
+    sf::Event event;
+    while (window.pollEvent(event))
+    {
+        if (event.type == sf::Event::Closed)
+            window.close();
+    }
+}
 
 template<std::size_t SIZE_X, std::size_t SIZE_Y>
-void initSFML(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunks)
+void startApp(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunks, const sf::Vector2u &windowSize, const std::string &windowTitle)
 {
 
-    sf::RenderWindow window(sf::VideoMode(SIZE_X * Chunk::CHUNK_SIZE_X, SIZE_Y * Chunk::CHUNK_SIZE_Y), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), windowTitle);
 
     while (window.isOpen())
     {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-        
-        int colorCount = 0;
-        for (int y = 0; y < SIZE_Y; y++)
-        {
-                for(int x = 0; x < SIZE_X; x++)
-                {
-                    sf::RectangleShape rectangle(sf::Vector2f(Chunk::CHUNK_SIZE_X, Chunk::CHUNK_SIZE_Y));
-                    
-                    rectangle.setPosition(x * Chunk::CHUNK_SIZE_X, y * Chunk::CHUNK_SIZE_Y);                    
-                    
-                    sf::Color colors[6] = {sf::Color::Red, sf::Color::Green, sf::Color::Blue, sf::Color::Yellow, sf::Color::Magenta, sf::Color::Cyan};
-                    
-                    rectangle.setFillColor(colors[colorCount++]);
-                    
-                    if(colorCount == 6) colorCount = 0;
-
-                    window.draw(rectangle);
-                }
-        }
+        closeWindowOnEvent(window);
 
         window.display();
     }
 }
 
+/*
 template<std::size_t SIZE_X, std::size_t SIZE_Y>
 void createSomeAnts(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunks)
 {
@@ -78,12 +65,14 @@ int main()
 {
 
 	
+    constexpr int CHUNK_MAP_SIZE_X = 8;
+    constexpr int CHUNK_MAP_SIZE_Y = 8;
+    std::array<std::array<Chunk, CHUNK_MAP_SIZE_X>, CHUNK_MAP_SIZE_Y> chunkMap;
     
-    std::array<std::array<Chunk, 8>, 9> chunks;
-    /*
-    initChunks(chunks);  
+    initEmptyChunks(chunkMap);  
 
-    initSFML(chunks);   
-    */
+    const sf::Vector2u windowSize = {CHUNK_MAP_SIZE_X * Chunk::CHUNK_SIZE.x, CHUNK_MAP_SIZE_Y * Chunk::CHUNK_SIZE.y};
+    startApp(chunkMap, windowSize, "AntLandia :)");   
+
     return 0;
 }

@@ -14,7 +14,7 @@ class GenericObject
 
 		sf::Color color;
 
-		int size;
+		float size;
 
 		void* getPtrHomeChunk();
 		void setPtrHomeChunk(void * pChunk);
