@@ -53,21 +53,6 @@ void startApp(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunkMap, const sf:
     window.close();
 }
 
-/*
-template<std::size_t SIZE_X, std::size_t SIZE_Y>
-void createSomeAnts(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunks)
-{
-    constexpr int NO_ANTS = 64;
-    std::array<Ant, NO_ANTS> ants;
-
-    int colorCode = 5;
-    for( auto & ant : ants)
-    {   
-        sf::Color colors[6] = {sf::Color::Red, sf::Color::Green, sf::Color::Blue, sf::Color::Yellow, sf::Color::Magenta, sf::Color::Cyan};
-        if(colorCode == -1) colorCode = 0;
-    }
-}
-*/
 
 int main()
 {
