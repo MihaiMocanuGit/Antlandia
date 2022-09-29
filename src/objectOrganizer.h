@@ -18,7 +18,8 @@ private:
         std::array<T, MAX_NO_OBJECTS_IN_GROUP> m_newObjects;
 
 public:
-
+        ObjectHolder();
+        
         //creates new objects which have to be manually initialized by user right after.
         void createNewObjects(unsigned int noOfObjects);
 
