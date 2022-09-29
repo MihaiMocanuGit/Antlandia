@@ -2,8 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
-#include "ant.h"
-#include "chunk.h"
+#include "objectOrganizer.h"
 
 
 

@@ -9,7 +9,6 @@
 class Chunk
 {
 	private:
-		static constexpr unsigned int m_MAX_ANTS_CHUNK = 255;
 
 		void initNearbyChunkMap(sf::Vector2<long unsigned int> noOfChunks);
 
@@ -19,7 +18,8 @@ class Chunk
 		}; 
 		
 	public:
-		std::array<Ant, m_MAX_ANTS_CHUNK> antsInChunk;
+		static constexpr unsigned int MAX_ANTS_CHUNK = 255;
+		std::array<Ant, MAX_ANTS_CHUNK> antsInChunk;
 	    
 		sf::Vector2u chunkIndex;
 
@@ -32,6 +32,7 @@ class Chunk
 		
         
 		///calls initNearbyChunkMap for every chunk in 2D array. It inits *pNearbyChunks[3][3];
+		///for initNearbyChunkMap to work, all chunks need to be continuous in memory, eg: std::array
         template<std::size_t SIZE_X, std::size_t SIZE_Y>
 		static void initAllChunks(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunks)
 		{
