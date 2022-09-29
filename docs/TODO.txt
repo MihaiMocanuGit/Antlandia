@@ -1,3 +1,3 @@
-[x]separe ObjectHolder from ObjectOrganizer and place in new header/cpp file
+[x]separate ObjectHolder from ObjectOrganizer and place in new header/cpp file
 [X]link new headers (objectHolder.h, objectOrganizer.h) in makefile
 [ ]!!refactor makefile
