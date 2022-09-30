@@ -1,7 +1,8 @@
 #include "objectHolder.h"
-#include "chunk.h"
 
 /*
+#include "chunk.h"
+
 template<class T>
 ObjectHolder<T>::ObjectHolder()
 {
