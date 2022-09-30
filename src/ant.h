@@ -3,6 +3,7 @@
 
 
 #include "genericObject.h"
+#include <SFML/Window.hpp>
 
 
 class Ant : public  GenericObject
@@ -12,15 +13,15 @@ class Ant : public  GenericObject
 	public:
 		float health;
 		float energy;
-		float velDirX, velDirY;
-		//vector, need to be normalized to 1
+		
+		sf::Vector2f velocity;
+		
 		
 		int getStatusCode();
 		void setStatusCode(int statusCode);
 
 		Ant();
-		Ant(float aX, float aY, void *aPHomeChunk);// : GenericObject(aX, aY, pHomeChunk);
-		void initAnt(float aHealth, float aEnergy, float aVelDirX, float aVelDirY);
+		Ant(sf::Vector2f aPosition, sf::Vector2f aVelocity, sf::Color aColor, float aSize, float aHealth, float aEnergy);
 
 };
 

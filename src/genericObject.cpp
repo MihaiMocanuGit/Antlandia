@@ -2,18 +2,14 @@
 #include <iostream>
 
 
-
-GenericObject::GenericObject(float aX, float aY, void *aPHomeChunk) : pHomeChunk(aPHomeChunk), coordX(aX), coordY(aY)
+GenericObject::GenericObject()
 {
 
 }
-
-
-void GenericObject::initGenericObject(int aColorCode, float aColorIntensity, float aSize)
+GenericObject::GenericObject(sf::Vector2f aPosition, sf::Color aColor, float aSize) 
+: position{aPosition}, color{aColor}, size{aSize}
 {
-	colorCode = aColorCode;
-	colorIntensity = aColorIntensity;
-	size = aSize;
+
 }
 
 

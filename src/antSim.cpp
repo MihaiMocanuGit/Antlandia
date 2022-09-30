@@ -1,54 +1,69 @@
 #include <iostream>
-#include "ant.h"
-#include "chunk.h"
+#include <SFML/Graphics.hpp>
+#include <string>
 
-void initChunks(std::array<std::array<Chunk, 8>, 8> &chunks) 
+#include "objectOrganizer.h"
+
+
+/*
+template<std::size_t SIZE_X, std::size_t SIZE_Y>
+void initEmptyChunks(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunks) 
 {
-    for(int y = 0; y < chunks.size(); y++)
+    for(unsigned int y = 0; y < chunks.size(); y++)
     {
-        for(int x = 0; x < chunks[y].size(); x++)
+        for(unsigned int x = 0; x < chunks[y].size(); x++)
         {
-            chunks[y][x] = Chunk(x,y);
+            chunks[y][x] = Chunk({x,y});
         }
     }
     
-    Chunk::chunksInit(chunks);    
+    Chunk::initAllChunks(chunks);    
 }
+*/
+
+void closeWindowIfEvent(sf::RenderWindow &window)
+{
+    sf::Event event;
+    while (window.pollEvent(event))
+    {
+        if (event.type == sf::Event::Closed)
+            window.close();
+    }
+}
+
+template<std::size_t SIZE_X, std::size_t SIZE_Y>
+void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector2u &windowSize, const std::string &windowTitle)
+{
+
+    sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), windowTitle);
+    window.setFramerateLimit(60);
+
+    while (window.isOpen())
+    {
+        closeWindowIfEvent(window);
+
+        //clear screen and fill with background color
+        window.clear(sf::Color::White);
+
+        window.display();
+    }
+
+    window.close();
+}
+
 
 int main()
 {
-	std::cout << "It works!\n";
-	
+    /*
+    constexpr int CHUNK_MAP_SIZE_X = 5;
+    constexpr int CHUNK_MAP_SIZE_Y = 10;
+    std::array<std::array<Chunk, CHUNK_MAP_SIZE_X>, CHUNK_MAP_SIZE_Y> chunkMap; 
+    */
 
+    ObjectOrganizer<5,10> objectOrganizer;
 
-	Ant ant(2, 3, NULL);
-	ant.initAnt(99.9f, 69, 2, 0);
-	ant.initGenericObject(1, 0.5, 3);
-
-	std::cout << ant.size << '\n';
-    
-    std::array<std::array<Chunk, 8>, 8> chunks;
-    initChunks(chunks);  
-    
-    for( auto & chunksY : chunks)
-    {
-        for( auto & chunkYX : chunksY)
-        {
-            std::cout <<  &chunkYX << '\t';
-        }
-        std::cout << '\n';
-    }
-
-    std::cout << "\n\n\n";
-
-   for( auto & chunksY : chunks)
-   {
-       for( auto & chunkYX : chunksY)
-       {
-           std::cout <<  chunkYX.pNearbyChunks[0][0] << '\t';
-       }
-       std::cout << '\n';
-   }
+    const sf::Vector2u windowSize = {objectOrganizer.noOfChunksX * Chunk::CHUNK_SIZE.x, objectOrganizer.noOfChunksY * Chunk::CHUNK_SIZE.y};
+    startApp(objectOrganizer, windowSize, "AntLandia :)");   
 
     return 0;
 }
