@@ -1,4 +1,6 @@
 #include "objectHolder.h"
+
+/*
 #include "chunk.h"
 
 template<class T>
@@ -42,3 +44,4 @@ void ObjectHolder<T>::changeReservedVectorSpace(std::size_t newReservedSpace)
     inUseObjects.reserve(newReservedSpace);
     newObjects.reserve(newReservedSpace);
 }
+*/

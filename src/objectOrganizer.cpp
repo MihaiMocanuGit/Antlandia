@@ -1,6 +1,7 @@
 #include "objectOrganizer.h"
 
 
+/*
 template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
 void ObjectOrganizer<MAP_SIZE_X, MAP_SIZE_Y>::m_initChunkMap()
 {
@@ -15,16 +16,10 @@ void ObjectOrganizer<MAP_SIZE_X, MAP_SIZE_Y>::m_initChunkMap()
     Chunk::initAllChunks(chunkMap);    
 }
 
+
 template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
 ObjectOrganizer<MAP_SIZE_X, MAP_SIZE_Y>::ObjectOrganizer()
-{
+{ 
     m_initChunkMap();
 }
-
-template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
-ObjectOrganizer<MAP_SIZE_X, MAP_SIZE_Y>::ObjectOrganizer(std::array<std::array<Chunk, MAP_SIZE_X>, MAP_SIZE_Y> chunkMap)
-    : chunkMap{chunkMap}
-{
-    m_initChunkMap();
-}
-
+*/
