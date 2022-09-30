@@ -5,7 +5,7 @@
 #include "objectOrganizer.h"
 
 
-
+/*
 template<std::size_t SIZE_X, std::size_t SIZE_Y>
 void initEmptyChunks(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunks) 
 {
@@ -19,6 +19,7 @@ void initEmptyChunks(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunks)
     
     Chunk::initAllChunks(chunks);    
 }
+*/
 
 void closeWindowIfEvent(sf::RenderWindow &window)
 {
@@ -31,10 +32,8 @@ void closeWindowIfEvent(sf::RenderWindow &window)
 }
 
 template<std::size_t SIZE_X, std::size_t SIZE_Y>
-void startApp(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunkMap, const sf::Vector2u &windowSize, const std::string &windowTitle)
+void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector2u &windowSize, const std::string &windowTitle)
 {
-    initEmptyChunks(chunkMap);  
-
 
     sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), windowTitle);
     window.setFramerateLimit(60);
@@ -55,13 +54,16 @@ void startApp(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunkMap, const sf:
 
 int main()
 {
-
+    /*
     constexpr int CHUNK_MAP_SIZE_X = 5;
     constexpr int CHUNK_MAP_SIZE_Y = 10;
     std::array<std::array<Chunk, CHUNK_MAP_SIZE_X>, CHUNK_MAP_SIZE_Y> chunkMap; 
-    
-    const sf::Vector2u windowSize = {CHUNK_MAP_SIZE_X * Chunk::CHUNK_SIZE.x, CHUNK_MAP_SIZE_Y * Chunk::CHUNK_SIZE.y};
-    startApp(chunkMap, windowSize, "AntLandia :)");   
+    */
+
+    ObjectOrganizer<5,10> objectOrganizer;
+
+    const sf::Vector2u windowSize = {objectOrganizer.noOfChunksX * Chunk::CHUNK_SIZE.x, objectOrganizer.noOfChunksY * Chunk::CHUNK_SIZE.y};
+    startApp(objectOrganizer, windowSize, "AntLandia :)");   
 
     return 0;
 }
