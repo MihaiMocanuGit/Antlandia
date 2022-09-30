@@ -40,19 +40,16 @@ public:
         //creates new objects which have to be manually initialized by user right after.
         void createNewObjects(unsigned int noOfObjects)
         {
-                for(unsigned int i = 0; i < noOfObjects; i++)
-                        newObjects.push_back(T());
+                newObjects.resize(newObjects.size() + noOfObjects, T());
         }
 
         //don't forget to manually init objects before; 
         void insertAllNewObjectsIntoHolder()
         {
-                for(unsigned int i = newObjects.size() - 1; i > 0; i++)
-                {
-                        inUseObjects.push_back(newObjects[i]);
-                        newObjects.pop_back();
-                }
+                inUseObjects.insert(inUseObjects.end(), newObjects.begin(), newObjects.end());
+                newObjects.clear();           
         }
+
 
         //best value Chunk::MAX_ANTS_CHUNK * ObjectOrganizer.noOfChunksX * ObjectOrganizer.noOfChunksY
         void changeReservedVectorSpace(std::size_t newReservedSpace)
