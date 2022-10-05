@@ -20,7 +20,7 @@ class Ant : public  GenericObject
 		void setStatusCode(int statusCode);
 
 		Ant();
-		Ant(sf::CircleShape aShape, sf::Vector2f aVelocity,  float aHealth, float aEnergy);
+		Ant(sf::CircleShape &aShape, sf::Vector2f &aVelocity,  float aHealth, float aEnergy);
 
 };
 

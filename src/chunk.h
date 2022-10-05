@@ -18,7 +18,7 @@ class Chunk
 		}; 
 		
 	public:
-		static constexpr unsigned int MAX_ANTS_CHUNK = 1;
+		static constexpr unsigned int MAX_ANTS_CHUNK = 256;
 		std::array<Ant, Chunk::MAX_ANTS_CHUNK> antsInChunk;
 	    
 		sf::Vector2u chunkIndex;

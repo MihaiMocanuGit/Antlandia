@@ -40,7 +40,7 @@ public:
         static constexpr std::size_t noOfChunksY = MAP_SIZE_Y;
 
         ObjectHolder<Ant> ants{Chunk::MAX_ANTS_CHUNK * noOfChunksX * noOfChunksY};
-        ObjectHolder<GenericObject> genericObjects{Chunk::MAX_ANTS_CHUNK * noOfChunksX * noOfChunksY / 3};
+        ObjectHolder<GenericObject> genericObjects{Chunk::MAX_ANTS_CHUNK * noOfChunksX * noOfChunksY};
 
 
         std::array<std::array<Chunk, MAP_SIZE_X>, MAP_SIZE_Y> chunkMap;

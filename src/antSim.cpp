@@ -23,17 +23,19 @@ float tempTestRand(float LO, float HI)
 template<std::size_t SIZE_X, std::size_t SIZE_Y>
 void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector2u &windowSize, const std::string &windowTitle)
 {
-    /*
-    objectOrganizer.ants.createNewObjects(256 * 2 * 100);
-    srand(time(0));
     
+    objectOrganizer.ants.createNewObjects(5 * 2);
+    srand(time(0));
+  
     for(auto & ant : objectOrganizer.ants.newObjects)
     {
-        ant.shape.setRadius(1);
-        ant.shape.setFillColor(sf::Color::Black);
-        ant.shape.setPosition(tempTestRand(0, windowSize.x), tempTestRand(0, windowSize.y));
+        std::cout << ant.pShape << '\t';
+        //ant.pShape->setRadius(1);
+        //ant.pShape->setFillColor(sf::Color::Black);
+        //ant.pShape->setPosition(tempTestRand(0, windowSize.x), tempTestRand(0, windowSize.y));
     }
      
+    /*
     objectOrganizer.ants.insertAllNewObjectsIntoHolder();
    
   
@@ -49,13 +51,13 @@ void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
         
         for(auto & ant : objectOrganizer.ants.inUseObjects)
         {
-            window.draw(ant.shape);
+            window.draw(*ant.pShape);
 
             float x = tempTestRand(0, windowSize.x);
             float y = tempTestRand(0, windowSize.y);
-            ant.shape.setPosition(x, y);
+            ant.pShape->setPosition(x, y);
 
-            if(ant.shape.getRadius() != 1) std::cout << ant.size << ' ';
+            if(ant.pShape->getRadius() != 1) std::cout << ant.size << ' ';
         }
         
         window.display();
@@ -67,12 +69,12 @@ void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
 
 int main()
 {
-    ObjectOrganizer<2,2> objectOrganizer;
+    ObjectOrganizer<3,3> objectOrganizer;
 
 
-    /*
+    
     const sf::Vector2u windowSize = {objectOrganizer.noOfChunksX * Chunk::CHUNK_SIZE.x, objectOrganizer.noOfChunksY * Chunk::CHUNK_SIZE.y};
     startApp(objectOrganizer, windowSize, "AntLandia :)");   
-    */
+    
     return 0;
 }
