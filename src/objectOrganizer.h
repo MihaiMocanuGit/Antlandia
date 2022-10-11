@@ -9,6 +9,10 @@
 #include "objectHolder.h"
 
 
+
+
+
+
 ///class responsible for creating chunkMap, it controls the structure logic and further calls
 template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
 class ObjectOrganizer
@@ -24,27 +28,27 @@ private:
                     {
                         chunkMap[y][x] = Chunk({x,y});
                     }
-                }
-    
-                Chunk::initAllChunks(chunkMap);    
+                }            
+               Chunk::initAllChunks(chunkMap);    
         }
 
 
-        //void m_initNoOfChunks();
+
 public:
 
         static constexpr std::size_t noOfChunksX = MAP_SIZE_X;
         static constexpr std::size_t noOfChunksY = MAP_SIZE_Y;
 
         ObjectHolder<Ant> ants{Chunk::MAX_ANTS_CHUNK * noOfChunksX * noOfChunksY};
-        ObjectHolder<GenericObject> genericObjects{Chunk::MAX_ANTS_CHUNK * noOfChunksX * noOfChunksY / 3};
+        ObjectHolder<GenericObject> genericObjects{Chunk::MAX_ANTS_CHUNK * noOfChunksX * noOfChunksY};
 
 
         std::array<std::array<Chunk, MAP_SIZE_X>, MAP_SIZE_Y> chunkMap;
 
         ObjectOrganizer()
-        { 
-                m_initChunkMap();
+        {       
+
+               m_initChunkMap();
         }
 
 };

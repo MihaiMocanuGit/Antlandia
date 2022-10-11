@@ -6,13 +6,13 @@
 #include "chunk.h"
 
 
-
+#include <iostream>
 template<class T>
 class ObjectHolder
 {
 private:
         
-        unsigned int m_RESERVED_VECTOR_SPACE;
+        unsigned int m_RESERVED_VECTOR_SPACE = -1;
 
 public:
 
@@ -26,13 +26,13 @@ public:
         ObjectHolder()
         {
                 //we make the assumption that the chunk map is 10 by 10 and one chunk can hold at most Chunk::MAX_ANTS_CHUNK
-                changeReservedVectorSpace(Chunk::MAX_ANTS_CHUNK * 10 * 10);
+                //changeReservedVectorSpace(Chunk::MAX_ANTS_CHUNK * 10 * 10);
         }
 
         //best value Chunk::MAX_ANTS_CHUNK * ObjectOrganizer.noOfChunksX * ObjectOrganizer.noOfChunksY
         ObjectHolder(std::size_t aproximateVectorSize)
         {
-                changeReservedVectorSpace(aproximateVectorSize);
+                //changeReservedVectorSpace(aproximateVectorSize);
         }
 
 
@@ -40,7 +40,7 @@ public:
         //creates new objects which have to be manually initialized by user right after.
         void createNewObjects(unsigned int noOfObjects)
         {
-                newObjects.resize(newObjects.size() + noOfObjects, T());
+                newObjects.resize(newObjects.size() + noOfObjects);
         }
 
         //don't forget to manually init objects before; 
@@ -54,7 +54,7 @@ public:
         //best value Chunk::MAX_ANTS_CHUNK * ObjectOrganizer.noOfChunksX * ObjectOrganizer.noOfChunksY
         void changeReservedVectorSpace(std::size_t newReservedSpace)
         {
-                ObjectHolder::m_RESERVED_VECTOR_SPACE = newReservedSpace;
+                m_RESERVED_VECTOR_SPACE = newReservedSpace;
                 inUseObjects.reserve(newReservedSpace);
                 newObjects.reserve(newReservedSpace);
         }

@@ -23,12 +23,15 @@ float tempTestRand(float LO, float HI)
 template<std::size_t SIZE_X, std::size_t SIZE_Y>
 void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector2u &windowSize, const std::string &windowTitle)
 {
-    objectOrganizer.ants.createNewObjects(256 * 2 * 100);
+    
+    objectOrganizer.ants.createNewObjects((1<<0) * SIZE_X * SIZE_Y);
     srand(time(0));
 
     for(auto & ant : objectOrganizer.ants.newObjects)
     {
-        ant.size = 2;
+        ant.pShape->setRadius(1);
+        ant.pShape->setFillColor(sf::Color::Black);
+        ant.pShape->setPosition(tempTestRand(0, windowSize.x), tempTestRand(0, windowSize.y));
     }
      
     objectOrganizer.ants.insertAllNewObjectsIntoHolder();
@@ -46,37 +49,29 @@ void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
         
         for(auto & ant : objectOrganizer.ants.inUseObjects)
         {
-            sf::CircleShape antShape(ant.size);
-            antShape.setPosition(ant.position);
-            antShape.setFillColor(sf::Color::Black);
-            window.draw(antShape);
+            window.draw(*ant.pShape);
 
             float x = tempTestRand(0, windowSize.x);
             float y = tempTestRand(0, windowSize.y);
-            ant.position = {x, y};
+            ant.pShape->setPosition(x, y);
 
-            if(ant.size != 2) std::cout << ant.size << ' ';
+            if(ant.pShape->getRadius() != 1) std::cout << ant.size << ' ';
         }
         
         window.display();
     }
-
+    
     window.close();
 }
 
-
 int main()
 {
-    /*
-    constexpr int CHUNK_MAP_SIZE_X = 5;
-    constexpr int CHUNK_MAP_SIZE_Y = 10;
-    std::array<std::array<Chunk, CHUNK_MAP_SIZE_X>, CHUNK_MAP_SIZE_Y> chunkMap; 
-    */
+    ObjectOrganizer<1,1> objectOrganizer;
 
-    ObjectOrganizer<10,10> objectOrganizer;
 
+    
     const sf::Vector2u windowSize = {objectOrganizer.noOfChunksX * Chunk::CHUNK_SIZE.x, objectOrganizer.noOfChunksY * Chunk::CHUNK_SIZE.y};
     startApp(objectOrganizer, windowSize, "AntLandia :)");   
-
+    
     return 0;
 }

@@ -2,3 +2,4 @@
 [X]link new headers (objectHolder.h, objectOrganizer.h) in makefile
 [ ]!!refactor makefile
 [ ]integrate sfml shapes into genericObject
+    []sfml shapes use too much memory, need to rethink this, for now we are alocating sf::CircleShape on the heap, might have introduce a dealocation bug now
