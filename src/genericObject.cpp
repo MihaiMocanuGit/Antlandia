@@ -2,32 +2,46 @@
 #include <iostream>
 
 int contor = 0;
-sf::CircleShape *GenericObject::m_initPtrShape(sf::CircleShape &object)
+void GenericObject::m_initPtrShape(sf::CircleShape &object)
 {
-   
-    sf::CircleShape *pObject = new sf::CircleShape();
-    *pObject = object;
+    std::cout << pShape << '\t';
+    pShape =  new sf::CircleShape;
+    std::cout << pShape << '\n';
 
-    return pObject;
+    *pShape = object;
+}
+
+
+void GenericObject::m_initPtrShape()
+{
+    std::cout << pShape << '\t';
+    pShape =  new sf::CircleShape;
+    std::cout << pShape << '\n';
+
+    //for debugging 
+    //pShape->setFillColor(sf::Color::Magenta);
+    //pShape->setRadius(5);
+
+
 }
 
 GenericObject::GenericObject()
 {
-    pShape = new sf::CircleShape;
+    m_initPtrShape();
 }
 
 GenericObject::GenericObject(sf::CircleShape &aShape) 
 {
-    pShape = m_initPtrShape(aShape);
+
+    m_initPtrShape(aShape);
 }
 
 GenericObject::~GenericObject()
 {
-    if(pShape != nullptr)
-    {
-        std::cout << pShape << '\t';
-        delete pShape;
-    }   
+    std::cout << '-' << pShape << '\t';
+    
+    //delete pShape;
     pShape = nullptr;
+    std::cout << '-' << pShape << '\n';  
 }
 

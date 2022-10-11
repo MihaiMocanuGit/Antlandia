@@ -29,7 +29,7 @@ private:
                         chunkMap[y][x] = Chunk({x,y});
                     }
                 }            
-                Chunk::initAllChunks(chunkMap);    
+               Chunk::initAllChunks(chunkMap);    
         }
 
 

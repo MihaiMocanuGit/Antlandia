@@ -40,7 +40,7 @@ public:
         //creates new objects which have to be manually initialized by user right after.
         void createNewObjects(unsigned int noOfObjects)
         {
-                newObjects.resize(newObjects.size() + noOfObjects, T());
+                newObjects.resize(newObjects.size() + noOfObjects);
         }
 
         //don't forget to manually init objects before; 

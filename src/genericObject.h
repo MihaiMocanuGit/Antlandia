@@ -9,9 +9,8 @@ class GenericObject
 	private:
 		void *m_pHomeChunk;
 
-	protected:
-		sf::CircleShape *m_initPtrShape(sf::CircleShape &object);
-
+		void m_initPtrShape(sf::CircleShape &object);
+		void m_initPtrShape();
 	public:
 		sf::CircleShape *pShape = nullptr;
 		sf::Color color;

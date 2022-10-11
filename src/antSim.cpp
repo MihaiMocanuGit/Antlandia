@@ -24,18 +24,16 @@ template<std::size_t SIZE_X, std::size_t SIZE_Y>
 void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector2u &windowSize, const std::string &windowTitle)
 {
     
-    objectOrganizer.ants.createNewObjects(5 * 2);
+    objectOrganizer.ants.createNewObjects((1<<0) * SIZE_X * SIZE_Y);
     srand(time(0));
-  
+
     for(auto & ant : objectOrganizer.ants.newObjects)
     {
-        std::cout << ant.pShape << '\t';
-        //ant.pShape->setRadius(1);
-        //ant.pShape->setFillColor(sf::Color::Black);
-        //ant.pShape->setPosition(tempTestRand(0, windowSize.x), tempTestRand(0, windowSize.y));
+        ant.pShape->setRadius(1);
+        ant.pShape->setFillColor(sf::Color::Black);
+        ant.pShape->setPosition(tempTestRand(0, windowSize.x), tempTestRand(0, windowSize.y));
     }
      
-    /*
     objectOrganizer.ants.insertAllNewObjectsIntoHolder();
    
   
@@ -64,12 +62,11 @@ void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
     }
     
     window.close();
-    */
 }
 
 int main()
 {
-    ObjectOrganizer<3,3> objectOrganizer;
+    ObjectOrganizer<1,1> objectOrganizer;
 
 
     
