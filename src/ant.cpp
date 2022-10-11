@@ -1,16 +1,17 @@
 #include "ant.h"
 #include <iostream>
 
-Ant::Ant() : GenericObject({-1,-1}, sf::Color::Magenta, 1)
+Ant::Ant() : GenericObject()
+{
+}
+
+
+Ant::Ant(sf::CircleShape &aShape, sf::Vector2f &aVelocity, float aHealth, float aEnergy) 
+		: GenericObject(aShape), velocity{aVelocity}, health{aHealth}, energy{aEnergy}
 {
 
 }
 
-Ant::Ant(sf::Vector2f aPosition, sf::Vector2f aVelocity, sf::Color aColor, float aSize, float aHealth, float aEnergy) 
-		: GenericObject(aPosition, aColor, aSize), health{aHealth}, energy{aEnergy}
-{
-
-}
 
 
 

@@ -7,11 +7,12 @@
 class GenericObject
 {
 	private:
-		void* m_pHomeChunk;
+		void *m_pHomeChunk;
 
+		void m_initPtrShape(sf::CircleShape &object);
+		void m_initPtrShape();
 	public:
-		sf::Vector2f position;
-
+		sf::CircleShape *pShape = nullptr;
 		sf::Color color;
 
 		float size;
@@ -20,7 +21,9 @@ class GenericObject
 		void setPtrHomeChunk(void * pChunk);
 		
 		GenericObject();
-		GenericObject(sf::Vector2f aPosition, sf::Color aColor, float aSize);
+		GenericObject(sf::CircleShape &aShape);
+
+		~GenericObject();
 
 };
 

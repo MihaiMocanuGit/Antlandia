@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -g -Wall
+CFLAGS = -g -Wall -O0
 OBJECTS = antSim.o genericObject.o ant.o chunk.o objectHolder.o objectOrganizer.o
 TARGET = antSim
 LIBS = -lsfml-graphics -lsfml-window -lsfml-system
