@@ -29,9 +29,12 @@ void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
 
     for(auto & ant : objectOrganizer.ants.newObjects)
     {
+        *ant.pShape = 2.4;
+        /*
         ant.pShape->setRadius(1);
         ant.pShape->setFillColor(sf::Color::Black);
         ant.pShape->setPosition(tempTestRand(0, windowSize.x), tempTestRand(0, windowSize.y));
+        */
     }
      
     objectOrganizer.ants.insertAllNewObjectsIntoHolder();
@@ -49,13 +52,14 @@ void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
         
         for(auto & ant : objectOrganizer.ants.inUseObjects)
         {
-            window.draw(*ant.pShape);
+            //window.draw(*ant.pShape);
 
             float x = tempTestRand(0, windowSize.x);
             float y = tempTestRand(0, windowSize.y);
-            ant.pShape->setPosition(x, y);
+            //ant.pShape->setPosition(x, y);
+            *ant.pShape = 5.2;
 
-            if(ant.pShape->getRadius() != 1) std::cout << ant.size << ' ';
+            //if(ant.pShape->getRadius() != 1) std::cout << ant.size << ' ';
         }
         
         window.display();

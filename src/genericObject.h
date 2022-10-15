@@ -4,15 +4,16 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
+#define DEBBUG_TYPE double
 class GenericObject
 {
 	private:
 		void *m_pHomeChunk;
 
-		void m_initPtrShape(sf::CircleShape &object);
+		void m_initPtrShape(DEBBUG_TYPE &object);
 		void m_initPtrShape();
 	public:
-		sf::CircleShape *pShape = nullptr;
+		DEBBUG_TYPE *pShape = nullptr;
 		sf::Color color;
 
 		float size;
@@ -21,7 +22,7 @@ class GenericObject
 		void setPtrHomeChunk(void * pChunk);
 		
 		GenericObject();
-		GenericObject(sf::CircleShape &aShape);
+		GenericObject(DEBBUG_TYPE &aShape);
 
 		~GenericObject();
 

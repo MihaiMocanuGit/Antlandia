@@ -2,10 +2,10 @@
 #include <iostream>
 
 int contor = 0;
-void GenericObject::m_initPtrShape(sf::CircleShape &object)
+void GenericObject::m_initPtrShape(DEBBUG_TYPE &object)
 {
     std::cout << pShape << '\t';
-    pShape =  new sf::CircleShape;
+    pShape =  new DEBBUG_TYPE;
     std::cout << pShape << '\n';
 
     *pShape = object;
@@ -15,7 +15,7 @@ void GenericObject::m_initPtrShape(sf::CircleShape &object)
 void GenericObject::m_initPtrShape()
 {
     std::cout << pShape << '\t';
-    pShape =  new sf::CircleShape;
+    pShape =  new DEBBUG_TYPE;
     std::cout << pShape << '\n';
 
     //for debugging 
@@ -30,7 +30,7 @@ GenericObject::GenericObject()
     m_initPtrShape();
 }
 
-GenericObject::GenericObject(sf::CircleShape &aShape) 
+GenericObject::GenericObject(DEBBUG_TYPE &aShape) 
 {
 
     m_initPtrShape(aShape);
