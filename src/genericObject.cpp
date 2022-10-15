@@ -43,7 +43,6 @@ GenericObject::GenericObject(const GenericObject &object)
 
     this->m_initPtrShape(*object.pShape);
 
-    this->size = object.size;
 }
 
 
@@ -55,4 +54,5 @@ GenericObject::~GenericObject()
     pShape = nullptr;
     //std::cout << '-' << pShape << '\n';  
 }
+
 

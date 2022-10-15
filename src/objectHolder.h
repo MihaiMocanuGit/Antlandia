@@ -3,17 +3,14 @@
 
 #include <vector>
 
-#include "chunk.h"
 
 
-#include <iostream>
 template<class T>
 class ObjectHolder
 {
 private:
         
         unsigned int m_RESERVED_VECTOR_SPACE = -1;
-
 public:
 
         //all initialized objects are in here
@@ -43,7 +40,8 @@ public:
                 newObjects.resize(newObjects.size() + noOfObjects);
         }
 
-        //don't forget to manually init objects before; 
+        //don't forget to manually init objects before;
+        //Note: this doesn't actually insert the objects into chunkMap 
         void insertAllNewObjectsIntoHolder()
         {
                 inUseObjects.insert(inUseObjects.end(), newObjects.begin(), newObjects.end());

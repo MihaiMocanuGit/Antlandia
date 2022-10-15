@@ -15,13 +15,15 @@ class Ant : public  GenericObject
 		
 		float health;
 		float energy;
-		
+		float interactingRadius;
+
 		int getStatusCode();
 		void setStatusCode(int statusCode);
 
 		Ant();
-		Ant(sf::CircleShape &aShape, sf::Vector2f &aVelocity,  float aHealth, float aEnergy);
+		Ant(sf::CircleShape &aShape, sf::Vector2f &aVelocity,  float aHealth, float aEnergy, float aInteractingRadius);
 
+		void init(sf::CircleShape &aShape, sf::Vector2f &aVelocity,  float aHealth, float aEnergy, float aInteractingRadius);
 };
 
 #endif
