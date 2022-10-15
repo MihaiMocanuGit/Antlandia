@@ -25,7 +25,7 @@ private:
         {
                 
                 if(position.x >= 0 and position.y >= 0)
-                        if(position.x < Chunk::CHUNK_SIZE.x * MAP_SIZE_X and position.y < Chunk::CHUNK_SIZE.y * MAP_SIZE_Y )
+                        if(position.x <= Chunk::CHUNK_SIZE.x * MAP_SIZE_X and position.y <= Chunk::CHUNK_SIZE.y * MAP_SIZE_Y )
                                  return true;
                         else 
                                 return false;
@@ -52,7 +52,12 @@ private:
 
                         unsigned int xIndex = position.x / Chunk::CHUNK_SIZE.x;
                         unsigned int yIndex = position.y / Chunk::CHUNK_SIZE.y;
-
+                        
+                        //indexes are from 0 to (MAP_SIZE_ - 1), so if an ant is right on the edge, it would be out of bonds
+                        //so, the chunks on the last row/column are ever so slighty bigger
+                        if(xIndex == MAP_SIZE_X) xIndex--;
+                        if(yIndex == MAP_SIZE_Y) yIndex--;
+                        
                         return {xIndex, yIndex};
                 }
                 else 
