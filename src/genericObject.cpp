@@ -40,7 +40,7 @@ GenericObject::~GenericObject()
 {
     std::cout << '-' << pShape << '\t';
     
-    //delete pShape;
+    delete pShape;
     pShape = nullptr;
     std::cout << '-' << pShape << '\n';  
 }
