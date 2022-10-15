@@ -36,6 +36,17 @@ GenericObject::GenericObject(DEBBUG_TYPE &aShape)
     m_initPtrShape(aShape);
 }
 
+GenericObject::GenericObject(const GenericObject &object) 
+{
+    this->m_pHomeChunk = object.m_pHomeChunk;
+
+
+    this->m_initPtrShape(*object.pShape);
+
+    this->size = object.size;
+}
+
+
 GenericObject::~GenericObject()
 {
     std::cout << '-' << pShape << '\t';

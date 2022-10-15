@@ -14,7 +14,6 @@ class GenericObject
 		void m_initPtrShape();
 	public:
 		DEBBUG_TYPE *pShape = nullptr;
-		sf::Color color;
 
 		float size;
 
@@ -23,6 +22,8 @@ class GenericObject
 		
 		GenericObject();
 		GenericObject(DEBBUG_TYPE &aShape);
+
+		GenericObject(const GenericObject &object);
 
 		~GenericObject();
 
