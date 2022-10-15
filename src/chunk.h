@@ -18,7 +18,7 @@ class Chunk
 		}; 
 		
 	public:
-		static constexpr unsigned int MAX_ANTS_CHUNK = 2048;
+		static constexpr unsigned int MAX_ANTS_CHUNK = 2*1024;
 
 		unsigned int noOfAnts = 0;
 		std::array<Ant*, Chunk::MAX_ANTS_CHUNK> antsInChunk;

@@ -24,7 +24,7 @@ template<std::size_t SIZE_X, std::size_t SIZE_Y>
 void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector2u &windowSize, const std::string &windowTitle)
 {
     
-    objectOrganizer.ants.createNewObjects((1<<10) * SIZE_X * SIZE_Y);
+    objectOrganizer.ants.createNewObjects((1<<7) * SIZE_X * SIZE_Y);
     srand(time(0));
 
     for(auto & ant : objectOrganizer.ants.newObjects)
@@ -40,7 +40,7 @@ void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
     objectOrganizer.insertAntHolderIntoWorldChunks();
   
     sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), windowTitle);
-    window.setFramerateLimit(30);
+    window.setFramerateLimit(60);
 
     while (window.isOpen())
     {
@@ -53,9 +53,14 @@ void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
         {
             window.draw(*ant.pShape);
 
+            /*
             float x = tempTestRand(0, windowSize.x);
             float y = tempTestRand(0, windowSize.y);
-            ant.pShape->setPosition(x, y);
+            objectOrganizer.moveAntTo(ant, {x,y});
+            */      
+
+            sf::Vector2f offset{tempTestRand(-1.9, 2), tempTestRand(-1.9, 2)};
+            objectOrganizer.moveAntBy(ant, offset);
         }
         
         window.display();

@@ -2,6 +2,8 @@
 #define OBJECT_ORGANIZER_H
 
 #include <array>
+#include <stdexcept>
+#include <iostream>
 
 #include "chunk.h"
 #include "ant.h"
@@ -11,7 +13,7 @@
 
 
 
-#include <iostream>
+
 
 ///class responsible for creating chunkMap, it controls the structure logic and further calls
 template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
@@ -19,6 +21,17 @@ class ObjectOrganizer
 {
 private:
 
+        bool m_objectPositionFitsChunkMap(const sf::Vector2f &position)
+        {
+                
+                if(position.x >= 0 and position.y >= 0)
+                        if(position.x < Chunk::CHUNK_SIZE.x * MAP_SIZE_X and position.y < Chunk::CHUNK_SIZE.y * MAP_SIZE_Y )
+                                 return true;
+                        else 
+                                return false;
+                else
+                        return false;
+        }
         //create chunk map and inits all chunks
         void m_initChunkMap()
         {
@@ -32,31 +45,60 @@ private:
                Chunk::initAllChunks(chunkMap);    
         }
 
-        sf::Vector2u m_identifyChunkMapIndexForObject(const GenericObject &object)
-        {
-                sf::Vector2f objectPos = object.pShape->getPosition();
-                
-                unsigned int xIndex = objectPos.x / Chunk::CHUNK_SIZE.x;
-                unsigned int yIndex = objectPos.y / Chunk::CHUNK_SIZE.y;
+        sf::Vector2u m_identifyChunkMapIndexForPosition(const sf::Vector2f &position)
+        {       
+                if(m_objectPositionFitsChunkMap(position))
+                { 
 
-                return {xIndex, yIndex};
-        }
+                        unsigned int xIndex = position.x / Chunk::CHUNK_SIZE.x;
+                        unsigned int yIndex = position.y / Chunk::CHUNK_SIZE.y;
 
-        void m_insertAntIntoWorldChunk(Ant &ant)
-        {
-                if(ant.m_pHomeChunk == nullptr)
+                        return {xIndex, yIndex};
+                }
+                else 
                 {
-                        sf::Vector2u antPosition = m_identifyChunkMapIndexForObject(ant);
-
-                        unsigned int *pNoOfAnts = &chunkMap[antPosition.y][antPosition.x].noOfAnts;
-                        
-                        if(chunkMap[antPosition.y][antPosition.x].noOfAnts < Chunk::MAX_ANTS_CHUNK)
-                                chunkMap[antPosition.y][antPosition.x].antsInChunk[(*pNoOfAnts)++] = &ant;
-                        else std::cout << *pNoOfAnts << '\t';
-                        
-                        ant.m_pHomeChunk = (void*)(&chunkMap[antPosition.y][antPosition.x]);
+                        throw std::domain_error("object position doesn't fit into chunkMap");
                 }
         }
+
+
+
+        void m_removeAntFromWorldChunk(Ant &rAnt)
+        {
+                //std::cout << rAnt.pShape->getPosition().x << '\t';
+           
+                sf::Vector2u antMapIndex = m_identifyChunkMapIndexForPosition(rAnt.pShape->getPosition());
+
+                //deincrement the counter: noOfAnts used in Chunk 
+                //and set pointer of removed ant's home to be NULL
+                unsigned int *pNoOfAnts = &chunkMap[antMapIndex.y][antMapIndex.x].noOfAnts;
+        
+                (*pNoOfAnts)--;
+                chunkMap[antMapIndex.y][antMapIndex.x].antsInChunk[*pNoOfAnts] = nullptr;
+                
+                //remove home chunk
+                rAnt.m_pHomeChunk = nullptr;
+
+        }
+
+        void m_insertAntIntoWorldChunk(Ant &rAnt)
+        {
+                //std::cout << rAnt.pShape->getPosition().x << '\n';
+     
+                sf::Vector2u antMapIndex = m_identifyChunkMapIndexForPosition(rAnt.pShape->getPosition());
+
+                unsigned int *pNoOfAnts = &chunkMap[antMapIndex.y][antMapIndex.x].noOfAnts;
+                
+                if(chunkMap[antMapIndex.y][antMapIndex.x].noOfAnts < Chunk::MAX_ANTS_CHUNK)
+                        chunkMap[antMapIndex.y][antMapIndex.x].antsInChunk[(*pNoOfAnts)++] = &rAnt;
+                else 
+                        throw std::out_of_range("chunk is already full of ants");
+                
+                rAnt.m_pHomeChunk = (void*)(&chunkMap[antMapIndex.y][antMapIndex.x]);
+   
+        }
+
+
 public:
 
         static constexpr std::size_t noOfChunksX = MAP_SIZE_X;
@@ -81,6 +123,25 @@ public:
                 {
                         m_insertAntIntoWorldChunk(ant);
                 }
+        }
+
+        //ant must already be in ObjectHolder<Ant>
+        void moveAntTo(Ant &rAnt, sf::Vector2f newPosition)
+        {
+                //sf::Vector2u oldChunkIndex = m_identifyChunkMapIndexForPositon(rAnt.pShape->getPosition());
+                //sf::Vector2u newChunkIndex = m_identifyChunkMapIndexForPositon(newPosition);
+                //if(oldChunkIndex != newChunkIndex)
+                m_removeAntFromWorldChunk(rAnt);
+                rAnt.pShape->setPosition(newPosition);
+                m_insertAntIntoWorldChunk(rAnt);
+        }
+        //if the new position wouldn't fit into the chunkMap, the object wont be moved
+        void moveAntBy(Ant &rAnt, sf::Vector2f offset)
+        {
+
+                sf::Vector2f newPosition = rAnt.pShape->getPosition() + offset;
+                if(m_objectPositionFitsChunkMap(newPosition))
+                      moveAntTo(rAnt, newPosition);
         }
 
 };

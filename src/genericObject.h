@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
+
 class GenericObject
 {
 	private:
@@ -13,6 +14,7 @@ class GenericObject
 	public:
 		void *m_pHomeChunk = nullptr;
 
+		//need to make this private and only get and set what i need
 		sf::CircleShape *pShape = nullptr;
 
 		float size;
@@ -26,6 +28,7 @@ class GenericObject
 		GenericObject(const GenericObject &object);
 
 		~GenericObject();
+
 
 };
 
