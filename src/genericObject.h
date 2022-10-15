@@ -13,7 +13,6 @@ class GenericObject
 		void m_initPtrShape();
 	public:
 		sf::CircleShape *pShape = nullptr;
-		sf::Color color;
 
 		float size;
 
@@ -22,6 +21,8 @@ class GenericObject
 		
 		GenericObject();
 		GenericObject(sf::CircleShape &aShape);
+
+		GenericObject(const GenericObject &object);
 
 		~GenericObject();
 
