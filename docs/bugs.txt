@@ -1,5 +1,1 @@
-destructor for generic object is called twice, before it would also seg fault, but after changing this line
->>newObjects.resize(newObjects.size() + noOfObjects, T());
-into
->>newObjects.resize(newObjects.size() + noOfObjects);
-in file: objectHolder.h, function: void createNewObjects(unsigned int noOfObjects)
+#No known bugs as of yet, let's hope there really are none :))
