@@ -37,7 +37,7 @@ void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
     }
      
     objectOrganizer.ants.insertAllNewObjectsIntoHolder();
-   
+    objectOrganizer.insertAntHolderIntoWorldChunks();
   
     sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), windowTitle);
     window.setFramerateLimit(30);
@@ -66,7 +66,7 @@ void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
 
 int main()
 {
-    ObjectOrganizer<10,10> objectOrganizer;
+    ObjectOrganizer<20,20> objectOrganizer;
 
 
     

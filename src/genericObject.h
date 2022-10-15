@@ -7,17 +7,18 @@
 class GenericObject
 {
 	private:
-		void *m_pHomeChunk;
 
 		void m_initPtrShape(sf::CircleShape &object);
 		void m_initPtrShape();
 	public:
+		void *m_pHomeChunk = nullptr;
+
 		sf::CircleShape *pShape = nullptr;
 
 		float size;
 
-		void* getPtrHomeChunk();
-		void setPtrHomeChunk(void * pChunk);
+		//void* getPtrHomeChunk();
+		//void setPtrHomeChunk(void * pChunk);
 		
 		GenericObject();
 		GenericObject(sf::CircleShape &aShape);

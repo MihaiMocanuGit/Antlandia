@@ -56,3 +56,4 @@ GenericObject::~GenericObject()
     //std::cout << '-' << pShape << '\n';  
 }
 
+
