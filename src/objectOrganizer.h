@@ -45,7 +45,7 @@ private:
                Chunk::initAllChunks(chunkMap);    
         }
 
-        sf::Vector2u m_identifyChunkMapIndexForPosition(const sf::Vector2f &position)
+        sf::Vector2u m_identifyChunkMapIndexFromPosition(const sf::Vector2f &position)
         {       
                 if(m_objectPositionFitsChunkMap(position))
                 { 
@@ -54,7 +54,7 @@ private:
                         unsigned int yIndex = position.y / Chunk::CHUNK_SIZE.y;
                         
                         //indexes are from 0 to (MAP_SIZE_ - 1), so if an ant is right on the edge, it would be out of bonds
-                        //so, the chunks on the last row/column are ever so slighty bigger
+                        //to correct this, the chunks on the last row/column are made ever so slighty bigger
                         if(xIndex == MAP_SIZE_X) xIndex--;
                         if(yIndex == MAP_SIZE_Y) yIndex--;
                         
@@ -72,7 +72,7 @@ private:
         {
                 //std::cout << rAnt.pShape->getPosition().x << '\t';
            
-                sf::Vector2u antMapIndex = m_identifyChunkMapIndexForPosition(rAnt.pShape->getPosition());
+                sf::Vector2u antMapIndex = m_identifyChunkMapIndexFromPosition(rAnt.pShape->getPosition());
 
                 //deincrement the counter: noOfAnts used in Chunk 
                 //and set pointer of removed ant's home to be NULL
@@ -90,7 +90,7 @@ private:
         {
                 //std::cout << rAnt.pShape->getPosition().x << '\n';
      
-                sf::Vector2u antMapIndex = m_identifyChunkMapIndexForPosition(rAnt.pShape->getPosition());
+                sf::Vector2u antMapIndex = m_identifyChunkMapIndexFromPosition(rAnt.pShape->getPosition());
 
                 unsigned int *pNoOfAnts = &chunkMap[antMapIndex.y][antMapIndex.x].noOfAnts;
                 
@@ -133,8 +133,8 @@ public:
         //ant must already be in ObjectHolder<Ant>
         void moveAntTo(Ant &rAnt, sf::Vector2f newPosition)
         {
-                //sf::Vector2u oldChunkIndex = m_identifyChunkMapIndexForPositon(rAnt.pShape->getPosition());
-                //sf::Vector2u newChunkIndex = m_identifyChunkMapIndexForPositon(newPosition);
+                //sf::Vector2u oldChunkIndex = m_identifyChunkMapIndexFromPositon(rAnt.pShape->getPosition());
+                //sf::Vector2u newChunkIndex = m_identifyChunkMapIndexFromPositon(newPosition);
                 //if(oldChunkIndex != newChunkIndex)
                 m_removeAntFromWorldChunk(rAnt);
                 rAnt.pShape->setPosition(newPosition);

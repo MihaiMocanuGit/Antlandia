@@ -53,13 +53,7 @@ void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
         {
             window.draw(*ant.pShape);
 
-            /*
-            float x = tempTestRand(0, windowSize.x);
-            float y = tempTestRand(0, windowSize.y);
-            objectOrganizer.moveAntTo(ant, {x,y});
-            */      
-
-            sf::Vector2f offset{tempTestRand(-1.9, 2), tempTestRand(-1.9, 2)};
+            sf::Vector2f offset{tempTestRand(-1.76, 2), tempTestRand(-1.9, 2)};
             objectOrganizer.moveAntBy(ant, offset);
         }
         
