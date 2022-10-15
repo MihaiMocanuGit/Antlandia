@@ -18,12 +18,15 @@ class Chunk
 		}; 
 		
 	public:
-		static constexpr unsigned int MAX_ANTS_CHUNK = 255;
+		static constexpr unsigned int MAX_ANTS_CHUNK = 2*1024;
+
+		unsigned int noOfAnts = 0;
 		std::array<Ant*, Chunk::MAX_ANTS_CHUNK> antsInChunk;
 	    
 		sf::Vector2u chunkIndex;
 
-		static constexpr m_Size CHUNK_SIZE = {128, 128};
+		static constexpr m_Size CHUNK_SIZE = {50, 50};
+
 
 		Chunk *pNearbyChunks[3][3];
         

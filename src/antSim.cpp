@@ -24,23 +24,25 @@ template<std::size_t SIZE_X, std::size_t SIZE_Y>
 void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector2u &windowSize, const std::string &windowTitle)
 {
     
-    objectOrganizer.ants.createNewObjects((1<<10) * SIZE_X * SIZE_Y);
+    objectOrganizer.ants.createNewObjects((1<<7) * SIZE_X * SIZE_Y);
     srand(time(0));
 
     for(auto & ant : objectOrganizer.ants.newObjects)
     {
+        sf::CircleShape shape(1);
+        shape.setFillColor(sf::Color::Black);
+        shape.setPosition(tempTestRand(0, windowSize.x), tempTestRand(0, windowSize.y));
 
-        ant.pShape->setRadius(1);
-        ant.pShape->setFillColor(sf::Color::Black);
-        ant.pShape->setPosition(tempTestRand(0, windowSize.x), tempTestRand(0, windowSize.y));
+        sf::Vector2f velocity{0.07, 0.1};
+        ant.init(shape, velocity, 100, 100, 5);
        
     }
      
     objectOrganizer.ants.insertAllNewObjectsIntoHolder();
-   
+    objectOrganizer.insertAntHolderIntoWorldChunks();
   
     sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), windowTitle);
-    window.setFramerateLimit(30);
+    window.setFramerateLimit(60);
 
     while (window.isOpen())
     {
@@ -53,9 +55,8 @@ void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
         {
             window.draw(*ant.pShape);
 
-            float x = tempTestRand(0, windowSize.x);
-            float y = tempTestRand(0, windowSize.y);
-            ant.pShape->setPosition(x, y);
+            sf::Vector2f offset{tempTestRand(-2, 2), tempTestRand(-1.8, 2)};
+            objectOrganizer.moveAntBy(ant, offset);
         }
         
         window.display();
@@ -66,7 +67,7 @@ void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
 
 int main()
 {
-    ObjectOrganizer<10,10> objectOrganizer;
+    ObjectOrganizer<20,20> objectOrganizer;
 
 
     
