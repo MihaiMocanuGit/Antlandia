@@ -29,10 +29,12 @@ void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
 
     for(auto & ant : objectOrganizer.ants.newObjects)
     {
+        sf::CircleShape shape(1);
+        shape.setFillColor(sf::Color::Black);
+        shape.setPosition(tempTestRand(0, windowSize.x), tempTestRand(0, windowSize.y));
 
-        ant.pShape->setRadius(1);
-        ant.pShape->setFillColor(sf::Color::Black);
-        ant.pShape->setPosition(tempTestRand(0, windowSize.x), tempTestRand(0, windowSize.y));
+        sf::Vector2f velocity{0.07, 0.1};
+        ant.init(shape, velocity, 100, 100, 5);
        
     }
      
@@ -53,7 +55,7 @@ void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
         {
             window.draw(*ant.pShape);
 
-            sf::Vector2f offset{tempTestRand(-1.76, 2), tempTestRand(-1.9, 2)};
+            sf::Vector2f offset{tempTestRand(-2, 2), tempTestRand(-1.8, 2)};
             objectOrganizer.moveAntBy(ant, offset);
         }
         
