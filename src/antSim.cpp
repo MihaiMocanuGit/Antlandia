@@ -24,7 +24,7 @@ template<std::size_t SIZE_X, std::size_t SIZE_Y>
 void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector2u &windowSize, const std::string &windowTitle)
 {
     
-    objectOrganizer.ants.createNewObjects((1<<12) * SIZE_X * SIZE_Y);
+    objectOrganizer.ants.createNewObjects((1<<10) * SIZE_X * SIZE_Y);
     srand(time(0));
 
     for(auto & ant : objectOrganizer.ants.newObjects)
