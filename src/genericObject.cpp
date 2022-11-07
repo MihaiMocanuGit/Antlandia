@@ -67,6 +67,11 @@ void GenericObject::moveBy(sf::Vector2f offset)
     m_pShape->setPosition(currentPosition + offset);
 }
 
+const void *GenericObject::getPtrHomeChunk() const
+{
+    return m_pHomeChunk;
+}
+
 void GenericObject::setPtrHomeChunk(void *pHomeChunk)
 {
     m_pHomeChunk = pHomeChunk;

@@ -3,5 +3,5 @@
 [X]!!refactor makefile
 [ ]integrate sfml shapes into genericObject
     [X]sfml shapes use too much memory, need to rethink this, for now we are alocating sf::CircleShape on the heap
-    []make sf::CircleShape in genericObject private and implement getters and setters for only what I need
+    [X]make sf::CircleShape in genericObject private and implement getters and setters for only what I need
 []add moveTo(), moveBy() etc to GenericObject, but keep similar functions in ObjectOrganizer which call subsequent functions in GenericObject but also check if they fit in ChunkMap

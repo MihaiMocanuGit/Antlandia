@@ -21,12 +21,7 @@ class GenericObject
 		sf::Vector2f m_velocity;
 
 	public:
-		
 
-
-
-		//void* getPtrHomeChunk();
-		//void setPtrHomeChunk(void * pChunk);
 		
 		GenericObject();
 		GenericObject(sf::CircleShape &aShape, sf::Vector2f aVelocity);
@@ -38,11 +33,12 @@ class GenericObject
 		void moveTo(sf::Vector2f position);
 		void moveBy(sf::Vector2f offset);
 
+		const void *getPtrHomeChunk() const;
 		void setPtrHomeChunk(void *pHomeChunk);
 
 		const sf::Vector2f &getPosition() const;
 		void setPosition(sf::Vector2f position);
-		
+
 		const sf::CircleShape &getShape() const;
 
 
