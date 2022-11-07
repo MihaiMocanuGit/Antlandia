@@ -11,7 +11,7 @@ class Ant : public  GenericObject
 	private: 
 		int m_statusCode; //to be defined later, ex 0 = standby, 1 = searching etc
 	public:
-		sf::Vector2f velocity;
+
 		
 		float health;
 		float energy;

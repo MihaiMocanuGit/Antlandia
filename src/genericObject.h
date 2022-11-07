@@ -16,12 +16,13 @@ class GenericObject
 
 		//need to make this private and only get and set what i need
 		sf::CircleShape *pShape = nullptr;
+		sf::Vector2f velocity;
 
 		//void* getPtrHomeChunk();
 		//void setPtrHomeChunk(void * pChunk);
 		
 		GenericObject();
-		GenericObject(sf::CircleShape &aShape);
+		GenericObject(sf::CircleShape &aShape, sf::Vector2f aVelocity);
 
 		GenericObject(const GenericObject &object);
 
