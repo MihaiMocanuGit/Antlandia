@@ -47,7 +47,7 @@ void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
     
     
     initAnts(objectOrganizer, windowSize);
-    
+
     sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), windowTitle);
     window.setFramerateLimit(60);
 
@@ -60,7 +60,7 @@ void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
         
         for(auto & ant : objectOrganizer.ants.inUseObjects)
         {
-            window.draw(*ant.pShape);
+            window.draw(ant.getShape());
 
             sf::Vector2f offset{tempTestRand(-2, 2), tempTestRand(-1.8, 2)};
             objectOrganizer.moveAntBy(ant, offset);

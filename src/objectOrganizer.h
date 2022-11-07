@@ -71,7 +71,7 @@ private:
         void m_removeAntFromWorldChunk(Ant &rAnt)
         {
 
-                sf::Vector2u antMapIndex = m_identifyChunkMapIndexFromPosition(rAnt.pShape->getPosition());
+                sf::Vector2u antMapIndex = m_identifyChunkMapIndexFromPosition(rAnt.getPosition());
 
                 //deincrement the counter: noOfAnts used in Chunk 
                 //and set pointer of removed ant's home to be NULL
@@ -90,7 +90,7 @@ private:
         {
                 //std::cout << rAnt.pShape->getPosition().x << '\n';
      
-                sf::Vector2u antMapIndex = m_identifyChunkMapIndexFromPosition(rAnt.pShape->getPosition());
+                sf::Vector2u antMapIndex = m_identifyChunkMapIndexFromPosition(rAnt.getPosition());
 
                 unsigned int *pNoOfAnts = &chunkMap[antMapIndex.y][antMapIndex.x].noOfAnts;
                 
@@ -137,14 +137,14 @@ public:
                 //sf::Vector2u newChunkIndex = m_identifyChunkMapIndexFromPositon(newPosition);
                 //if(oldChunkIndex != newChunkIndex)
                 m_removeAntFromWorldChunk(rAnt);
-                rAnt.pShape->setPosition(newPosition);
+                rAnt.setPosition(newPosition);
                 m_insertAntIntoWorldChunk(rAnt);
         }
         //if the new position wouldn't fit into the chunkMap, the object wont be moved
         void moveAntBy(Ant &rAnt, sf::Vector2f offset)
         {
 
-                sf::Vector2f newPosition = rAnt.pShape->getPosition() + offset;
+                sf::Vector2f newPosition = rAnt.getPosition() + offset;
                 if(m_objectPositionFitsChunkMap(newPosition))
                       moveAntTo(rAnt, newPosition);
         }

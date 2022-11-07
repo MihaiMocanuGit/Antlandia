@@ -14,8 +14,8 @@ Ant::Ant(sf::CircleShape &aShape, sf::Vector2f &aVelocity, float aHealth, float 
 
 void Ant::init(sf::CircleShape &aShape, sf::Vector2f &aVelocity,  float aHealth, float aEnergy, float aInteractingRadius)
 {
-	*pShape = aShape;
-	velocity = aVelocity;
+	*m_pShape = aShape;
+	m_velocity = aVelocity;
 	health = aHealth;
 	energy = aEnergy;
 	interactingRadius = aInteractingRadius;
