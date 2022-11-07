@@ -70,19 +70,19 @@ private:
 
         void m_removeAntFromWorldChunk(Ant &rAnt)
         {
-                //std::cout << rAnt.pShape->getPosition().x << '\t';
-           
+
                 sf::Vector2u antMapIndex = m_identifyChunkMapIndexFromPosition(rAnt.pShape->getPosition());
 
                 //deincrement the counter: noOfAnts used in Chunk 
                 //and set pointer of removed ant's home to be NULL
                 unsigned int *pNoOfAnts = &chunkMap[antMapIndex.y][antMapIndex.x].noOfAnts;
         
+                //also set the removed ant to null
                 (*pNoOfAnts)--;
                 chunkMap[antMapIndex.y][antMapIndex.x].antsInChunk[*pNoOfAnts] = nullptr;
                 
                 //remove home chunk
-                rAnt.m_pHomeChunk = nullptr;
+                rAnt.setPtrHomeChunk(nullptr);
 
         }
 
@@ -99,7 +99,7 @@ private:
                 else 
                         throw std::out_of_range("chunk is already full of ants");
                 
-                rAnt.m_pHomeChunk = (void*)(&chunkMap[antMapIndex.y][antMapIndex.x]);
+                rAnt.setPtrHomeChunk((void*)(&chunkMap[antMapIndex.y][antMapIndex.x]));
    
         }
 

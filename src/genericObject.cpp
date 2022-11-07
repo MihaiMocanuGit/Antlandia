@@ -56,4 +56,18 @@ GenericObject::~GenericObject()
     //std::cout << '-' << pShape << '\n';  
 }
 
+void GenericObject::moveTo(sf::Vector2f position)
+{
+    pShape->setPosition(position);
+}
 
+void GenericObject::moveBy(sf::Vector2f offset)
+{
+    sf::Vector2f currentPosition = pShape->getPosition();
+    pShape->setPosition(currentPosition + offset);
+}
+
+void GenericObject::setPtrHomeChunk(void *pHomeChunk)
+{
+    m_pHomeChunk = pHomeChunk;
+}
