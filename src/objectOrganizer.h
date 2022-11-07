@@ -66,8 +66,20 @@ private:
                 }
         }
 
+        /*
+        void m_findIndexOfAntInChunk(const Ant &ant)
+        {
+                 sf::Vector2u antMapIndex = m_identifyChunkMapIndexFromPosition(ant.getPosition());
 
+                 for(unsigned int index = 0; index < ants.inUseObjects.size(); index++)
+                 {
+                        if(&ant == &ants.inUseObjects[index])
+                                return index;
+                 }
+                 return -1;
 
+        }
+        //THIS IS SO WRONG
         void m_removeAntFromWorldChunk(Ant &rAnt)
         {
 
@@ -75,6 +87,7 @@ private:
 
                 //deincrement the counter: noOfAnts used in Chunk 
                 //and set pointer of removed ant's home to be NULL
+                //I'm using pointer to automatically sync all modifications on noOfAnTS
                 unsigned int *pNoOfAnts = &chunkMap[antMapIndex.y][antMapIndex.x].noOfAnts;
         
                 //also set the removed ant to null
@@ -102,6 +115,7 @@ private:
                 rAnt.setPtrHomeChunk((void*)(&chunkMap[antMapIndex.y][antMapIndex.x]));
    
         }
+        */
 
 
 public:
@@ -130,6 +144,7 @@ public:
                 }
         }
 
+        /*
         //ant must already be in ObjectHolder<Ant>
         void moveAntTo(Ant &rAnt, sf::Vector2f newPosition)
         {
@@ -148,6 +163,7 @@ public:
                 if(m_objectPositionFitsChunkMap(newPosition))
                       moveAntTo(rAnt, newPosition);
         }
+        */
 
 };
 
