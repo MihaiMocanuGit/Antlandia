@@ -21,9 +21,8 @@ float tempTestRand(float LO, float HI)
 }
 
 template<std::size_t SIZE_X, std::size_t SIZE_Y>
-void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector2u &windowSize, const std::string &windowTitle)
+void initAnts(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector2u &windowSize)
 {
-    
     objectOrganizer.ants.createNewObjects((1<<7) * SIZE_X * SIZE_Y);
     srand(time(0));
 
@@ -40,7 +39,15 @@ void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
      
     objectOrganizer.ants.insertAllNewObjectsIntoHolder();
     objectOrganizer.insertAntHolderIntoWorldChunks();
-  
+}
+
+template<std::size_t SIZE_X, std::size_t SIZE_Y>
+void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector2u &windowSize, const std::string &windowTitle)
+{
+    
+    
+    initAnts(objectOrganizer, windowSize);
+    
     sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), windowTitle);
     window.setFramerateLimit(60);
 
