@@ -57,15 +57,27 @@ void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
 
         //clear screen and fill with background color
         window.clear(sf::Color::White);
-        
+
+        /*
         for(auto & ant : objectOrganizer.ants.inUseObjects)
         {
+
             window.draw(ant.getShape());
 
             sf::Vector2f offset{tempTestRand(-2, 2), tempTestRand(-1.8, 2)};
             //objectOrganizer.moveAntBy(ant, offset);
         }
-        
+        */
+
+        for(unsigned int i = 0; i < objectOrganizer.ants.inUseObjects.size(); i++)
+        {
+            Ant *pCurrentAnt = &objectOrganizer.ants.inUseObjects[i];
+
+            window.draw(pCurrentAnt->getShape());
+
+            sf::Vector2f offset{tempTestRand(-2, 2), tempTestRand(-1.8, 2)};
+            objectOrganizer.moveAntAtIndexBy(i, offset);
+        }
         window.display();
     }
     
