@@ -144,6 +144,28 @@ public:
                 }
         }
 
+        //NOTE, WRITTEN THIS WHILE DRUNK, MUST RECHECK WHEN SOBER
+        void moveAntAtIndexTo(unsigned int index, sf::Vector2f newPosition)
+        {
+                sf::Vector2u currentChunkIndex = m_findIndexOfAntInChunk(ants.inUseObjects[index].getPosition)
+                sf::Vector2u newChunkIndex = m_findIndexOfAntInChunk(newPosition)
+
+                if(currentChunkIndex == newChunkIndex)
+                {
+                        ants.inUseObjects[index].setPosition(newPosition)
+                }
+                else
+                {
+                        void *pNewHomeChunk = (void*)(&chunkMap[newChunkIndex.y][newChunkIndex.x])
+                        ants.inUseObjects[index].setPtrHomeChunk(pNewHomeChunk)
+                        ants.inUseObjects[index].setPosition(newPosition)
+                }
+        }
+
+        void moveAntAtIndexdTo(unsigned int index, sf::Vector2f positionOffset)
+        {
+                moveAntAtIndexdTo(index,  ants.inUseObjects[index].getPosition() + positionOffset)
+        }
         /*
         //ant must already be in ObjectHolder<Ant>
         void moveAntTo(Ant &rAnt, sf::Vector2f newPosition)
