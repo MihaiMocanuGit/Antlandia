@@ -63,7 +63,7 @@ void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
             window.draw(ant.getShape());
 
             sf::Vector2f offset{tempTestRand(-2, 2), tempTestRand(-1.8, 2)};
-            objectOrganizer.moveAntBy(ant, offset);
+            //objectOrganizer.moveAntBy(ant, offset);
         }
         
         window.display();
@@ -79,7 +79,7 @@ int main()
 
     
     const sf::Vector2u windowSize = {objectOrganizer.noOfChunksX * Chunk::CHUNK_SIZE.x, objectOrganizer.noOfChunksY * Chunk::CHUNK_SIZE.y};
-    //startApp(objectOrganizer, windowSize, "AntLandia :)");
+    startApp(objectOrganizer, windowSize, "AntLandia :)");
     
     return 0;
 }

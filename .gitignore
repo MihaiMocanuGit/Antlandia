@@ -1,4 +1,5 @@
-builds/objects
+*.o
+*.d
 antSim
 .vscode
 .idea
