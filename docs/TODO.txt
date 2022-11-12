@@ -8,4 +8,8 @@
 
 [ ]For ObjectOrganizationLogic:
     [X]Add moveTo(), moveBy() etc to GenericObject
-    [ ]Keep similar functions in ObjectOrganizer which call subsequent functions in GenericObject but also check if they fit in ChunkMap
+    [X]Keep similar functions in ObjectOrganizer which call subsequent functions in GenericObject but also check if they fit in ChunkMap
+    [ ]Change m_findIndexInChunkOfAnt(int index) so that it calculates the index in O(1)
+    [ ]Separate ChunkMap from ObjectOrganization, (make ChunkMap class)
+    [ ]Needs testing and a refactoring
+    [ ]Optimization will surely be needed
