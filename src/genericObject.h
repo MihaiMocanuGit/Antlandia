@@ -11,21 +11,36 @@ class GenericObject
 
 		void m_initPtrShape(sf::CircleShape &object);
 		void m_initPtrShape();
-	public:
+
+	protected:
+
 		void *m_pHomeChunk = nullptr;
 
-		//need to make this private and only get and set what i need
-		sf::CircleShape *pShape = nullptr;
 
-		//void* getPtrHomeChunk();
-		//void setPtrHomeChunk(void * pChunk);
+		sf::CircleShape *m_pShape = nullptr;
+		sf::Vector2f m_velocity;
+
+	public:
+
 		
 		GenericObject();
-		GenericObject(sf::CircleShape &aShape);
+		GenericObject(sf::CircleShape &aShape, sf::Vector2f aVelocity);
 
 		GenericObject(const GenericObject &object);
 
 		~GenericObject();
+
+		void moveTo(sf::Vector2f position);
+		void moveBy(sf::Vector2f offset);
+
+		const void *getPtrHomeChunk() const;
+		void setPtrHomeChunk(void *pHomeChunk);
+
+		const sf::Vector2f &getPosition() const;
+		void setPosition(sf::Vector2f position);
+
+		const sf::CircleShape &getShape() const;
+
 
 
 };

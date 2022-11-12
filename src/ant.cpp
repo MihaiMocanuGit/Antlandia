@@ -7,15 +7,15 @@ Ant::Ant() : GenericObject()
 
 
 Ant::Ant(sf::CircleShape &aShape, sf::Vector2f &aVelocity, float aHealth, float aEnergy, float aInteractingRadius) 
-		: GenericObject(aShape), velocity{aVelocity}, health{aHealth}, energy{aEnergy}, interactingRadius{aInteractingRadius}
+		: GenericObject(aShape, aVelocity), health{aHealth}, energy{aEnergy}, interactingRadius{aInteractingRadius}
 {
 
 }
 
 void Ant::init(sf::CircleShape &aShape, sf::Vector2f &aVelocity,  float aHealth, float aEnergy, float aInteractingRadius)
 {
-	*pShape = aShape;
-	velocity = aVelocity;
+	*m_pShape = aShape;
+	m_velocity = aVelocity;
 	health = aHealth;
 	energy = aEnergy;
 	interactingRadius = aInteractingRadius;

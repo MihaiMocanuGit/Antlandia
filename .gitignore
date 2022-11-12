@@ -1,0 +1,5 @@
+*.o
+*.d
+antSim
+.vscode
+.idea

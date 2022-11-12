@@ -1,0 +1,2 @@
+g++ will generate .o and .d files in here, they can be ignored
+Run "make clean" to delete all of them if you so wish
