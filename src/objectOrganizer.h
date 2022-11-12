@@ -66,7 +66,7 @@ private:
                 }
         }
 
-        /*
+/*
         void m_findIndexOfAntInChunk(const Ant &ant)
         {
                  sf::Vector2u antMapIndex = m_identifyChunkMapIndexFromPosition(ant.getPosition());
@@ -79,43 +79,44 @@ private:
                  return -1;
 
         }
-        //THIS IS SO WRONG
-        void m_removeAntFromWorldChunk(Ant &rAnt)
-        {
 
-                sf::Vector2u antMapIndex = m_identifyChunkMapIndexFromPosition(rAnt.getPosition());
+    //THIS IS SO WRONG
+    void m_removeAntFromWorldChunk(Ant &rAnt)
+    {
 
-                //deincrement the counter: noOfAnts used in Chunk 
-                //and set pointer of removed ant's home to be NULL
-                //I'm using pointer to automatically sync all modifications on noOfAnTS
-                unsigned int *pNoOfAnts = &chunkMap[antMapIndex.y][antMapIndex.x].noOfAnts;
-        
-                //also set the removed ant to null
-                (*pNoOfAnts)--;
-                chunkMap[antMapIndex.y][antMapIndex.x].antsInChunk[*pNoOfAnts] = nullptr;
-                
-                //remove home chunk
-                rAnt.setPtrHomeChunk(nullptr);
+            sf::Vector2u antMapIndex = m_identifyChunkMapIndexFromPosition(rAnt.getPosition());
 
-        }
+            //deincrement the counter: noOfAnts used in Chunk
+            //and set pointer of removed ant's home to be NULL
+            //I'm using pointer to automatically sync all modifications on noOfAnTS
+            unsigned int *pNoOfAnts = &chunkMap[antMapIndex.y][antMapIndex.x].noOfAnts;
 
-        void m_insertAntIntoWorldChunk(Ant &rAnt)
-        {
-                //std::cout << rAnt.pShape->getPosition().x << '\n';
-     
-                sf::Vector2u antMapIndex = m_identifyChunkMapIndexFromPosition(rAnt.getPosition());
+            //also set the removed ant to null
+            (*pNoOfAnts)--;
+            chunkMap[antMapIndex.y][antMapIndex.x].antsInChunk[*pNoOfAnts] = nullptr;
 
-                unsigned int *pNoOfAnts = &chunkMap[antMapIndex.y][antMapIndex.x].noOfAnts;
-                
-                if(chunkMap[antMapIndex.y][antMapIndex.x].noOfAnts < Chunk::MAX_ANTS_CHUNK)
-                        chunkMap[antMapIndex.y][antMapIndex.x].antsInChunk[(*pNoOfAnts)++] = &rAnt;
-                else 
-                        throw std::out_of_range("chunk is already full of ants");
-                
-                rAnt.setPtrHomeChunk((void*)(&chunkMap[antMapIndex.y][antMapIndex.x]));
-   
-        }
-        */
+            //remove home chunk
+            rAnt.setPtrHomeChunk(nullptr);
+
+    }
+    */
+    void m_insertAntIntoWorldChunk(Ant &rAnt)
+    {
+            //std::cout << rAnt.pShape->getPosition().x << '\n';
+
+            sf::Vector2u antMapIndex = m_identifyChunkMapIndexFromPosition(rAnt.getPosition());
+
+            unsigned int *pNoOfAnts = &chunkMap[antMapIndex.y][antMapIndex.x].noOfAnts;
+
+            if(chunkMap[antMapIndex.y][antMapIndex.x].noOfAnts < Chunk::MAX_ANTS_CHUNK)
+                    chunkMap[antMapIndex.y][antMapIndex.x].antsInChunk[(*pNoOfAnts)++] = &rAnt;
+            else
+                    throw std::out_of_range("chunk is already full of ants");
+
+            rAnt.setPtrHomeChunk((void*)(&chunkMap[antMapIndex.y][antMapIndex.x]));
+
+    }
+
 
 
 public:
@@ -147,24 +148,25 @@ public:
         //NOTE, WRITTEN THIS WHILE DRUNK, MUST RECHECK WHEN SOBER
         void moveAntAtIndexTo(unsigned int index, sf::Vector2f newPosition)
         {
-                sf::Vector2u currentChunkIndex = m_findIndexOfAntInChunk(ants.inUseObjects[index].getPosition)
-                sf::Vector2u newChunkIndex = m_findIndexOfAntInChunk(newPosition)
+                Ant *pCurrentAnt = &ants.inUseObjects[index];
+                sf::Vector2u currentChunkIndex = m_identifyChunkMapIndexFromPosition(pCurrentAnt->getPosition());
+                sf::Vector2u newChunkIndex = m_identifyChunkMapIndexFromPosition(pCurrentAnt->getPosition());
 
                 if(currentChunkIndex == newChunkIndex)
                 {
-                        ants.inUseObjects[index].setPosition(newPosition)
+                        pCurrentAnt->setPosition(newPosition);
                 }
                 else
                 {
-                        void *pNewHomeChunk = (void*)(&chunkMap[newChunkIndex.y][newChunkIndex.x])
-                        ants.inUseObjects[index].setPtrHomeChunk(pNewHomeChunk)
-                        ants.inUseObjects[index].setPosition(newPosition)
+                        void *pNewHomeChunk = (void*)(&chunkMap[newChunkIndex.y][newChunkIndex.x]);
+                        pCurrentAnt->setPtrHomeChunk(pNewHomeChunk);
+                        pCurrentAnt->setPosition(newPosition);
                 }
         }
 
-        void moveAntAtIndexdTo(unsigned int index, sf::Vector2f positionOffset)
+        void moveAntAtIndexBy(unsigned int index, sf::Vector2f positionOffset)
         {
-                moveAntAtIndexdTo(index,  ants.inUseObjects[index].getPosition() + positionOffset)
+                moveAntAtIndexTo(index,  ants.inUseObjects[index].getPosition() + positionOffset);
         }
         /*
         //ant must already be in ObjectHolder<Ant>
