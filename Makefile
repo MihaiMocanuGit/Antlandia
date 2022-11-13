@@ -3,7 +3,7 @@ CFLAGS = -g -fsanitize=address -Wall -O0
 SRC_DIR = ./src
 OBJ_DIR = ./builds/objects
 SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
-OBJ_FILE = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
+OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
 TARGET = antSim
 LIBS = -lsfml-graphics -lsfml-window -lsfml-system
 all: $(TARGET)
