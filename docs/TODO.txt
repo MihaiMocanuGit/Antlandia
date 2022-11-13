@@ -13,3 +13,5 @@
     [ ]Separate ChunkMap from ObjectOrganization, (make ChunkMap class)
     [ ]Needs testing and a refactoring
     [ ]Optimization will surely be needed
+
+[ ]Increase Ant capacity in chunk by using a std::vector to hold additional ants
