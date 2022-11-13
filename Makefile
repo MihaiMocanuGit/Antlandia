@@ -16,7 +16,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
-	$(RM) builds/$(TARGET) builds/objects/*.o
+	$(RM) builds/$(TARGET) builds/objects/*.o builds/objects/*.d
 
 run:
 	make && builds/./antSim
