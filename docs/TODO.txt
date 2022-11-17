@@ -15,4 +15,4 @@
     [ ]Optimization will surely be needed
     [ ]Keeping all ants in a std:vector might be too slow
 
-[ ]Increase Ant capacity in chunk by using a std::vector to hold additional ants
+[ ]IF NEEDED Increase Ant capacity in chunk by using a std::vector to hold additional ants
