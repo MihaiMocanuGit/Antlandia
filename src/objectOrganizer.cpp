@@ -5,15 +5,15 @@
 template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
 void ObjectOrganizer<MAP_SIZE_X, MAP_SIZE_Y>::m_initChunkMap()
 {
-    for(unsigned int y = 0; y < chunkMap.size(); y++)
+    for(unsigned int y = 0; y < map.size(); y++)
     {
-        for(unsigned int x = 0; x < chunkMap[y].size(); x++)
+        for(unsigned int x = 0; x < map[y].size(); x++)
         {
-            chunkMap[y][x] = Chunk({x,y});
+            map[y][x] = Chunk({x,y});
         }
     }
     
-    Chunk::initAllChunks(chunkMap);    
+    Chunk::initAllChunks(map);
 }
 
 

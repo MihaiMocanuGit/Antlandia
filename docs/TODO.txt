@@ -1,6 +1,9 @@
 [x]Separate ObjectHolder from ObjectOrganizer and place in new header/cpp file
 [X]Link new headers (objectHolder.h, objectOrganizer.h) in makefile
 [X]!!refactor makefile
+
+[ ]Comments
+[ ]Documentation
 [ ]Integrate sfml shapes into genericObject
     [X]Sfml shapes use too much memory, need to rethink this, for now we are alocating sf::CircleShape on the heap
     [X]Make sf::CircleShape in genericObject private and implement getters and setters for only what I need
@@ -9,10 +12,12 @@
 [ ]For ObjectOrganizationLogic:
     [X]Add moveTo(), moveBy() etc to GenericObject
     [X]Keep similar functions in ObjectOrganizer which call subsequent functions in GenericObject but also check if they fit in ChunkMap
-    [ ]Change m_findIndexInChunkOfAnt(int index) so that it calculates the index in O(1)
     [ ]Separate ChunkMap from ObjectOrganization, (make ChunkMap class)
     [ ]Needs testing and refactoring
     [ ]Optimization will surely be needed
     [ ]Keeping all ants in a std:vector might be too slow
 
+    [ ]ChunkMap
+        [ ]Refactor naming (delete ChunkMap references in names, we are already in chunk map class)
+        [ ]Maybe make class iterable, so that I dont have to call chunkMap.map[i] and instead do chunkMap[i]
 [ ]IF NEEDED Increase Ant capacity in chunk by using a std::vector to hold additional ants

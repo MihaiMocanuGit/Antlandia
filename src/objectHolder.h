@@ -41,7 +41,7 @@ public:
         }
 
         //don't forget to manually init objects before;
-        //Note: this doesn't actually insert the objects into chunkMap 
+        //Note: this doesn't actually insert the objects into map
         void insertAllNewObjectsIntoHolder()
         {
                 inUseObjects.insert(inUseObjects.end(), newObjects.begin(), newObjects.end());

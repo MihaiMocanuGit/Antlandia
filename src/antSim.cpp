@@ -85,7 +85,7 @@ int main()
 
 
     
-    const sf::Vector2u windowSize = {objectOrganizer.noOfChunksX * Chunk::CHUNK_SIZE.x, objectOrganizer.noOfChunksY * Chunk::CHUNK_SIZE.y};
+    const sf::Vector2u windowSize = {objectOrganizer.NO_OF_CHUNKS_X * Chunk::CHUNK_SIZE.x, objectOrganizer.NO_OF_CHUNKS_Y * Chunk::CHUNK_SIZE.y};
     startApp(objectOrganizer, windowSize, "AntLandia :)");
     
     return 0;
