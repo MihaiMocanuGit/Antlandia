@@ -24,6 +24,7 @@ class GenericObject
 
 		
 		GenericObject();
+        GenericObject(sf::CircleShape &aShape);
 		GenericObject(sf::CircleShape &aShape, sf::Vector2f aVelocity);
 
 		GenericObject(const GenericObject &object);

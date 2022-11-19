@@ -30,12 +30,21 @@ GenericObject::GenericObject()
     m_initPtrShape();
 }
 
+GenericObject::GenericObject(sf::CircleShape &aShape)
+{
+
+    m_initPtrShape(aShape);
+    m_velocity = {0, 0};
+}
+
 GenericObject::GenericObject(sf::CircleShape &aShape, sf::Vector2f aVelocity) 
 {
 
     m_initPtrShape(aShape);
     m_velocity = aVelocity;
 }
+
+
 
 GenericObject::GenericObject(const GenericObject &object) 
 {

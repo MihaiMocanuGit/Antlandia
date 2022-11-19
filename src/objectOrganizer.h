@@ -20,7 +20,7 @@ private:
     unsigned int m_findIndexInChunkOfAnt(unsigned int indexOfAnt)
     {
         Ant *pCurrentAnt = &ants.inUseObjects[indexOfAnt];
-        sf::Vector2u antMapIndex = chunkMap.identifyChunkMapIndexFromPosition(pCurrentAnt->getPosition());
+        sf::Vector2u antMapIndex = chunkMap.identifyMapIndexFromPosition(pCurrentAnt->getPosition());
 
         for (unsigned int i = 0; i < chunkMap.map[antMapIndex.y][antMapIndex.x].MAX_ANTS_CHUNK; ++i)
         {
@@ -35,7 +35,7 @@ private:
     {
         Ant *pCurrentAnt = &ants.inUseObjects[indexOfAnt];
 
-        sf::Vector2u antMapIndex = chunkMap.identifyChunkMapIndexFromPosition(pCurrentAnt->getPosition());
+        sf::Vector2u antMapIndex = chunkMap.identifyMapIndexFromPosition(pCurrentAnt->getPosition());
         unsigned int indexInChunk = m_findIndexInChunkOfAnt(indexOfAnt);
 
         chunkMap.map[antMapIndex.y][antMapIndex.x].antsInChunk[indexInChunk] = nullptr;
@@ -52,7 +52,7 @@ private:
          * When such a spot is found, we put our ant into it and increment the ants in chunk counter
          */
         Ant *pCurrentAnt = &ants.inUseObjects[indexOfAnt];
-        sf::Vector2u antMapIndex = chunkMap.identifyChunkMapIndexFromPosition(pCurrentAnt->getPosition());
+        sf::Vector2u antMapIndex = chunkMap.identifyMapIndexFromPosition(pCurrentAnt->getPosition());
 
         if (Chunk::MAX_ANTS_CHUNK <= chunkMap.map[antMapIndex.y][antMapIndex.x].noOfAnts)
             throw std::out_of_range("Chunk is already full");
@@ -78,7 +78,7 @@ public:
 
     ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> chunkMap;
     ObjectHolder<Ant> ants{Chunk::MAX_ANTS_CHUNK * MAP_SIZE_X * MAP_SIZE_Y};
-    //ObjectHolder<GenericObject> genericObjects{Chunk::MAX_ANTS_CHUNK * noOfChunksX * noOfChunksY};
+    ObjectHolder<GenericObject> genericObjects{Chunk::MAX_ANTS_CHUNK * MAP_SIZE_X * MAP_SIZE_Y};
 
 
     //needs to be called only once after every objectHolder.insertAllNewObjectsIntoHolder() call
@@ -93,11 +93,11 @@ public:
     //NOTE, WRITTEN THIS WHILE DRUNK, MUST RECHECK WHEN SOBER
     void moveAntAtIndexTo(unsigned int index, sf::Vector2f newPosition)
     {
-        if (chunkMap.objectPositionFitsChunkMap(newPosition))
+        if (chunkMap.objectPositionFitsMap(newPosition))
         {
             Ant *pCurrentAnt = &ants.inUseObjects[index];
-            sf::Vector2u currentChunkIndex = chunkMap.identifyChunkMapIndexFromPosition(pCurrentAnt->getPosition());
-            sf::Vector2u newChunkIndex = chunkMap.identifyChunkMapIndexFromPosition(newPosition);
+            sf::Vector2u currentChunkIndex = chunkMap.identifyMapIndexFromPosition(pCurrentAnt->getPosition());
+            sf::Vector2u newChunkIndex = chunkMap.identifyMapIndexFromPosition(newPosition);
 
             if (currentChunkIndex == newChunkIndex)
             {

@@ -11,7 +11,7 @@ class ChunkMap
 {
 private:
     //create chunk map and inits all chunks
-    void m_initChunkMap()
+    void m_initMap()
     {
         for (unsigned int y = 0; y < map.size(); y++)
         {
@@ -28,11 +28,11 @@ public:
 
     ChunkMap()
     {
-        m_initChunkMap();
+        m_initMap();
     }
 
 
-    bool objectPositionFitsChunkMap(const sf::Vector2f &position)
+    bool objectPositionFitsMap(const sf::Vector2f &position)
     {
 
         if (position.x >= 0 and position.y >= 0)
@@ -45,9 +45,9 @@ public:
     }
 
 
-    sf::Vector2u identifyChunkMapIndexFromPosition(const sf::Vector2f &position)
+    sf::Vector2u identifyMapIndexFromPosition(const sf::Vector2f &position)
     {
-        if (objectPositionFitsChunkMap(position))
+        if (objectPositionFitsMap(position))
         {
 
             unsigned int xIndex = position.x / Chunk::CHUNK_SIZE.x;

@@ -1,9 +1,10 @@
 #ifndef ANT_H
 #define ANT_H
 
-
-#include "genericObject.h"
 #include <SFML/Window.hpp>
+#include "genericObject.h"
+#include "pheromone.h"
+
 
 
 class Ant : public  GenericObject
@@ -22,6 +23,12 @@ class Ant : public  GenericObject
 
 		Ant();
 		Ant(sf::CircleShape &aShape, sf::Vector2f &aVelocity,  float aHealth, float aEnergy, float aInteractingRadius);
+
+        /*
+         * TODO: THINK HOW TO CHANGE THE STRUCTURE LEVELS TO IMPLEMENT THIS
+         *          see TODO.txt for more info
+         */
+        void dischargePheromone(int pheromoneType);
 
 		void init(sf::CircleShape &aShape, sf::Vector2f &aVelocity,  float aHealth, float aEnergy, float aInteractingRadius);
 };

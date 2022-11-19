@@ -20,6 +20,6 @@ void ObjectOrganizer<MAP_SIZE_X, MAP_SIZE_Y>::m_initChunkMap()
 template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
 ObjectOrganizer<MAP_SIZE_X, MAP_SIZE_Y>::ObjectOrganizer()
 { 
-    m_initChunkMap();
+    m_initMap();
 }
 */
