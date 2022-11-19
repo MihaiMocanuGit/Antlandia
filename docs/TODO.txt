@@ -11,14 +11,28 @@
 
 [ ]For ObjectOrganizationLogic:
     [X]Add moveTo(), moveBy() etc to GenericObject
-    [X]Keep similar functions in ObjectOrganizer which call subsequent functions in GenericObject but also check if they fit in ChunkMap
-    [ ]Separate ChunkMap from ObjectOrganization, (make ChunkMap class)
+    [X]Keep similar functions in ObjectOrganizer which call subsequent functions in GenericObject but also check if they
+     fit in ChunkMap
+    [X]Separate ChunkMap from ObjectOrganization, (make ChunkMap class)
     [ ]Needs testing and refactoring
     [ ]Optimization will surely be needed
     [ ]Keeping all ants in a std:vector might be too slow
 
     [ ]ChunkMap
-        [ ]Refactor naming (delete ChunkMap references in names, we are already in chunk map class)
-        [ ]Maybe make class iterable, so that I dont have to call chunkMap.map[i] and instead do chunkMap[i]
+        [X]Refactor naming (delete ChunkMap references in names, we are already in chunk map class)
+        [ ]Maybe make class iterable, so that I dont have to call chunkMap.map[i] and instead just do chunkMap[i]
 
 [ ]IF NEEDED Increase Ant capacity in chunk by using a std::vector to hold additional ants
+
+[ ]Ant class
+    [ ]Implement pheromone discharge
+
+[ ]Implement Pheromone class, derived from generic Object.
+    [ ]Make it so ants leave pheromones, so this class needs to be inserted into Ant
+    [ ]Think how to delete the Pheromone object when it is depleted, it probably should be done external
+
+[ ]!!!Somehow, the structural level of ant/genericObject/pheromone should be reversed with objectOrganizer, meaning that
+these objects should be able to place themselves into the holders in object organizer.
+So: ant/genericObject/pheromone => objectOrganizer NOT objectOrganizer => ant/genericObject/pheromone
+Example: ants should be able to place pheromones into the objectOrganizer holder for pheromones
+Also, when an ant is moved (at the ant level, not objectOrganizer level), it should automatically be moved in ObjOrgnz
