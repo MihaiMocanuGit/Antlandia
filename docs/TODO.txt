@@ -20,4 +20,5 @@
     [ ]ChunkMap
         [ ]Refactor naming (delete ChunkMap references in names, we are already in chunk map class)
         [ ]Maybe make class iterable, so that I dont have to call chunkMap.map[i] and instead do chunkMap[i]
+
 [ ]IF NEEDED Increase Ant capacity in chunk by using a std::vector to hold additional ants
