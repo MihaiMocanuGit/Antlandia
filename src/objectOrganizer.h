@@ -64,7 +64,7 @@ private:
                 chunkMap.map[antMapIndex.y][antMapIndex.x].antsInChunk[i] = pCurrentAnt;
                 chunkMap.map[antMapIndex.y][antMapIndex.x].noOfAnts++;
 
-                pCurrentAnt->setPtrHomeChunk((void *) &chunkMap.map[antMapIndex.y][antMapIndex.x]);
+                pCurrentAnt->setPtrHomeChunk(&chunkMap.map[antMapIndex.y][antMapIndex.x]);
 
                 return;
             }

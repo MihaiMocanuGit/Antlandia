@@ -4,43 +4,53 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
+/*
+ * Forward Declarations of classes due to circular dependencies
+ */
+class Chunk;
+template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
+class ObjectOrganizer;
+
 
 class GenericObject
 {
-	private:
+private:
 
-		void m_initPtrShape(sf::CircleShape &object);
-		void m_initPtrShape();
+    void m_initPtrShape(sf::CircleShape &object);
+    void m_initPtrShape();
 
-	protected:
+protected:
+    Chunk *m_pHomeChunk = nullptr;
 
-		void *m_pHomeChunk = nullptr;
+    //template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
+    //ObjectOrganizer<std::size_t, std::size_t> *m_pObjOrganizer = nullptr;
+
+    sf::CircleShape *m_pShape = nullptr;
+    sf::Vector2f m_velocity;
+
+public:
 
 
-		sf::CircleShape *m_pShape = nullptr;
-		sf::Vector2f m_velocity;
+    GenericObject();
+    GenericObject(sf::CircleShape &aShape);
+    GenericObject(sf::CircleShape &aShape, sf::Vector2f aVelocity);
 
-	public:
+    GenericObject(const GenericObject &object);
 
-		
-		GenericObject();
-        GenericObject(sf::CircleShape &aShape);
-		GenericObject(sf::CircleShape &aShape, sf::Vector2f aVelocity);
+    ~GenericObject();
 
-		GenericObject(const GenericObject &object);
+    void moveTo(sf::Vector2f position);
+    void moveBy(sf::Vector2f offset);
 
-		~GenericObject();
+    const Chunk *getPtrHomeChunk() const;
+    void setPtrHomeChunk(Chunk *pHomeChunk);
 
-		void moveTo(sf::Vector2f position);
-		void moveBy(sf::Vector2f offset);
+    //const ObjectOrganizer
 
-		const void *getPtrHomeChunk() const;
-		void setPtrHomeChunk(void *pHomeChunk);
+    const sf::Vector2f &getPosition() const;
+    void setPosition(sf::Vector2f position);
 
-		const sf::Vector2f &getPosition() const;
-		void setPosition(sf::Vector2f position);
-
-		const sf::CircleShape &getShape() const;
+    const sf::CircleShape &getShape() const;
 
 
 
