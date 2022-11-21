@@ -22,8 +22,8 @@ private:
 protected:
     Chunk *m_pHomeChunk = nullptr;
 
-    //template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
-    //ObjectOrganizer<std::size_t, std::size_t> *m_pObjOrganizer = nullptr;
+    template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
+    ObjectOrganizer<MAP_SIZE_X, MAP_SIZE_Y> *m_pObjOrganizer = nullptr;
 
     sf::CircleShape *m_pShape = nullptr;
     sf::Vector2f m_velocity;
