@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
-#include "objectOrganizer.h"
+#include "world.h"
 
 void closeWindowIfEvent(sf::RenderWindow &window)
 {
@@ -21,13 +21,13 @@ float tempTestRand(float LO, float HI)
 }
 
 template<std::size_t SIZE_X, std::size_t SIZE_Y>
-void initAnts(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector2u &windowSize)
+void initAnts(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize)
 {
-    objectOrganizer.ants.createNewObjects((1<<7) * SIZE_X * SIZE_Y);
+    rWorld.ants.createNewObjects((1 << 6) * SIZE_X * SIZE_Y);
 
     srand(time(0));
 
-    for(auto & ant : objectOrganizer.ants.newObjects)
+    for(auto & ant : rWorld.ants.newObjects)
     {
         sf::CircleShape shape(1);
         shape.setFillColor(sf::Color::Black);
@@ -39,16 +39,16 @@ void initAnts(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
     }
 
 
-    objectOrganizer.ants.insertAllNewObjectsIntoHolder();
-    objectOrganizer.insertAntHolderIntoWorldChunks();
+    rWorld.ants.insertAllNewObjectsIntoHolder();
+    rWorld.insertAntHolderIntoWorldChunks();
 
 }
 
 template<std::size_t SIZE_X, std::size_t SIZE_Y>
-void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector2u &windowSize, const std::string &windowTitle)
+void startApp(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize, const std::string &windowTitle)
 {
 
-    initAnts(objectOrganizer, windowSize);
+    initAnts(rWorld, windowSize);
 
     sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), windowTitle);
     window.setFramerateLimit(60);
@@ -61,16 +61,14 @@ void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
         window.clear(sf::Color::White);
 
 
-        for(unsigned int i = 0; i < objectOrganizer.ants.inUseObjects.size(); i++)
+        for(unsigned int i = 0; i < rWorld.ants.inUseObjects.size(); i++)
         {
-            Ant *pCurrentAnt = &objectOrganizer.ants.inUseObjects[i];
-
-            window.draw(pCurrentAnt->getShape());
+            Ant *pCurrentAnt = &rWorld.ants.inUseObjects[i];
 
             sf::Vector2f offset{tempTestRand(-0.75*1.25, 1*1.25), tempTestRand(-0.75*1.5, 1*1.5)};
-            objectOrganizer.moveAntAtIndexBy(i, offset);
+            pCurrentAnt->template moveBy(rWorld, offset);
 
-
+            window.draw(pCurrentAnt->getShape());
         }
         window.display();
     }
@@ -81,12 +79,11 @@ void startApp(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector
 int main()
 {
 
-    ObjectOrganizer<15,15> objectOrganizer;
-
+    World<15,15> world;
 
     
-    const sf::Vector2u windowSize = {objectOrganizer.NO_OF_CHUNKS_X * Chunk::CHUNK_SIZE.x, objectOrganizer.NO_OF_CHUNKS_Y * Chunk::CHUNK_SIZE.y};
-    startApp(objectOrganizer, windowSize, "AntLandia :)");
+    const sf::Vector2u windowSize = {world.NO_OF_CHUNKS_X * Chunk::CHUNK_SIZE.x, world.NO_OF_CHUNKS_Y * Chunk::CHUNK_SIZE.y};
+    startApp(world, windowSize, "AntLandia :)");
     
     return 0;
 }

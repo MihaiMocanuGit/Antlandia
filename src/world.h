@@ -13,10 +13,13 @@
 
 ///class responsible for creating map, it controls the structure logic and further calls
 template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
-class ObjectOrganizer
+class World
 {
 private:
-
+/*
+ * TODO: add a member variable in genericObject: m_indexInChunk so that m_findIndexInChunkOfAnt() won't be needed anymore
+ *  Might prove quite a performance improvement
+ */
     unsigned int m_findIndexInChunkOfAnt(unsigned int indexOfAnt)
     {
         Ant *pCurrentAnt = &ants.inUseObjects[indexOfAnt];
@@ -64,7 +67,7 @@ private:
                 chunkMap.map[antMapIndex.y][antMapIndex.x].antsInChunk[i] = pCurrentAnt;
                 chunkMap.map[antMapIndex.y][antMapIndex.x].noOfAnts++;
 
-                pCurrentAnt->setPtrHomeChunk((void *) &chunkMap.map[antMapIndex.y][antMapIndex.x]);
+                pCurrentAnt->setPtrHomeChunk(&chunkMap.map[antMapIndex.y][antMapIndex.x]);
 
                 return;
             }
@@ -90,7 +93,6 @@ public:
         }
     }
 
-    //NOTE, WRITTEN THIS WHILE DRUNK, MUST RECHECK WHEN SOBER
     void moveAntAtIndexTo(unsigned int index, sf::Vector2f newPosition)
     {
         if (chunkMap.objectPositionFitsMap(newPosition))
