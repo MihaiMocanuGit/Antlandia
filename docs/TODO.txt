@@ -1,6 +1,9 @@
-[x]Separate ObjectHolder from ObjectOrganizer and place in new header/cpp file
+[x]Separate ObjectHolder from World and place in new header/cpp file
 [X]Link new headers (objectHolder.h, objectOrganizer.h) in makefile
 [X]!!refactor makefile
+
+[ ]Comments
+[ ]Documentation
 [ ]Integrate sfml shapes into genericObject
     [X]Sfml shapes use too much memory, need to rethink this, for now we are alocating sf::CircleShape on the heap
     [X]Make sf::CircleShape in genericObject private and implement getters and setters for only what I need
@@ -8,8 +11,30 @@
 
 [ ]For ObjectOrganizationLogic:
     [X]Add moveTo(), moveBy() etc to GenericObject
-    [X]Keep similar functions in ObjectOrganizer which call subsequent functions in GenericObject but also check if they fit in ChunkMap
-    [ ]Change m_findIndexInChunkOfAnt(int index) so that it calculates the index in O(1)
-    [ ]Separate ChunkMap from ObjectOrganization, (make ChunkMap class)
-    [ ]Needs testing and a refactoring
+    [X]Keep similar functions in World which call subsequent functions in GenericObject but also check if they
+     fit in ChunkMap
+    [X]Separate ChunkMap from ObjectOrganization, (make ChunkMap class)
+    [ ]Needs testing and refactoring
     [ ]Optimization will surely be needed
+    [ ]Keeping all ants in a std:vector might be too slow
+
+    [ ]ChunkMap
+        [X]Refactor naming (delete ChunkMap references in names, we are already in chunk map class)
+        [ ]Maybe make class iterable, so that I dont have to call chunkMap.map[i] and instead just do chunkMap[i]
+
+[ ]IF NEEDED Increase Ant capacity in chunk by using a std::vector to hold additional ants
+
+[ ]Ant class
+    [ ]Implement pheromone discharge
+
+[ ]Implement Pheromone class, derived from generic Object.
+    [ ]Make it so ants leave pheromones, so this class needs to be inserted into Ant
+    [ ]Think how to delete the Pheromone object when it is depleted, it probably should be done external
+
+[X]!!!Somehow, the structural level of ant/genericObject/pheromone should be reversed with objectOrganizer, meaning that
+these objects should be able to place themselves into the holders in object organizer.
+So: ant/genericObject/pheromone => objectOrganizer NOT objectOrganizer => ant/genericObject/pheromone
+Example: ants should be able to place pheromones into the objectOrganizer holder for pheromones
+Also, when an ant is moved (at the ant level, not objectOrganizer level), it should automatically be moved in World
+Note: Did this, without reversing the structure levels. Added functions in genericObject that solicit World as a
+ parameter and now an ant can directly modify through these functions World

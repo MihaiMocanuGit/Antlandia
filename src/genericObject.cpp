@@ -30,6 +30,13 @@ GenericObject::GenericObject()
     m_initPtrShape();
 }
 
+GenericObject::GenericObject(sf::CircleShape &aShape)
+{
+
+    m_initPtrShape(aShape);
+    m_velocity = {0, 0};
+}
+
 GenericObject::GenericObject(sf::CircleShape &aShape, sf::Vector2f aVelocity) 
 {
 
@@ -37,13 +44,15 @@ GenericObject::GenericObject(sf::CircleShape &aShape, sf::Vector2f aVelocity)
     m_velocity = aVelocity;
 }
 
+
+
 GenericObject::GenericObject(const GenericObject &object) 
 {
     this->m_pHomeChunk = object.m_pHomeChunk;
-
+    this->m_indexInHolder = object.m_indexInHolder;
 
     this->m_initPtrShape(*object.m_pShape);
-
+    this->m_velocity = object.m_velocity;
 }
 
 
@@ -56,25 +65,23 @@ GenericObject::~GenericObject()
     //std::cout << '-' << pShape << '\n';  
 }
 
-void GenericObject::moveTo(sf::Vector2f position)
-{
-    m_pShape->setPosition(position);
-}
 
-void GenericObject::moveBy(sf::Vector2f offset)
-{
-    sf::Vector2f currentPosition = m_pShape->getPosition();
-    m_pShape->setPosition(currentPosition + offset);
-}
-
-const void *GenericObject::getPtrHomeChunk() const
+const Chunk *GenericObject::getPtrHomeChunk() const
 {
     return m_pHomeChunk;
 }
 
-void GenericObject::setPtrHomeChunk(void *pHomeChunk)
+void GenericObject::setPtrHomeChunk(Chunk *pHomeChunk)
 {
     m_pHomeChunk = pHomeChunk;
+}
+const unsigned int GenericObject::getIndexInHolder() const
+{
+    return m_indexInHolder;
+}
+void GenericObject::setIndexInHolder(unsigned int indexInHolder)
+{
+    m_indexInHolder = indexInHolder;
 }
 
 const sf::Vector2f &GenericObject::getPosition() const

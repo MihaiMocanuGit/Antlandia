@@ -4,42 +4,61 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
+/*
+ * Forward Declarations of classes due to circular dependencies
+ */
+class Chunk;
+template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
+class World;
+
 
 class GenericObject
 {
-	private:
+private:
 
-		void m_initPtrShape(sf::CircleShape &object);
-		void m_initPtrShape();
+    void m_initPtrShape(sf::CircleShape &object);
+    void m_initPtrShape();
 
-	protected:
+protected:
+    Chunk *m_pHomeChunk = nullptr;
+    unsigned int m_indexInHolder;
 
-		void *m_pHomeChunk = nullptr;
+    sf::CircleShape *m_pShape = nullptr;
+    sf::Vector2f m_velocity;
+
+public:
 
 
-		sf::CircleShape *m_pShape = nullptr;
-		sf::Vector2f m_velocity;
+    GenericObject();
+    GenericObject(sf::CircleShape &aShape);
+    GenericObject(sf::CircleShape &aShape, sf::Vector2f aVelocity);
 
-	public:
+    GenericObject(const GenericObject &object);
 
-		
-		GenericObject();
-		GenericObject(sf::CircleShape &aShape, sf::Vector2f aVelocity);
+    ~GenericObject();
 
-		GenericObject(const GenericObject &object);
+    template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
+    void moveTo(World<MAP_SIZE_X, MAP_SIZE_Y> &rWorld, sf::Vector2f position)
+    {
+        rWorld.moveAntAtIndexTo(m_indexInHolder, position);
+    }
 
-		~GenericObject();
+    template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
+    void moveBy(World<MAP_SIZE_X, MAP_SIZE_Y> &rWorld, sf::Vector2f offset)
+    {
+        rWorld.moveAntAtIndexBy(m_indexInHolder, offset);
+    }
 
-		void moveTo(sf::Vector2f position);
-		void moveBy(sf::Vector2f offset);
+    const Chunk *getPtrHomeChunk() const;
+    void setPtrHomeChunk(Chunk *pHomeChunk);
 
-		const void *getPtrHomeChunk() const;
-		void setPtrHomeChunk(void *pHomeChunk);
+    const unsigned int getIndexInHolder() const;
+    void setIndexInHolder(unsigned int indexInHolder);
 
-		const sf::Vector2f &getPosition() const;
-		void setPosition(sf::Vector2f position);
+    const sf::Vector2f &getPosition() const;
+    void setPosition(sf::Vector2f position);
 
-		const sf::CircleShape &getShape() const;
+    const sf::CircleShape &getShape() const;
 
 
 

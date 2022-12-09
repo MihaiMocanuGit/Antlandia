@@ -19,7 +19,7 @@ clean:
 	$(RM) builds/$(TARGET) builds/objects/*.o builds/objects/*.d
 
 run:
-	make && builds/./antSim
+	make && builds/./$(TARGET)
 
 CFLAGS += -MMD
 -include $(OBJ_FILES:.o=.d)
