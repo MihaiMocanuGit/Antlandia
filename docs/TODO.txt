@@ -31,8 +31,10 @@
     [ ]Make it so ants leave pheromones, so this class needs to be inserted into Ant
     [ ]Think how to delete the Pheromone object when it is depleted, it probably should be done external
 
-[ ]!!!Somehow, the structural level of ant/genericObject/pheromone should be reversed with objectOrganizer, meaning that
+[X]!!!Somehow, the structural level of ant/genericObject/pheromone should be reversed with objectOrganizer, meaning that
 these objects should be able to place themselves into the holders in object organizer.
 So: ant/genericObject/pheromone => objectOrganizer NOT objectOrganizer => ant/genericObject/pheromone
 Example: ants should be able to place pheromones into the objectOrganizer holder for pheromones
-Also, when an ant is moved (at the ant level, not objectOrganizer level), it should automatically be moved in ObjOrgnz
+Also, when an ant is moved (at the ant level, not objectOrganizer level), it should automatically be moved in God
+Note: Did this, without reversing the structure levels. Added functions in genericObject that solicit God as a
+ parameter and now an ant can directly modify through these functions God
