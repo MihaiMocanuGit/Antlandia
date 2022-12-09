@@ -1,9 +1,9 @@
-#include "objectOrganizer.h"
+#include "god.h"
 
 
 /*
 template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
-void ObjectOrganizer<MAP_SIZE_X, MAP_SIZE_Y>::m_initChunkMap()
+void God<MAP_SIZE_X, MAP_SIZE_Y>::m_initChunkMap()
 {
     for(unsigned int y = 0; y < map.size(); y++)
     {
@@ -18,7 +18,7 @@ void ObjectOrganizer<MAP_SIZE_X, MAP_SIZE_Y>::m_initChunkMap()
 
 
 template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
-ObjectOrganizer<MAP_SIZE_X, MAP_SIZE_Y>::ObjectOrganizer()
+God<MAP_SIZE_X, MAP_SIZE_Y>::God()
 { 
     m_initMap();
 }

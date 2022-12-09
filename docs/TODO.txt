@@ -1,4 +1,4 @@
-[x]Separate ObjectHolder from ObjectOrganizer and place in new header/cpp file
+[x]Separate ObjectHolder from God and place in new header/cpp file
 [X]Link new headers (objectHolder.h, objectOrganizer.h) in makefile
 [X]!!refactor makefile
 
@@ -11,7 +11,7 @@
 
 [ ]For ObjectOrganizationLogic:
     [X]Add moveTo(), moveBy() etc to GenericObject
-    [X]Keep similar functions in ObjectOrganizer which call subsequent functions in GenericObject but also check if they
+    [X]Keep similar functions in God which call subsequent functions in GenericObject but also check if they
      fit in ChunkMap
     [X]Separate ChunkMap from ObjectOrganization, (make ChunkMap class)
     [ ]Needs testing and refactoring

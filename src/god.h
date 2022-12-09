@@ -13,7 +13,7 @@
 
 ///class responsible for creating map, it controls the structure logic and further calls
 template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
-class ObjectOrganizer
+class God
 {
 private:
 
@@ -90,7 +90,6 @@ public:
         }
     }
 
-    //NOTE, WRITTEN THIS WHILE DRUNK, MUST RECHECK WHEN SOBER
     void moveAntAtIndexTo(unsigned int index, sf::Vector2f newPosition)
     {
         if (chunkMap.objectPositionFitsMap(newPosition))

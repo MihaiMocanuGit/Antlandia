@@ -9,7 +9,7 @@
  */
 class Chunk;
 template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
-class ObjectOrganizer;
+class God;
 
 
 class GenericObject
@@ -19,9 +19,9 @@ private:
     void m_initPtrShape(sf::CircleShape &object);
     void m_initPtrShape();
 
-    unsigned int m_indexInWorld;
 protected:
     Chunk *m_pHomeChunk = nullptr;
+    unsigned int m_indexInHolder;
 
     sf::CircleShape *m_pShape = nullptr;
     sf::Vector2f m_velocity;
@@ -38,21 +38,22 @@ public:
     ~GenericObject();
 
     template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
-    void moveTo(ObjectOrganizer<MAP_SIZE_X, MAP_SIZE_Y> &world, sf::Vector2f position)
+    void moveTo(God<MAP_SIZE_X, MAP_SIZE_Y> &rGod, sf::Vector2f position)
     {
-        world.moveAntAtIndexTo(m_indexInWorld, position);
+        rGod.moveAntAtIndexTo(m_indexInHolder, position);
     }
 
     template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
-    void moveBy(ObjectOrganizer<MAP_SIZE_X, MAP_SIZE_Y> &world, sf::Vector2f offset)
+    void moveBy(God<MAP_SIZE_X, MAP_SIZE_Y> &rGod, sf::Vector2f offset)
     {
-        world.moveAntAtIndexBy(m_indexInWorld, offset);
+        rGod.moveAntAtIndexBy(m_indexInHolder, offset);
     }
 
     const Chunk *getPtrHomeChunk() const;
     void setPtrHomeChunk(Chunk *pHomeChunk);
 
-    //const ObjectOrganizer
+    const unsigned int getIndexInHolder() const;
+    void setIndexInHolder(unsigned int indexInHolder);
 
     const sf::Vector2f &getPosition() const;
     void setPosition(sf::Vector2f position);
