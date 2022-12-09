@@ -23,7 +23,7 @@ float tempTestRand(float LO, float HI)
 template<std::size_t SIZE_X, std::size_t SIZE_Y>
 void initAnts(ObjectOrganizer<SIZE_X, SIZE_Y> &objectOrganizer, const sf::Vector2u &windowSize)
 {
-    objectOrganizer.ants.createNewObjects((1<<7) * SIZE_X * SIZE_Y);
+    objectOrganizer.ants.createNewObjects((1<<6) * SIZE_X * SIZE_Y);
 
     srand(time(0));
 
