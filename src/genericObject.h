@@ -9,7 +9,7 @@
  */
 class Chunk;
 template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
-class God;
+class World;
 
 
 class GenericObject
@@ -38,15 +38,15 @@ public:
     ~GenericObject();
 
     template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
-    void moveTo(God<MAP_SIZE_X, MAP_SIZE_Y> &rGod, sf::Vector2f position)
+    void moveTo(World<MAP_SIZE_X, MAP_SIZE_Y> &rWorld, sf::Vector2f position)
     {
-        rGod.moveAntAtIndexTo(m_indexInHolder, position);
+        rWorld.moveAntAtIndexTo(m_indexInHolder, position);
     }
 
     template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
-    void moveBy(God<MAP_SIZE_X, MAP_SIZE_Y> &rGod, sf::Vector2f offset)
+    void moveBy(World<MAP_SIZE_X, MAP_SIZE_Y> &rWorld, sf::Vector2f offset)
     {
-        rGod.moveAntAtIndexBy(m_indexInHolder, offset);
+        rWorld.moveAntAtIndexBy(m_indexInHolder, offset);
     }
 
     const Chunk *getPtrHomeChunk() const;

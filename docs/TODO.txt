@@ -1,4 +1,4 @@
-[x]Separate ObjectHolder from God and place in new header/cpp file
+[x]Separate ObjectHolder from World and place in new header/cpp file
 [X]Link new headers (objectHolder.h, objectOrganizer.h) in makefile
 [X]!!refactor makefile
 
@@ -11,7 +11,7 @@
 
 [ ]For ObjectOrganizationLogic:
     [X]Add moveTo(), moveBy() etc to GenericObject
-    [X]Keep similar functions in God which call subsequent functions in GenericObject but also check if they
+    [X]Keep similar functions in World which call subsequent functions in GenericObject but also check if they
      fit in ChunkMap
     [X]Separate ChunkMap from ObjectOrganization, (make ChunkMap class)
     [ ]Needs testing and refactoring
@@ -35,6 +35,6 @@
 these objects should be able to place themselves into the holders in object organizer.
 So: ant/genericObject/pheromone => objectOrganizer NOT objectOrganizer => ant/genericObject/pheromone
 Example: ants should be able to place pheromones into the objectOrganizer holder for pheromones
-Also, when an ant is moved (at the ant level, not objectOrganizer level), it should automatically be moved in God
-Note: Did this, without reversing the structure levels. Added functions in genericObject that solicit God as a
- parameter and now an ant can directly modify through these functions God
+Also, when an ant is moved (at the ant level, not objectOrganizer level), it should automatically be moved in World
+Note: Did this, without reversing the structure levels. Added functions in genericObject that solicit World as a
+ parameter and now an ant can directly modify through these functions World

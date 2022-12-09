@@ -1,9 +1,9 @@
-#include "god.h"
+#include "world.h"
 
 
 /*
 template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
-void God<MAP_SIZE_X, MAP_SIZE_Y>::m_initChunkMap()
+void World<MAP_SIZE_X, MAP_SIZE_Y>::m_initChunkMap()
 {
     for(unsigned int y = 0; y < map.size(); y++)
     {
@@ -18,7 +18,7 @@ void God<MAP_SIZE_X, MAP_SIZE_Y>::m_initChunkMap()
 
 
 template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
-God<MAP_SIZE_X, MAP_SIZE_Y>::God()
+World<MAP_SIZE_X, MAP_SIZE_Y>::World()
 { 
     m_initMap();
 }

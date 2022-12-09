@@ -29,7 +29,7 @@ public:
         //changeReservedVectorSpace(Chunk::MAX_ANTS_CHUNK * 10 * 10);
     }
 
-    //best value Chunk::MAX_ANTS_CHUNK * God.noOfChunksX * God.noOfChunksY
+    //best value Chunk::MAX_ANTS_CHUNK * World.noOfChunksX * World.noOfChunksY
     ObjectHolder(std::size_t aproximateVectorSize)
     {
         //changeReservedVectorSpace(aproximateVectorSize);
@@ -57,7 +57,7 @@ public:
     }
 
 
-    //best value Chunk::MAX_ANTS_CHUNK * God.noOfChunksX * God.noOfChunksY
+    //best value Chunk::MAX_ANTS_CHUNK * World.noOfChunksX * World.noOfChunksY
     void changeReservedVectorSpace(std::size_t newReservedSpace)
     {
         m_RESERVED_VECTOR_SPACE = newReservedSpace;

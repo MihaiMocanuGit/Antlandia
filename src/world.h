@@ -13,10 +13,13 @@
 
 ///class responsible for creating map, it controls the structure logic and further calls
 template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
-class God
+class World
 {
 private:
-
+/*
+ * TODO: add a member variable in genericObject: m_indexInChunk so that m_findIndexInChunkOfAnt() won't be needed anymore
+ *  Might prove quite a performance improvement
+ */
     unsigned int m_findIndexInChunkOfAnt(unsigned int indexOfAnt)
     {
         Ant *pCurrentAnt = &ants.inUseObjects[indexOfAnt];
