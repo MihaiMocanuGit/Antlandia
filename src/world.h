@@ -76,8 +76,8 @@ private:
 
 public:
 
-    std::size_t NO_OF_CHUNKS_X = MAP_SIZE_X;
-    std::size_t NO_OF_CHUNKS_Y = MAP_SIZE_Y;
+    static constexpr std::size_t NO_OF_CHUNKS_X = MAP_SIZE_X;
+    static constexpr std::size_t NO_OF_CHUNKS_Y = MAP_SIZE_Y;
 
     ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> chunkMap;
     ObjectHolder<Ant> ants{Chunk::MAX_ANTS_CHUNK * MAP_SIZE_X * MAP_SIZE_Y};
