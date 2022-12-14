@@ -10,7 +10,7 @@
 template<class T>
 class ObjectHolder
 {
-    static_assert(std::is_base_of<GenericObject, T>::value, "T must inherit from list");
+    static_assert(std::is_base_of<GenericObject, T>::value, "T must inherit from GenericObject");
 private:
 
     unsigned int m_RESERVED_VECTOR_SPACE = -1;

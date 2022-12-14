@@ -8,6 +8,7 @@
 template <class T>
 class ObjectChunkArray
 {
+    static_assert(std::is_base_of<GenericObject, T>::value, "T must inherit from GenericObject");
     static constexpr unsigned int MAX_OBJECTS_CHUNK = 2*1024;
     unsigned int noOfObjects = 0;
 

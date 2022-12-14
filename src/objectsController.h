@@ -8,6 +8,7 @@
 template <class T, std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
 class ObjectsChunkArrayCopy
 {
+    static_assert(std::is_base_of<GenericObject, T>::value, "T must inherit from GenericObject");
 public:
     std::array<T*, Chunk::MAX_ANTS_CHUNK> *pArrayMap[MAP_SIZE_Y][MAP_SIZE_X];
 
@@ -27,6 +28,7 @@ public:
 template <class T, std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
 class ObjectsController
 {
+    static_assert(std::is_base_of<GenericObject, T>::value, "T must inherit from GenericObject");
 /*
  * TODO: Modify all apparitions of "ant" into "object" / "obj"
  */
