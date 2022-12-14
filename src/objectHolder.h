@@ -5,7 +5,7 @@
 #include "genericObject.h"
 
 /*
- * Holder can only store genericObjects and its derivatives
+ * Holder can only store pheromons and its derivatives
  */
 template<class T>
 class ObjectHolder

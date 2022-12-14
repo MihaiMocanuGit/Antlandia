@@ -5,6 +5,14 @@
 #include <SFML/Window.hpp>
 #include "ant.h"
 
+template <class T>
+class ObjectChunkArray
+{
+    static constexpr unsigned int MAX_ANTS_CHUNK = 2*1024;
+
+    unsigned int noOfAnts = 0;
+    std::array<T*, ObjectChunkArray::MAX_ANTS_CHUNK> antsInChunk;
+};
 
 class Chunk
 {

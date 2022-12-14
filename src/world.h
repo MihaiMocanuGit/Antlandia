@@ -18,7 +18,7 @@ class World
 private:
 /*
  * TODO: add a member variable in genericObject: m_indexInChunk so that m_findIndexInChunkOfAnt() won't be needed anymore
- *  Might prove quite a performance improvement
+ *  Might prove to be quite a performance improvement
  */
     unsigned int m_findIndexInChunkOfAnt(unsigned int indexOfAnt)
     {
@@ -47,7 +47,7 @@ private:
         pCurrentAnt->setPtrHomeChunk(nullptr);
     }
 
-    void m_insertAntIntoWorldChunk(unsigned int indexOfAnt)
+    void m_insertAntsIntoWorldChunk(unsigned int indexOfAnt)
     {
         /*
          * We are searching through the array for the first empty spot. The array is not sorted, so it will have
@@ -81,7 +81,7 @@ public:
 
     ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> chunkMap;
     ObjectHolder<Ant> ants{Chunk::MAX_ANTS_CHUNK * MAP_SIZE_X * MAP_SIZE_Y};
-    ObjectHolder<GenericObject> genericObjects{Chunk::MAX_ANTS_CHUNK * MAP_SIZE_X * MAP_SIZE_Y};
+    ObjectHolder<Pheromone> pheromons{Chunk::MAX_ANTS_CHUNK * MAP_SIZE_X * MAP_SIZE_Y};
 
 
     //needs to be called only once after every objectHolder.insertAllNewObjectsIntoHolder() call
@@ -89,7 +89,7 @@ public:
     {
         for (unsigned int i = 0; i < ants.inUseObjects.size(); ++i)
         {
-            m_insertAntIntoWorldChunk(i);
+            m_insertAntsIntoWorldChunk(i);
         }
     }
 
@@ -108,7 +108,7 @@ public:
             {
                 m_removeAntFromWorldChunk(index);
                 pCurrentAnt->setPosition(newPosition);
-                m_insertAntIntoWorldChunk(index);
+                m_insertAntsIntoWorldChunk(index);
 
             }
         }
