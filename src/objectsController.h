@@ -13,7 +13,6 @@ public:
 
     void initAsAntArrayMap(const ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> &rChunkMap)
     {
-        std::array<T*, Chunk::MAX_ANTS_CHUNK> *pAntArrayMap[MAP_SIZE_Y][MAP_SIZE_X];
         for (unsigned int y = 0; y < rChunkMap.size(); y++)
         {
             for (unsigned int x = 0; x < rChunkMap[y].size(); x++)
@@ -33,57 +32,57 @@ class ObjectsController
  */
 private:
     /*
- * TODO: add a member variable in genericObject: m_indexInChunk so that m_findIndexInChunkOfAnt() won't be needed anymore
+ * TODO: add a member variable in genericObject: m_indexInChunk so that m_findIndexInChunkOfObject() won't be needed anymore
  *  Might prove quite a performance improvement
  */
-    unsigned int m_findIndexInChunkOfAnt(unsigned int indexOfAnt)
+    unsigned int m_findIndexInChunkOfObject(unsigned int indexOfObject)
     {
-        Ant *pCurrentAnt = &objectHolder.inUseObjects[indexOfAnt];
-        sf::Vector2u antMapIndex = pChunkMapCopy->identifyMapIndexFromPosition(pCurrentAnt->getPosition());
+        T *pCurrentObject = &objectHolder.inUseObjects[indexOfObject];
+        sf::Vector2u objectMapIndex = pChunkMapCopy->identifyMapIndexFromPosition(pCurrentObject->getPosition());
 
-        for (unsigned int i = 0; i < pChunkMapCopy->map[antMapIndex.y][antMapIndex.x].MAX_ANTS_CHUNK; ++i)
+        for (unsigned int i = 0; i < pChunkMapCopy->map[objectMapIndex.y][objectMapIndex.x].MAX_ANTS_CHUNK; ++i)
         {
-            if (pChunkMapCopy->map[antMapIndex.y][antMapIndex.x].antsInChunk[i] == pCurrentAnt)
+            if (pChunkMapCopy->map[objectMapIndex.y][objectMapIndex.x].objectsInChunk[i] == pCurrentObject)
                 return i;
         }
         return -1;
     }
 
 
-    void m_removeAntFromWorldChunk(unsigned int indexOfAnt)
+    void m_removeObjectFromWorldChunk(unsigned int indexOfObject)
     {
-        Ant *pCurrentAnt = &objectHolder.inUseObjects[indexOfAnt];
+        T *pCurrentObject = &objectHolder.inUseObjects[indexOfObject];
 
-        sf::Vector2u antMapIndex = pChunkMapCopy->identifyMapIndexFromPosition(pCurrentAnt->getPosition());
-        unsigned int indexInChunk = m_findIndexInChunkOfAnt(indexOfAnt);
+        sf::Vector2u objectMapIndex = pChunkMapCopy->identifyMapIndexFromPosition(pCurrentObject->getPosition());
+        unsigned int indexInChunk = m_findIndexInChunkOfObject(indexOfObject);
 
-        chunkArrayCopy.pArrayMap[antMapIndex.y][antMapIndex.x].antsInChunk[indexInChunk] = nullptr;
-        chunkArrayCopy.pArrayMap[antMapIndex.y][antMapIndex.x].noOfAnts--;
+        chunkArrayCopy.pArrayMap[objectMapIndex.y][objectMapIndex.x].objectsInChunk[indexInChunk] = nullptr;
+        chunkArrayCopy.pArrayMap[objectMapIndex.y][objectMapIndex.x].noOfObjects--;
 
-        pCurrentAnt->setPtrHomeChunk(nullptr);
+        pCurrentObject->setPtrHomeChunk(nullptr);
     }
 
-    void m_insertAntIntoWorldChunk(unsigned int indexOfAnt)
+    void m_insertObjectIntoWorldChunk(unsigned int indexOfObject)
     {
         /*
          * We are searching through the array for the first empty spot. The array is not sorted, so it will have
          * empty spots inside itself.
-         * When such a spot is found, we put our ant into it and increment the ants in chunk counter
+         * When such a spot is found, we put our object into it and increment the objects in chunk counter
          */
-        Ant *pCurrentAnt = &objectHolder.inUseObjects[indexOfAnt];
-        sf::Vector2u antMapIndex = pChunkMapCopy.identifyMapIndexFromPosition(pCurrentAnt->getPosition());
+        T *pCurrentObject = &objectHolder.inUseObjects[indexOfObject];
+        sf::Vector2u objectMapIndex = pChunkMapCopy->identifyMapIndexFromPosition(pCurrentObject->getPosition());
 
-        if (Chunk::MAX_ANTS_CHUNK <= pChunkMapCopy.map[antMapIndex.y][antMapIndex.x].noOfAnts)
+        if (Chunk::MAX_ANTS_CHUNK <= pChunkMapCopy->map[objectMapIndex.y][objectMapIndex.x].noOfObjects)
             throw std::out_of_range("Chunk is already full");
 
-        for (unsigned int i = 0; i < pChunkMapCopy.map[antMapIndex.y][antMapIndex.x].MAX_ANTS_CHUNK; ++i)
+        for (unsigned int i = 0; i < pChunkMapCopy->map[objectMapIndex.y][objectMapIndex.x].MAX_ANTS_CHUNK; ++i)
         {
-            if (pChunkMapCopy->map[antMapIndex.y][antMapIndex.x].antsInChunk[i] == nullptr)
+            if (pChunkMapCopy->map[objectMapIndex.y][objectMapIndex.x].objectsInChunk[i] == nullptr)
             {
-                pChunkMapCopy->map[antMapIndex.y][antMapIndex.x].antsInChunk[i] = pCurrentAnt;
-                pChunkMapCopy->map[antMapIndex.y][antMapIndex.x].noOfAnts++;
+                pChunkMapCopy->map[objectMapIndex.y][objectMapIndex.x].objectsInChunk[i] = pCurrentObject;
+                pChunkMapCopy->map[objectMapIndex.y][objectMapIndex.x].noOfObjects++;
 
-                pCurrentAnt->setPtrHomeChunk(&pChunkMapCopy.map[antMapIndex.y][antMapIndex.x]);
+                pCurrentObject->setPtrHomeChunk(&pChunkMapCopy->map[objectMapIndex.y][objectMapIndex.x]);
 
                 return;
             }
@@ -107,7 +106,7 @@ public:
         switch (init_option)
         {
             case INIT_AS_ANTS:
-                chunkArrayCopy.initAsAntArrayMap();
+                chunkArrayCopy.initAsObjectArrayMap();
                 break;
             case INIT_AS_PHEROMONES:
                 chunkArrayCopy.initAsPheromoneArrayMap();
@@ -119,38 +118,38 @@ public:
 
 
     //needs to be called only once after every objectHolder.insertAllNewObjectsIntoHolder() call
-    void insertAntHolderIntoWorldChunks()
+    void insertObjectHolderIntoWorldChunks()
     {
         for (unsigned int i = 0; i < objectHolder.inUseObjects.size(); ++i)
         {
-            m_insertAntIntoWorldChunk(i);
+            m_insertObjectIntoWorldChunk(i);
         }
     }
 
-    void moveAntAtIndexTo(unsigned int index, sf::Vector2f newPosition)
+    void moveObjectAtIndexTo(unsigned int index, sf::Vector2f newPosition)
     {
         if (pChunkMapCopy->objectPositionFitsMap(newPosition))
         {
-            Ant *pCurrentAnt = &objectHolder.inUseObjects[index];
-            sf::Vector2u currentChunkIndex = pChunkMapCopy->identifyMapIndexFromPosition(pCurrentAnt->getPosition());
+            T *pCurrentObject = &objectHolder.inUseObjects[index];
+            sf::Vector2u currentChunkIndex = pChunkMapCopy->identifyMapIndexFromPosition(pCurrentObject->getPosition());
             sf::Vector2u newChunkIndex = pChunkMapCopy->identifyMapIndexFromPosition(newPosition);
 
             if (currentChunkIndex == newChunkIndex)
             {
-                pCurrentAnt->setPosition(newPosition);
+                pCurrentObject->setPosition(newPosition);
             } else
             {
-                m_removeAntFromWorldChunk(index);
-                pCurrentAnt->setPosition(newPosition);
-                m_insertAntIntoWorldChunk(index);
+                m_removeObjectFromWorldChunk(index);
+                pCurrentObject->setPosition(newPosition);
+                m_insertObjectIntoWorldChunk(index);
 
             }
         }
     }
 
-    void moveAntAtIndexBy(unsigned int index, sf::Vector2f positionOffset)
+    void moveObjectAtIndexBy(unsigned int index, sf::Vector2f positionOffset)
     {
-        moveAntAtIndexTo(index, objectHolder.inUseObjects[index].getPosition() + positionOffset);
+        moveObjectAtIndexTo(index, objectHolder.inUseObjects[index].getPosition() + positionOffset);
     }
 };
 
