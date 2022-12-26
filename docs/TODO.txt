@@ -38,3 +38,19 @@ Example: ants should be able to place pheromones into the objectOrganizer holder
 Also, when an ant is moved (at the ant level, not objectOrganizer level), it should automatically be moved in World
 Note: Did this, without reversing the structure levels. Added functions in genericObject that solicit World as a
  parameter and now an ant can directly modify through these functions World
+
+
+
+[ ] Template implementation:
+    /*
+     * Layer structure:
+     *      World - ObjectController templates
+     *      ChunkMap
+     *      Chunks - Objects arrays template
+     *
+     *  So the middle man - ChunkMap - doesn't allow a direct template connection between
+     *  Object Controller and Chunks. Therefore ObjectController uses ObjectChunkArraysCopy
+     *  to create a bridge by copying all needed references.
+     */
+     But what if all object holders are actually in ChunkMap, keeping in World only
+     the move function? What would this imply for spawning pheromones from ants?

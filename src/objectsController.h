@@ -5,8 +5,18 @@
 #include "chunk.h"
 #include "chunkMap.h"
 
+/*
+ * Layer structure:
+ *      World - ObjectController templates
+ *      ChunkMap
+ *      Chunks - Objects arrays template
+ *
+ *  So the middle man - ChunkMap - doesn't allow a direct template connection between
+ *  Object Controller and Chunks. Therefore ObjectController uses ObjectChunkArraysCopy
+ *  to create a bridge by copying all needed references.
+ */
 template <class T, std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
-class ObjectsChunkArrayCopy
+class ObjectChunkArraysCopy
 {
     static_assert(std::is_base_of<GenericObject, T>::value, "T must inherit from GenericObject");
 public:
@@ -40,11 +50,11 @@ private:
     unsigned int m_findIndexInChunkOfObject(unsigned int indexOfObject)
     {
         T *pCurrentObject = &objectHolder.inUseObjects[indexOfObject];
-        sf::Vector2u objectMapIndex = pChunkMapCopy->identifyMapIndexFromPosition(pCurrentObject->getPosition());
+        sf::Vector2u objectMapIndex = pChunkMap->identifyMapIndexFromPosition(pCurrentObject->getPosition());
 
-        for (unsigned int i = 0; i < pChunkMapCopy->map[objectMapIndex.y][objectMapIndex.x].MAX_ANTS_CHUNK; ++i)
+        for (unsigned int i = 0; i < pChunkMap->map[objectMapIndex.y][objectMapIndex.x].MAX_ANTS_CHUNK; ++i)
         {
-            if (pChunkMapCopy->map[objectMapIndex.y][objectMapIndex.x].objectsInChunk[i] == pCurrentObject)
+            if (pChunkMap->map[objectMapIndex.y][objectMapIndex.x].objectsInChunk[i] == pCurrentObject)
                 return i;
         }
         return -1;
@@ -55,11 +65,11 @@ private:
     {
         T *pCurrentObject = &objectHolder.inUseObjects[indexOfObject];
 
-        sf::Vector2u objectMapIndex = pChunkMapCopy->identifyMapIndexFromPosition(pCurrentObject->getPosition());
+        sf::Vector2u objectMapIndex = pChunkMap->identifyMapIndexFromPosition(pCurrentObject->getPosition());
         unsigned int indexInChunk = m_findIndexInChunkOfObject(indexOfObject);
 
-        chunkArrayCopy.pArrayMap[objectMapIndex.y][objectMapIndex.x].objectsInChunk[indexInChunk] = nullptr;
-        chunkArrayCopy.pArrayMap[objectMapIndex.y][objectMapIndex.x].noOfObjects--;
+        chunkArraysCopy.pArrayMap[objectMapIndex.y][objectMapIndex.x].objectsInChunk[indexInChunk] = nullptr;
+        chunkArraysCopy.pArrayMap[objectMapIndex.y][objectMapIndex.x].noOfObjects--;
 
         pCurrentObject->setPtrHomeChunk(nullptr);
     }
@@ -72,19 +82,19 @@ private:
          * When such a spot is found, we put our object into it and increment the objects in chunk counter
          */
         T *pCurrentObject = &objectHolder.inUseObjects[indexOfObject];
-        sf::Vector2u objectMapIndex = pChunkMapCopy->identifyMapIndexFromPosition(pCurrentObject->getPosition());
+        sf::Vector2u objectMapIndex = pChunkMap->identifyMapIndexFromPosition(pCurrentObject->getPosition());
 
-        if (Chunk::MAX_ANTS_CHUNK <= pChunkMapCopy->map[objectMapIndex.y][objectMapIndex.x].noOfObjects)
+        if (Chunk::MAX_ANTS_CHUNK <= pChunkMap->map[objectMapIndex.y][objectMapIndex.x].noOfObjects)
             throw std::out_of_range("Chunk is already full");
 
-        for (unsigned int i = 0; i < pChunkMapCopy->map[objectMapIndex.y][objectMapIndex.x].MAX_ANTS_CHUNK; ++i)
+        for (unsigned int i = 0; i < pChunkMap->map[objectMapIndex.y][objectMapIndex.x].MAX_ANTS_CHUNK; ++i)
         {
-            if (pChunkMapCopy->map[objectMapIndex.y][objectMapIndex.x].objectsInChunk[i] == nullptr)
+            if (pChunkMap->map[objectMapIndex.y][objectMapIndex.x].objectsInChunk[i] == nullptr)
             {
-                pChunkMapCopy->map[objectMapIndex.y][objectMapIndex.x].objectsInChunk[i] = pCurrentObject;
-                pChunkMapCopy->map[objectMapIndex.y][objectMapIndex.x].noOfObjects++;
+                pChunkMap->map[objectMapIndex.y][objectMapIndex.x].objectsInChunk[i] = pCurrentObject;
+                pChunkMap->map[objectMapIndex.y][objectMapIndex.x].noOfObjects++;
 
-                pCurrentObject->setPtrHomeChunk(&pChunkMapCopy->map[objectMapIndex.y][objectMapIndex.x]);
+                pCurrentObject->setPtrHomeChunk(&pChunkMap->map[objectMapIndex.y][objectMapIndex.x]);
 
                 return;
             }
@@ -99,19 +109,19 @@ public:
     static constexpr unsigned int INIT_AS_PHEROMONES = 1;
 
     ObjectHolder<T> objectHolder{Chunk::MAX_ANTS_CHUNK * MAP_SIZE_X * MAP_SIZE_Y / 4};
-    ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> *pChunkMapCopy;
+    ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> *pChunkMap;
 
-    ObjectsChunkArrayCopy<T, MAP_SIZE_X, MAP_SIZE_Y> chunkArrayCopy;
+    ObjectChunkArraysCopy<T, MAP_SIZE_X, MAP_SIZE_Y> chunkArraysCopy;
 
-    ObjectsController(ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> *pChunkMap, unsigned int init_option = 100) : pChunkMapCopy(pChunkMap)
+    ObjectsController(ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> *pChunkMap, unsigned int init_option = 100) : pChunkMap(pChunkMap)
     {
         switch (init_option)
         {
             case INIT_AS_ANTS:
-                chunkArrayCopy.initAsObjectArrayMap();
+                chunkArraysCopy.initAsObjectArrayMap();
                 break;
             case INIT_AS_PHEROMONES:
-                chunkArrayCopy.initAsPheromoneArrayMap();
+                chunkArraysCopy.initAsPheromoneArrayMap();
                 break;
             default:
                 throw std::invalid_argument("invalid init_option");
@@ -130,11 +140,11 @@ public:
 
     void moveObjectAtIndexTo(unsigned int index, sf::Vector2f newPosition)
     {
-        if (pChunkMapCopy->objectPositionFitsMap(newPosition))
+        if (pChunkMap->objectPositionFitsMap(newPosition))
         {
             T *pCurrentObject = &objectHolder.inUseObjects[index];
-            sf::Vector2u currentChunkIndex = pChunkMapCopy->identifyMapIndexFromPosition(pCurrentObject->getPosition());
-            sf::Vector2u newChunkIndex = pChunkMapCopy->identifyMapIndexFromPosition(newPosition);
+            sf::Vector2u currentChunkIndex = pChunkMap->identifyMapIndexFromPosition(pCurrentObject->getPosition());
+            sf::Vector2u newChunkIndex = pChunkMap->identifyMapIndexFromPosition(newPosition);
 
             if (currentChunkIndex == newChunkIndex)
             {
