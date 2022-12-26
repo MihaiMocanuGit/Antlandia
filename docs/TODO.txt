@@ -52,5 +52,12 @@ Note: Did this, without reversing the structure levels. Added functions in gener
      *  Object Controller and Chunks. Therefore ObjectController uses ObjectChunkArraysCopy
      *  to create a bridge by copying all needed references.
      */
-     But what if all object holders are actually in ChunkMap, keeping in World only
-     the move function? What would this imply for spawning pheromones from ants?
+     But what if all object holders (ObjectController) are actually in ChunkMap instead, keeping in World only
+     the move functions? What would this imply for spawning pheromones from ants?
+     In world:
+                                   MoveFunctions
+     In ChunkMap:                //             \\
+                    <Ant> Controller    &&     <Pheromone> Controller
+                        ||                          ||          (note that there are more
+     In chunks[][]:    /||\                        /||\          holders for every controller)
+                    <Ant> Holder        &&      <Pheromone> Holder
