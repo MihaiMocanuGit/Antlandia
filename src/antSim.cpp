@@ -63,21 +63,20 @@ void startApp(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize, con
         window.clear(sf::Color::White);
 
         std::vector<Ant> *pInUseAnts = &rWorld.antController.objectHolder.inUseObjects;
-        //for(unsigned int i = 0; i < rWorld.ants.inUseObjects.size(); i++)
-        for(unsigned int i = 0; i < pInUseAnts->size(); i++)
+        for(auto & ant : *pInUseAnts)
         {
-            Ant *pCurrentAnt = &pInUseAnts->at(i);
-
             sf::Vector2f offset{tempTestRand(-0.75*1.25, 1*1.25), tempTestRand(-0.75*1.5, 1*1.5)};
-            pCurrentAnt->template moveBy(rWorld, offset);
+            ant.template moveBy(rWorld, offset);
 
-            window.draw(pCurrentAnt->getShape());
+            window.draw(ant.getShape());
         }
         window.display();
+
     }
     
     window.close();
 }
+
 
 int main()
 {
