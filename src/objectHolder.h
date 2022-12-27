@@ -5,12 +5,12 @@
 #include "genericObject.h"
 
 /*
- * Holder can only store genericObjects and its derivatives
+ * Holder can only store pheromons and its derivatives
  */
 template<class T>
 class ObjectHolder
 {
-    static_assert(std::is_base_of<GenericObject, T>::value, "T must inherit from list");
+    static_assert(std::is_base_of<GenericObject, T>::value, "T must inherit from GenericObject");
 private:
 
     unsigned int m_RESERVED_VECTOR_SPACE = -1;
@@ -25,11 +25,11 @@ public:
 
     ObjectHolder()
     {
-        //we make the assumption that the chunk map is 10 by 10 and one chunk can hold at most Chunk::MAX_ANTS_CHUNK
-        //changeReservedVectorSpace(Chunk::MAX_ANTS_CHUNK * 10 * 10);
+        //we make the assumption that the chunk map is 10 by 10 and one chunk can hold at most Chunk::MAX_OBJECTS_PER_TYPE
+        //changeReservedVectorSpace(Chunk::MAX_OBJECTS_PER_TYPE * 10 * 10);
     }
 
-    //best value Chunk::MAX_ANTS_CHUNK * World.noOfChunksX * World.noOfChunksY
+    //best value Chunk::MAX_OBJECTS_PER_TYPE * World.noOfChunksX * World.noOfChunksY
     ObjectHolder(std::size_t aproximateVectorSize)
     {
         //changeReservedVectorSpace(aproximateVectorSize);
@@ -57,7 +57,7 @@ public:
     }
 
 
-    //best value Chunk::MAX_ANTS_CHUNK * World.noOfChunksX * World.noOfChunksY
+    //best value Chunk::MAX_OBJECTS_PER_TYPE * World.noOfChunksX * World.noOfChunksY
     void changeReservedVectorSpace(std::size_t newReservedSpace)
     {
         m_RESERVED_VECTOR_SPACE = newReservedSpace;
