@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -g -fsanitize=address -Wall -O0
+CFLAGS = -std=c++17 -g -fsanitize=address -Wall -O0
 SRC_DIR = ./src
 OBJ_DIR = ./builds/objects
 SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
