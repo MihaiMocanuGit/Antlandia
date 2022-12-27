@@ -6,8 +6,8 @@
 template<class T>
 ObjectHolder<T>::ObjectHolder()
 {
-    //we make the assumption that the chunk map is 10 by 10 and one chunk can hold at most Chunk::MAX_ANTS_CHUNK
-    changeReservedVectorSpace(Chunk::MAX_ANTS_CHUNK * 10 * 10);
+    //we make the assumption that the chunk map is 10 by 10 and one chunk can hold at most Chunk::MAX_OBJECTS_PER_TYPE
+    changeReservedVectorSpace(Chunk::MAX_OBJECTS_PER_TYPE * 10 * 10);
 }
 
 template<class T>

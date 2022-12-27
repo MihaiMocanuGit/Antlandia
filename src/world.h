@@ -25,7 +25,7 @@ private:
         Ant *pCurrentAnt = &ants.inUseObjects[indexOfAnt];
         sf::Vector2u antMapIndex = chunkMap.identifyMapIndexFromPosition(pCurrentAnt->getPosition());
 
-        for (unsigned int i = 0; i < chunkMap.map[antMapIndex.y][antMapIndex.x].MAX_ANTS_CHUNK; ++i)
+        for (unsigned int i = 0; i < chunkMap.map[antMapIndex.y][antMapIndex.x].MAX_OBJECTS_PER_TYPE; ++i)
         {
             if (chunkMap.map[antMapIndex.y][antMapIndex.x].antsInChunk[i] == pCurrentAnt)
                 return i;
@@ -57,10 +57,10 @@ private:
         Ant *pCurrentAnt = &ants.inUseObjects[indexOfAnt];
         sf::Vector2u antMapIndex = chunkMap.identifyMapIndexFromPosition(pCurrentAnt->getPosition());
 
-        if (Chunk::MAX_ANTS_CHUNK <= chunkMap.map[antMapIndex.y][antMapIndex.x].noOfAnts)
+        if (Chunk::MAX_OBJECTS_PER_TYPE <= chunkMap.map[antMapIndex.y][antMapIndex.x].noOfAnts)
             throw std::out_of_range("Chunk is already full");
 
-        for (unsigned int i = 0; i < chunkMap.map[antMapIndex.y][antMapIndex.x].MAX_ANTS_CHUNK; ++i)
+        for (unsigned int i = 0; i < chunkMap.map[antMapIndex.y][antMapIndex.x].MAX_OBJECTS_PER_TYPE; ++i)
         {
             if (chunkMap.map[antMapIndex.y][antMapIndex.x].antsInChunk[i] == nullptr)
             {
@@ -80,8 +80,8 @@ public:
     static constexpr std::size_t NO_OF_CHUNKS_Y = MAP_SIZE_Y;
 
     ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> chunkMap;
-    ObjectHolder<Ant> ants{Chunk::MAX_ANTS_CHUNK * MAP_SIZE_X * MAP_SIZE_Y};
-    ObjectHolder<Pheromone> pheromons{Chunk::MAX_ANTS_CHUNK * MAP_SIZE_X * MAP_SIZE_Y};
+    ObjectHolder<Ant> ants{Chunk::MAX_OBJECTS_PER_TYPE * MAP_SIZE_X * MAP_SIZE_Y};
+    ObjectHolder<Pheromone> pheromons{Chunk::MAX_OBJECTS_PER_TYPE * MAP_SIZE_X * MAP_SIZE_Y};
 
 
     //needs to be called only once after every objectHolder.insertAllNewObjectsIntoHolder() call

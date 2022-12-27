@@ -5,6 +5,9 @@
 
 #include "world.h"
 
+//testing
+#include "objectsController.h"
+
 void closeWindowIfEvent(sf::RenderWindow &window)
 {
     sf::Event event;
@@ -47,7 +50,6 @@ void initAnts(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize)
 template<std::size_t SIZE_X, std::size_t SIZE_Y>
 void startApp(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize, const std::string &windowTitle)
 {
-
     initAnts(rWorld, windowSize);
 
     sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), windowTitle);

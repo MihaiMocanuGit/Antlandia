@@ -29,11 +29,12 @@ class Chunk
 		}; 
 		
 	public:
-		static constexpr unsigned int MAX_ANTS_CHUNK = 2*1024;
+		static constexpr unsigned int MAX_OBJECTS_PER_TYPE = 1024;
 
 		unsigned int noOfAnts = 0;
-		std::array<Ant*, Chunk::MAX_ANTS_CHUNK> antsInChunk;
-	    
+		std::array<Ant*, Chunk::MAX_OBJECTS_PER_TYPE> antsInChunk;
+        std::array<Pheromone*, Chunk::MAX_OBJECTS_PER_TYPE> pheromonesInChunk;
+
 		sf::Vector2u chunkIndex;
 
 		static constexpr m_Size CHUNK_SIZE = {50, 50};

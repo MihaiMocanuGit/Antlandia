@@ -7,9 +7,9 @@
 
 /*
  * Layer structure:
- *      World - ObjectController templates
- *      ChunkMap
- *      Chunks - Objects arrays template
+ *      World - ObjectController templates  |\|\ Object -
+ *      ChunkMap                            \|\| - Chunk -
+ *      Chunks - Objects arrays template    |\|\ - ArrayCopy
  *
  *  ObjectController uses ObjectChunkArraysCopy to create a bridge between Object Controllers template instances
  *  and Object Arrays from every chunk by copying all needed references.
@@ -17,21 +17,42 @@
 template <class T, std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
 class ObjectChunkArraysCopy
 {
+private:
     static_assert(std::is_base_of<GenericObject, T>::value, "T must inherit from GenericObject");
-public:
-    std::array<T*, Chunk::MAX_ANTS_CHUNK> *pArrayMap[MAP_SIZE_Y][MAP_SIZE_X];
-
-    void initAsAntArrayMap(const ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> &rChunkMap)
+    void m_initAsAntArrayMap(ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> &rChunkMap)
     {
-        for (unsigned int y = 0; y < rChunkMap.size(); y++)
+        for (unsigned int y = 0; y < rChunkMap.map.size(); y++)
         {
-            for (unsigned int x = 0; x < rChunkMap[y].size(); x++)
+            for (unsigned int x = 0; x < rChunkMap.map[y].size(); x++)
             {
-                pArrayMap[y][x] = &rChunkMap[y][x].antsInChunk();
+                pArrayMap[y][x] = &rChunkMap.map[y][x].antsInChunk;
             }
         }
     }
-    static void initAsPheromoneArrayMap(const ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> pChunkMap);
+    void m_initAsPheromoneArrayMap(ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> &rChunkMap)
+    {
+        for (unsigned int y = 0; y < rChunkMap.map.size(); y++)
+        {
+            for (unsigned int x = 0; x < rChunkMap.map[y].size(); x++)
+            {
+                pArrayMap[y][x] = &rChunkMap.map[y][x].pheromonesInChunk;
+            }
+        }
+    }
+public:
+    std::array<T*, Chunk::MAX_OBJECTS_PER_TYPE> *pArrayMap[MAP_SIZE_Y][MAP_SIZE_X];
+
+    ObjectChunkArraysCopy() = default;
+
+    ObjectChunkArraysCopy(ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> *pAChunkMap)
+    {
+        if constexpr (std::is_same_v<T, Ant>)
+            m_initAsAntArrayMap(*pAChunkMap);
+        else if constexpr (std::is_same_v<T, Pheromone>)
+            m_initAsPheromoneArrayMap(*pAChunkMap);
+    }
+
+
 };
 
 template <class T, std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
@@ -51,7 +72,7 @@ private:
         T *pCurrentObject = &objectHolder.inUseObjects[indexOfObject];
         sf::Vector2u objectMapIndex = pChunkMap->identifyMapIndexFromPosition(pCurrentObject->getPosition());
 
-        for (unsigned int i = 0; i < pChunkMap->map[objectMapIndex.y][objectMapIndex.x].MAX_ANTS_CHUNK; ++i)
+        for (unsigned int i = 0; i < pChunkMap->map[objectMapIndex.y][objectMapIndex.x].MAX_OBJECTS_PER_TYPE; ++i)
         {
             if (pChunkMap->map[objectMapIndex.y][objectMapIndex.x].objectsInChunk[i] == pCurrentObject)
                 return i;
@@ -83,10 +104,10 @@ private:
         T *pCurrentObject = &objectHolder.inUseObjects[indexOfObject];
         sf::Vector2u objectMapIndex = pChunkMap->identifyMapIndexFromPosition(pCurrentObject->getPosition());
 
-        if (Chunk::MAX_ANTS_CHUNK <= pChunkMap->map[objectMapIndex.y][objectMapIndex.x].noOfObjects)
+        if (Chunk::MAX_OBJECTS_PER_TYPE <= pChunkMap->map[objectMapIndex.y][objectMapIndex.x].noOfObjects)
             throw std::out_of_range("Chunk is already full");
 
-        for (unsigned int i = 0; i < pChunkMap->map[objectMapIndex.y][objectMapIndex.x].MAX_ANTS_CHUNK; ++i)
+        for (unsigned int i = 0; i < pChunkMap->map[objectMapIndex.y][objectMapIndex.x].MAX_OBJECTS_PER_TYPE; ++i)
         {
             if (pChunkMap->map[objectMapIndex.y][objectMapIndex.x].objectsInChunk[i] == nullptr)
             {
@@ -104,27 +125,18 @@ public:
     static constexpr std::size_t NO_OF_CHUNKS_X = MAP_SIZE_X;
     static constexpr std::size_t NO_OF_CHUNKS_Y = MAP_SIZE_Y;
 
-    static constexpr unsigned int INIT_AS_ANTS = 0;
-    static constexpr unsigned int INIT_AS_PHEROMONES = 1;
+    static constexpr unsigned int INIT_AS_GENERIC_OBJECTS = 0;
+    static constexpr unsigned int INIT_AS_ANTS = 1;
+    static constexpr unsigned int INIT_AS_PHEROMONES = 2;
 
-    ObjectHolder<T> objectHolder{Chunk::MAX_ANTS_CHUNK * MAP_SIZE_X * MAP_SIZE_Y / 4};
+    ObjectHolder<T> objectHolder{Chunk::MAX_OBJECTS_PER_TYPE * MAP_SIZE_X * MAP_SIZE_Y / 4};
     ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> *pChunkMap;
 
     ObjectChunkArraysCopy<T, MAP_SIZE_X, MAP_SIZE_Y> chunkArraysCopy;
 
-    ObjectsController(ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> *pChunkMap, unsigned int init_option = 100) : pChunkMap(pChunkMap)
+    ObjectsController(ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> *pAChunkMap) : pChunkMap{pAChunkMap}
     {
-        switch (init_option)
-        {
-            case INIT_AS_ANTS:
-                chunkArraysCopy.initAsObjectArrayMap();
-                break;
-            case INIT_AS_PHEROMONES:
-                chunkArraysCopy.initAsPheromoneArrayMap();
-                break;
-            default:
-                throw std::invalid_argument("invalid init_option");
-        }
+        chunkArraysCopy = ObjectChunkArraysCopy<T, MAP_SIZE_X, MAP_SIZE_Y>(pAChunkMap);
     }
 
 
