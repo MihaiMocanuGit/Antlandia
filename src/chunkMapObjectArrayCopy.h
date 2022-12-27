@@ -31,7 +31,7 @@ private:
         }
     }
 public:
-    ObjectChunkArray<T>  *pObjectArrayMap[MAP_SIZE_Y][MAP_SIZE_X];
+    ChunkObjectArray<T>  *pObjectArrayMap[MAP_SIZE_Y][MAP_SIZE_X];
 
     ChunkMapObjectArraysCopy() = default;
 

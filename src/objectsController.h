@@ -48,7 +48,7 @@ public:
     {
         T *pCurrentObject = &objectHolder.inUseObjects[indexOfObject];
         sf::Vector2u objectMapIndex = pChunkMap->identifyMapIndexFromPosition(pCurrentObject->getPosition());
-        ObjectChunkArray<T> *pCurrentChunkArray = chunkMapObjectArrays.pObjectArrayMap[objectMapIndex.y][objectMapIndex.x];
+        ChunkObjectArray<T> *pCurrentChunkArray = chunkMapObjectArrays.pObjectArrayMap[objectMapIndex.y][objectMapIndex.x];
 
         for (unsigned int i = 0; i < pCurrentChunkArray->MAX_OBJECTS_PER_TYPE; ++i)
         {
@@ -65,7 +65,7 @@ public:
 
         sf::Vector2u objectMapIndex = pChunkMap->identifyMapIndexFromPosition(pCurrentObject->getPosition());
         unsigned int indexInChunk = findIndexInChunkOfObject(indexOfObject);
-        ObjectChunkArray<T> *pCurrentChunkArray = chunkMapObjectArrays.pObjectArrayMap[objectMapIndex.y][objectMapIndex.x];
+        ChunkObjectArray<T> *pCurrentChunkArray = chunkMapObjectArrays.pObjectArrayMap[objectMapIndex.y][objectMapIndex.x];
 
         pCurrentChunkArray->objectsInChunk[indexInChunk] = nullptr;
         pCurrentChunkArray->noOfObjects--;
@@ -85,7 +85,7 @@ public:
         T *pCurrentObject = &objectHolder.inUseObjects[indexOfObject];
         sf::Vector2u objectMapIndex = pChunkMap->identifyMapIndexFromPosition(pCurrentObject->getPosition());
 
-        ObjectChunkArray<T> *pCurrentChunkArray = chunkMapObjectArrays.pObjectArrayMap[objectMapIndex.y][objectMapIndex.x];
+        ChunkObjectArray<T> *pCurrentChunkArray = chunkMapObjectArrays.pObjectArrayMap[objectMapIndex.y][objectMapIndex.x];
         if (Chunk::MAX_OBJECTS_PER_TYPE <= pCurrentChunkArray->noOfObjects)
             throw std::out_of_range("Chunk is already full");
 
