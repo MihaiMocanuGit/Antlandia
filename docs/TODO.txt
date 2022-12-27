@@ -48,16 +48,12 @@ Note: Did this, without reversing the structure levels. Added functions in gener
      *      ChunkMap
      *      Chunks - Objects arrays template
      *
-     *  So the middle man - ChunkMap - doesn't allow a direct template connection between
-     *  Object Controller and Chunks. Therefore ObjectController uses ObjectChunkArraysCopy
-     *  to create a bridge by copying all needed references.
+     *  ObjectController uses ObjectChunkArraysCopy to create a bridge between Object Controllers template instances
+     *  and Object Arrays from every chunk by copying all needed references.
      */
-     But what if all object holders (ObjectController) are actually in ChunkMap instead, keeping in World only
-     the move functions? What would this imply for spawning pheromones from ants?
      In world:
-                                   MoveFunctions
-     In ChunkMap:                //             \\
-                    <Ant> Controller    &&     <Pheromone> Controller
-                        ||                          ||          (note that there are more
-     In chunks[][]:    /||\                        /||\          holders for every controller)
-                    <Ant> Holder        &&      <Pheromone> Holder
+                                  <Ant> Controller  AND  MoveFunctions AND <Pheromone> Controller
+     In ChunkMap:                       //                                              \\
+                                        ||                                              ||          (note that there are more
+     In chunks[][]:                    /||\                                            /||\          holders for every controller)
+                                    <Ant> Holder            &&                    <Pheromone> Holder

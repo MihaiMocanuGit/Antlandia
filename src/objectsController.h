@@ -11,9 +11,8 @@
  *      ChunkMap
  *      Chunks - Objects arrays template
  *
- *  So the middle man - ChunkMap - doesn't allow a direct template connection between
- *  Object Controller and Chunks. Therefore ObjectController uses ObjectChunkArraysCopy
- *  to create a bridge by copying all needed references.
+ *  ObjectController uses ObjectChunkArraysCopy to create a bridge between Object Controllers template instances
+ *  and Object Arrays from every chunk by copying all needed references.
  */
 template <class T, std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
 class ObjectChunkArraysCopy
