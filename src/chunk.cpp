@@ -1,8 +1,7 @@
 #include "chunk.h"
 
-Chunk::Chunk() 
-{
-}
+Chunk::Chunk() = default;
+
 
 Chunk::Chunk(sf::Vector2u aChunkIndex) : chunkIndex{aChunkIndex}
 {
