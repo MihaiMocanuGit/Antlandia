@@ -5,8 +5,6 @@
 
 #include "world.h"
 
-//testing
-#include "objectsController.h"
 
 void closeWindowIfEvent(sf::RenderWindow &window)
 {

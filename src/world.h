@@ -10,6 +10,7 @@
 #include "genericObject.h"
 #include "objectHolder.h"
 #include "chunkMap.h"
+#include "objectsController.h"
 
 ///class responsible for creating map, it controls the structure logic and further calls
 template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
@@ -20,6 +21,7 @@ private:
  * TODO: add a member variable in genericObject: m_indexInChunk so that m_findIndexInChunkOfAnt() won't be needed anymore
  *  Might prove to be quite a performance improvement
  */
+    /*
     unsigned int m_findIndexInChunkOfAnt(unsigned int indexOfAnt)
     {
         Ant *pCurrentAnt = &ants.inUseObjects[indexOfAnt];
@@ -32,8 +34,12 @@ private:
         }
         return -1;
     }
-
-
+     */
+    unsigned int m_findIndexInChunkOfAnt(unsigned int indexOfAnt)
+    {
+        return antController.m_findIndexInChunkOfObject(indexOfAnt);
+    }
+    /*
     void m_removeAntFromWorldChunk(unsigned int indexOfAnt)
     {
         Ant *pCurrentAnt = &ants.inUseObjects[indexOfAnt];
@@ -46,7 +52,13 @@ private:
 
         pCurrentAnt->setPtrHomeChunk(nullptr);
     }
+*/
+    void m_removeAntFromWorldChunk(unsigned int indexOfAnt)
+    {
+        antController.m_removeObjectFromWorldChunk(indexOfAnt);
+    }
 
+    /*
     void m_insertAntsIntoWorldChunk(unsigned int indexOfAnt)
     {
         /*
@@ -54,6 +66,7 @@ private:
          * empty spots inside itself.
          * When such a spot is found, we put our ant into it and increment the ants in chunk counter
          */
+    /*
         Ant *pCurrentAnt = &ants.inUseObjects[indexOfAnt];
         sf::Vector2u antMapIndex = chunkMap.identifyMapIndexFromPosition(pCurrentAnt->getPosition());
 
@@ -73,7 +86,11 @@ private:
             }
         }
     }
-
+    */
+    void m_insertAntsIntoWorldChunk(unsigned int indexOfAnt)
+    {
+        antController.m_insertObjectIntoWorldChunk(indexOfAnt);
+    }
 public:
 
     static constexpr std::size_t NO_OF_CHUNKS_X = MAP_SIZE_X;
@@ -81,9 +98,16 @@ public:
 
     ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> chunkMap;
     ObjectHolder<Ant> ants{Chunk::MAX_OBJECTS_PER_TYPE * MAP_SIZE_X * MAP_SIZE_Y};
+    ObjectsController<Ant, MAP_SIZE_X, MAP_SIZE_Y> antController;
+
     ObjectHolder<Pheromone> pheromons{Chunk::MAX_OBJECTS_PER_TYPE * MAP_SIZE_X * MAP_SIZE_Y};
 
+    World()
+    {
+        antController = ObjectsController<Ant, MAP_SIZE_X, MAP_SIZE_Y>(&chunkMap);
+    }
 
+    /*
     //needs to be called only once after every objectHolder.insertAllNewObjectsIntoHolder() call
     void insertAntHolderIntoWorldChunks()
     {
@@ -92,7 +116,14 @@ public:
             m_insertAntsIntoWorldChunk(i);
         }
     }
+     */
+    //needs to be called only once after every objectHolder.insertAllNewObjectsIntoHolder() call
+    void insertAntHolderIntoWorldChunks()
+    {
+        antController.insertObjectHolderIntoWorldChunks();
+    }
 
+    /*
     void moveAntAtIndexTo(unsigned int index, sf::Vector2f newPosition)
     {
         if (chunkMap.objectPositionFitsMap(newPosition))
@@ -113,10 +144,21 @@ public:
             }
         }
     }
+    */
+    void moveAntAtIndexTo(unsigned int index, sf::Vector2f newPosition)
+    {
+        antController.moveObjectAtIndexTo(index, newPosition);
+    }
 
+    /*
     void moveAntAtIndexBy(unsigned int index, sf::Vector2f positionOffset)
     {
         moveAntAtIndexTo(index, ants.inUseObjects[index].getPosition() + positionOffset);
+    }
+    */
+    void moveAntAtIndexBy(unsigned int index, sf::Vector2f positionOffset)
+    {
+        antController.moveObjectAtIndexBy(index, positionOffset);
     }
 
 

@@ -5,14 +5,18 @@
 #include <SFML/Window.hpp>
 #include "ant.h"
 
+/*
+ * TODO: Change from T to T*
+ */
 template <class T>
 class ObjectChunkArray
 {
+public:
     static_assert(std::is_base_of<GenericObject, T>::value, "T must inherit from GenericObject");
-    static constexpr unsigned int MAX_OBJECTS_CHUNK = 2*1024;
+    static constexpr unsigned int MAX_OBJECTS_PER_TYPE = 1024;
     unsigned int noOfObjects = 0;
 
-    std::array<T*, ObjectChunkArray::MAX_OBJECTS_CHUNK> objectsInChunk;
+    std::array<T*, ObjectChunkArray::MAX_OBJECTS_PER_TYPE> objectsInChunk;
 
     void optimizeArray();
 };
@@ -33,8 +37,10 @@ class Chunk
 
 		unsigned int noOfAnts = 0;
 		std::array<Ant*, Chunk::MAX_OBJECTS_PER_TYPE> antsInChunk;
-        std::array<Pheromone*, Chunk::MAX_OBJECTS_PER_TYPE> pheromonesInChunk;
+        ObjectChunkArray<Ant> antsArray;
 
+        std::array<Pheromone*, Chunk::MAX_OBJECTS_PER_TYPE> pheromonesInChunk;
+        ObjectChunkArray<Pheromone> pheromonesArray;
 		sf::Vector2u chunkIndex;
 
 		static constexpr m_Size CHUNK_SIZE = {50, 50};

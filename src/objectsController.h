@@ -15,8 +15,9 @@
  *  and Object Arrays from every chunk by copying all needed references.
  */
 template <class T, std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
-class ObjectChunkArraysCopy
+class ChunkMapObjectArraysCopy
 {
+
 private:
     static_assert(std::is_base_of<GenericObject, T>::value, "T must inherit from GenericObject");
     void m_initAsAntArrayMap(ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> &rChunkMap)
@@ -25,7 +26,7 @@ private:
         {
             for (unsigned int x = 0; x < rChunkMap.map[y].size(); x++)
             {
-                pArrayMap[y][x] = &rChunkMap.map[y][x].antsInChunk;
+                pObjectArrayMap[y][x] = &rChunkMap.map[y][x].antsArray;
             }
         }
     }
@@ -35,16 +36,16 @@ private:
         {
             for (unsigned int x = 0; x < rChunkMap.map[y].size(); x++)
             {
-                pArrayMap[y][x] = &rChunkMap.map[y][x].pheromonesInChunk;
+                pObjectArrayMap[y][x] = &rChunkMap.map[y][x].pheromonesArray;
             }
         }
     }
 public:
-    std::array<T*, Chunk::MAX_OBJECTS_PER_TYPE> *pArrayMap[MAP_SIZE_Y][MAP_SIZE_X];
+    ObjectChunkArray<T>  *pObjectArrayMap[MAP_SIZE_Y][MAP_SIZE_X];
 
-    ObjectChunkArraysCopy() = default;
+    ChunkMapObjectArraysCopy() = default;
 
-    ObjectChunkArraysCopy(ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> *pAChunkMap)
+    ChunkMapObjectArraysCopy(ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> *pAChunkMap)
     {
         if constexpr (std::is_same_v<T, Ant>)
             m_initAsAntArrayMap(*pAChunkMap);
@@ -62,19 +63,23 @@ class ObjectsController
 /*
  * TODO: Modify all apparitions of "ant" into "object" / "obj"
  */
-private:
+public:
     /*
- * TODO: add a member variable in genericObject: m_indexInChunk so that m_findIndexInChunkOfObject() won't be needed anymore
- *  Might prove quite a performance improvement
- */
+     * TODO: Had to modify private: to public: for implementation testing,
+     *  Remember to change it back/modify the structure accordingly
+     *
+     * TODO: add a member variable in genericObject: m_indexInChunk so that m_findIndexInChunkOfObject() won't be needed anymore
+     *  Might prove quite a performance improvement
+     */
     unsigned int m_findIndexInChunkOfObject(unsigned int indexOfObject)
     {
         T *pCurrentObject = &objectHolder.inUseObjects[indexOfObject];
         sf::Vector2u objectMapIndex = pChunkMap->identifyMapIndexFromPosition(pCurrentObject->getPosition());
+        ObjectChunkArray<T> *pCurrentChunkArray = chunkMapObjectArrays.pObjectArrayMap[objectMapIndex.y][objectMapIndex.x];
 
-        for (unsigned int i = 0; i < pChunkMap->map[objectMapIndex.y][objectMapIndex.x].MAX_OBJECTS_PER_TYPE; ++i)
+        for (unsigned int i = 0; i < pCurrentChunkArray->MAX_OBJECTS_PER_TYPE; ++i)
         {
-            if (pChunkMap->map[objectMapIndex.y][objectMapIndex.x].objectsInChunk[i] == pCurrentObject)
+            if (pCurrentChunkArray->objectsInChunk[i] == pCurrentObject)
                 return i;
         }
         return -1;
@@ -87,9 +92,10 @@ private:
 
         sf::Vector2u objectMapIndex = pChunkMap->identifyMapIndexFromPosition(pCurrentObject->getPosition());
         unsigned int indexInChunk = m_findIndexInChunkOfObject(indexOfObject);
+        ObjectChunkArray<T> *pCurrentChunkArray = chunkMapObjectArrays.pObjectArrayMap[objectMapIndex.y][objectMapIndex.x];
 
-        chunkArraysCopy.pArrayMap[objectMapIndex.y][objectMapIndex.x].objectsInChunk[indexInChunk] = nullptr;
-        chunkArraysCopy.pArrayMap[objectMapIndex.y][objectMapIndex.x].noOfObjects--;
+        pCurrentChunkArray->objectsInChunk[indexInChunk] = nullptr;
+        pCurrentChunkArray->noOfObjects--;
 
         pCurrentObject->setPtrHomeChunk(nullptr);
     }
@@ -104,15 +110,20 @@ private:
         T *pCurrentObject = &objectHolder.inUseObjects[indexOfObject];
         sf::Vector2u objectMapIndex = pChunkMap->identifyMapIndexFromPosition(pCurrentObject->getPosition());
 
-        if (Chunk::MAX_OBJECTS_PER_TYPE <= pChunkMap->map[objectMapIndex.y][objectMapIndex.x].noOfObjects)
+        ObjectChunkArray<T> *pCurrentChunkArray = chunkMapObjectArrays.pObjectArrayMap[objectMapIndex.y][objectMapIndex.x];
+        if (Chunk::MAX_OBJECTS_PER_TYPE <= pCurrentChunkArray->noOfObjects)
             throw std::out_of_range("Chunk is already full");
 
-        for (unsigned int i = 0; i < pChunkMap->map[objectMapIndex.y][objectMapIndex.x].MAX_OBJECTS_PER_TYPE; ++i)
+        /*
+         * TODO: We can remember the last found free space (which was later occupied), saving some cpu time
+         *  so i = lastKnownFreeSpace instead of i = 0
+         */
+        for (unsigned int i = 0; i < pCurrentChunkArray->MAX_OBJECTS_PER_TYPE; ++i)
         {
-            if (pChunkMap->map[objectMapIndex.y][objectMapIndex.x].objectsInChunk[i] == nullptr)
+            if (pCurrentChunkArray->objectsInChunk[i] == nullptr)
             {
-                pChunkMap->map[objectMapIndex.y][objectMapIndex.x].objectsInChunk[i] = pCurrentObject;
-                pChunkMap->map[objectMapIndex.y][objectMapIndex.x].noOfObjects++;
+                pCurrentChunkArray->objectsInChunk[i] = pCurrentObject;
+                pCurrentChunkArray->noOfObjects++;
 
                 pCurrentObject->setPtrHomeChunk(&pChunkMap->map[objectMapIndex.y][objectMapIndex.x]);
 
@@ -132,11 +143,12 @@ public:
     ObjectHolder<T> objectHolder{Chunk::MAX_OBJECTS_PER_TYPE * MAP_SIZE_X * MAP_SIZE_Y / 4};
     ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> *pChunkMap;
 
-    ObjectChunkArraysCopy<T, MAP_SIZE_X, MAP_SIZE_Y> chunkArraysCopy;
+    ChunkMapObjectArraysCopy<T, MAP_SIZE_X, MAP_SIZE_Y> chunkMapObjectArrays;
 
+    ObjectsController() = default;
     ObjectsController(ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> *pAChunkMap) : pChunkMap{pAChunkMap}
     {
-        chunkArraysCopy = ObjectChunkArraysCopy<T, MAP_SIZE_X, MAP_SIZE_Y>(pAChunkMap);
+        chunkMapObjectArrays = ChunkMapObjectArraysCopy<T, MAP_SIZE_X, MAP_SIZE_Y>(pAChunkMap);
     }
 
 
