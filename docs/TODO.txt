@@ -57,3 +57,8 @@ Note: Did this, without reversing the structure levels. Added functions in gener
                                         ||                                              ||          (note that there are more
      In chunks[][]:                    /||\                                            /||\          holders for every controller)
                                     <Ant> Holder            &&                    <Pheromone> Holder
+
+     [X] Define templates
+     [ ] Change from the old system to the new one
+        Note: Achieved a working state, not quite finished though. For now the old functions call the new ones in World,
+            but I need to completely delete all old functions and directly introduce calls to the new template system
