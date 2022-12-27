@@ -35,11 +35,14 @@ class Chunk
                                       };
         
         Chunk();
-		Chunk(sf::Vector2u aChunkIndex);
+		explicit Chunk(sf::Vector2u aChunkIndex);
 		
         
 		///calls initNearbyChunkMap for every chunk in 2D array. It inits *pNearbyChunks[3][3];
 		///for initNearbyChunkMap to work, all chunks need to be continuous in memory, eg: std::array
+		/*
+		 * TODO: Move this into ChunkMap
+		 */
         template<std::size_t SIZE_X, std::size_t SIZE_Y>
 		static void initAllChunks(std::array<std::array<Chunk, SIZE_X>, SIZE_Y> &chunks)
 		{
