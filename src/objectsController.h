@@ -4,7 +4,7 @@
 #include "objectHolder.h"
 #include "chunk.h"
 #include "chunkMap.h"
-
+#include "chunkMapObjectArrayCopy.h"
 /*
  * Layer structure:
  *      World - ObjectController templates  |\|\ Object -
@@ -14,47 +14,6 @@
  *  ObjectController uses ObjectChunkArraysCopy to create a bridge between Object Controllers template instances
  *  and Object Arrays from every chunk by copying all needed references.
  */
-template <class T, std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
-class ChunkMapObjectArraysCopy
-{
-
-private:
-    static_assert(std::is_base_of<GenericObject, T>::value, "T must inherit from GenericObject");
-    void m_initAsAntArrayMap(ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> &rChunkMap)
-    {
-        for (unsigned int y = 0; y < rChunkMap.map.size(); y++)
-        {
-            for (unsigned int x = 0; x < rChunkMap.map[y].size(); x++)
-            {
-                pObjectArrayMap[y][x] = &rChunkMap.map[y][x].antsArray;
-            }
-        }
-    }
-    void m_initAsPheromoneArrayMap(ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> &rChunkMap)
-    {
-        for (unsigned int y = 0; y < rChunkMap.map.size(); y++)
-        {
-            for (unsigned int x = 0; x < rChunkMap.map[y].size(); x++)
-            {
-                pObjectArrayMap[y][x] = &rChunkMap.map[y][x].pheromonesArray;
-            }
-        }
-    }
-public:
-    ObjectChunkArray<T>  *pObjectArrayMap[MAP_SIZE_Y][MAP_SIZE_X];
-
-    ChunkMapObjectArraysCopy() = default;
-
-    ChunkMapObjectArraysCopy(ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> *pAChunkMap)
-    {
-        if constexpr (std::is_same_v<T, Ant>)
-            m_initAsAntArrayMap(*pAChunkMap);
-        else if constexpr (std::is_same_v<T, Pheromone>)
-            m_initAsPheromoneArrayMap(*pAChunkMap);
-    }
-
-
-};
 
 template <class T, std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
 class ObjectsController
