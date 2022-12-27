@@ -60,78 +60,8 @@ template <class T, std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
 class ObjectsController
 {
     static_assert(std::is_base_of<GenericObject, T>::value, "T must inherit from GenericObject");
-/*
- * TODO: Modify all apparitions of "ant" into "object" / "obj"
- */
-public:
-    /*
-     * TODO: Had to modify private: to public: for implementation testing,
-     *  Remember to change it back/modify the structure accordingly
-     *
-     * TODO: add a member variable in genericObject: m_indexInChunk so that m_findIndexInChunkOfObject() won't be needed anymore
-     *  Might prove quite a performance improvement
-     */
-    unsigned int m_findIndexInChunkOfObject(unsigned int indexOfObject)
-    {
-        T *pCurrentObject = &objectHolder.inUseObjects[indexOfObject];
-        sf::Vector2u objectMapIndex = pChunkMap->identifyMapIndexFromPosition(pCurrentObject->getPosition());
-        ObjectChunkArray<T> *pCurrentChunkArray = chunkMapObjectArrays.pObjectArrayMap[objectMapIndex.y][objectMapIndex.x];
-
-        for (unsigned int i = 0; i < pCurrentChunkArray->MAX_OBJECTS_PER_TYPE; ++i)
-        {
-            if (pCurrentChunkArray->objectsInChunk[i] == pCurrentObject)
-                return i;
-        }
-        return -1;
-    }
-
-
-    void m_removeObjectFromWorldChunk(unsigned int indexOfObject)
-    {
-        T *pCurrentObject = &objectHolder.inUseObjects[indexOfObject];
-
-        sf::Vector2u objectMapIndex = pChunkMap->identifyMapIndexFromPosition(pCurrentObject->getPosition());
-        unsigned int indexInChunk = m_findIndexInChunkOfObject(indexOfObject);
-        ObjectChunkArray<T> *pCurrentChunkArray = chunkMapObjectArrays.pObjectArrayMap[objectMapIndex.y][objectMapIndex.x];
-
-        pCurrentChunkArray->objectsInChunk[indexInChunk] = nullptr;
-        pCurrentChunkArray->noOfObjects--;
-
-        pCurrentObject->setPtrHomeChunk(nullptr);
-    }
-
-    void m_insertObjectIntoWorldChunk(unsigned int indexOfObject)
-    {
-        /*
-         * We are searching through the array for the first empty spot. The array is not sorted, so it will have
-         * empty spots inside itself.
-         * When such a spot is found, we put our object into it and increment the objects in chunk counter
-         */
-        T *pCurrentObject = &objectHolder.inUseObjects[indexOfObject];
-        sf::Vector2u objectMapIndex = pChunkMap->identifyMapIndexFromPosition(pCurrentObject->getPosition());
-
-        ObjectChunkArray<T> *pCurrentChunkArray = chunkMapObjectArrays.pObjectArrayMap[objectMapIndex.y][objectMapIndex.x];
-        if (Chunk::MAX_OBJECTS_PER_TYPE <= pCurrentChunkArray->noOfObjects)
-            throw std::out_of_range("Chunk is already full");
-
-        /*
-         * TODO: We can remember the last found free space (which was later occupied), saving some cpu time
-         *  so i = lastKnownFreeSpace instead of i = 0
-         */
-        for (unsigned int i = 0; i < pCurrentChunkArray->MAX_OBJECTS_PER_TYPE; ++i)
-        {
-            if (pCurrentChunkArray->objectsInChunk[i] == nullptr)
-            {
-                pCurrentChunkArray->objectsInChunk[i] = pCurrentObject;
-                pCurrentChunkArray->noOfObjects++;
-
-                pCurrentObject->setPtrHomeChunk(&pChunkMap->map[objectMapIndex.y][objectMapIndex.x]);
-
-                return;
-            }
-        }
-    }
-
+private:
+    unsigned int m_lastKnownFreeSpace = 0;
 public:
     static constexpr std::size_t NO_OF_CHUNKS_X = MAP_SIZE_X;
     static constexpr std::size_t NO_OF_CHUNKS_Y = MAP_SIZE_Y;
@@ -151,13 +81,82 @@ public:
         chunkMapObjectArrays = ChunkMapObjectArraysCopy<T, MAP_SIZE_X, MAP_SIZE_Y>(pAChunkMap);
     }
 
+    /*
+     * TODO: add a member variable in genericObject: m_indexInChunk so that findIndexInChunkOfObject() won't be needed anymore
+     *  Might prove quite a performance improvement
+     */
+    unsigned int findIndexInChunkOfObject(unsigned int indexOfObject)
+    {
+        T *pCurrentObject = &objectHolder.inUseObjects[indexOfObject];
+        sf::Vector2u objectMapIndex = pChunkMap->identifyMapIndexFromPosition(pCurrentObject->getPosition());
+        ObjectChunkArray<T> *pCurrentChunkArray = chunkMapObjectArrays.pObjectArrayMap[objectMapIndex.y][objectMapIndex.x];
+
+        for (unsigned int i = 0; i < pCurrentChunkArray->MAX_OBJECTS_PER_TYPE; ++i)
+        {
+            if (pCurrentChunkArray->objectsInChunk[i] == pCurrentObject)
+                return i;
+        }
+        return -1;
+    }
+
+
+    void removeObjectFromWorldChunk(unsigned int indexOfObject)
+    {
+        T *pCurrentObject = &objectHolder.inUseObjects[indexOfObject];
+
+        sf::Vector2u objectMapIndex = pChunkMap->identifyMapIndexFromPosition(pCurrentObject->getPosition());
+        unsigned int indexInChunk = findIndexInChunkOfObject(indexOfObject);
+        ObjectChunkArray<T> *pCurrentChunkArray = chunkMapObjectArrays.pObjectArrayMap[objectMapIndex.y][objectMapIndex.x];
+
+        pCurrentChunkArray->objectsInChunk[indexInChunk] = nullptr;
+        pCurrentChunkArray->noOfObjects--;
+
+        pCurrentObject->setPtrHomeChunk(nullptr);
+
+        if (indexInChunk < m_lastKnownFreeSpace) m_lastKnownFreeSpace = indexInChunk;
+    }
+
+    void insertObjectIntoWorldChunk(unsigned int indexOfObject)
+    {
+        /*
+         * We are searching through the array for the first empty spot. The array is not sorted, so it will have
+         * empty spots inside itself.
+         * When such a spot is found, we put our object into it and increment the objects in chunk counter
+         */
+        T *pCurrentObject = &objectHolder.inUseObjects[indexOfObject];
+        sf::Vector2u objectMapIndex = pChunkMap->identifyMapIndexFromPosition(pCurrentObject->getPosition());
+
+        ObjectChunkArray<T> *pCurrentChunkArray = chunkMapObjectArrays.pObjectArrayMap[objectMapIndex.y][objectMapIndex.x];
+        if (Chunk::MAX_OBJECTS_PER_TYPE <= pCurrentChunkArray->noOfObjects)
+            throw std::out_of_range("Chunk is already full");
+
+        /*
+         * TODO: We can remember the last found free space (which was later occupied), saving some cpu time
+         *  so i = m_lastKnownFreeSpace instead of i = 0
+         */
+
+        for (unsigned int i = m_lastKnownFreeSpace; i < pCurrentChunkArray->MAX_OBJECTS_PER_TYPE; ++i)
+        {
+            if (pCurrentChunkArray->objectsInChunk[i] == nullptr)
+            {
+                pCurrentChunkArray->objectsInChunk[i] = pCurrentObject;
+                pCurrentChunkArray->noOfObjects++;
+
+                pCurrentObject->setPtrHomeChunk(&pChunkMap->map[objectMapIndex.y][objectMapIndex.x]);
+
+                m_lastKnownFreeSpace = i;
+                return;
+            }
+        }
+    }
+
 
     //needs to be called only once after every objectHolder.insertAllNewObjectsIntoHolder() call
     void insertObjectHolderIntoWorldChunks()
     {
         for (unsigned int i = 0; i < objectHolder.inUseObjects.size(); ++i)
         {
-            m_insertObjectIntoWorldChunk(i);
+            insertObjectIntoWorldChunk(i);
         }
     }
 
@@ -174,9 +173,9 @@ public:
                 pCurrentObject->setPosition(newPosition);
             } else
             {
-                m_removeObjectFromWorldChunk(index);
+                removeObjectFromWorldChunk(index);
                 pCurrentObject->setPosition(newPosition);
-                m_insertObjectIntoWorldChunk(index);
+                insertObjectIntoWorldChunk(index);
 
             }
         }
