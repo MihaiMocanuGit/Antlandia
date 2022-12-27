@@ -24,11 +24,13 @@ float tempTestRand(float LO, float HI)
 template<std::size_t SIZE_X, std::size_t SIZE_Y>
 void initAnts(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize)
 {
-    rWorld.ants.createNewObjects((1 << 6) * SIZE_X * SIZE_Y);
+    //rWorld.ants.createNewObjects((1 << 6) * SIZE_X * SIZE_Y);
+    rWorld.antController.objectHolder.createNewObjects((1 << 6) * SIZE_X * SIZE_Y);
+
 
     srand(time(0));
 
-    for(auto & ant : rWorld.ants.newObjects)
+    for(auto & ant : rWorld.antController.objectHolder.newObjects)
     {
         sf::CircleShape shape(1);
         shape.setFillColor(sf::Color::Black);
@@ -40,7 +42,7 @@ void initAnts(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize)
     }
 
 
-    rWorld.ants.insertAllNewObjectsIntoHolder();
+    rWorld.antController.objectHolder.insertAllNewObjectsIntoHolder();
     rWorld.insertAntHolderIntoWorldChunks();
 
 }
@@ -60,10 +62,11 @@ void startApp(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize, con
         //clear screen and fill with background color
         window.clear(sf::Color::White);
 
-
-        for(unsigned int i = 0; i < rWorld.ants.inUseObjects.size(); i++)
+        std::vector<Ant> *pInUseAnts = &rWorld.antController.objectHolder.inUseObjects;
+        //for(unsigned int i = 0; i < rWorld.ants.inUseObjects.size(); i++)
+        for(unsigned int i = 0; i < pInUseAnts->size(); i++)
         {
-            Ant *pCurrentAnt = &rWorld.ants.inUseObjects[i];
+            Ant *pCurrentAnt = &pInUseAnts->at(i);
 
             sf::Vector2f offset{tempTestRand(-0.75*1.25, 1*1.25), tempTestRand(-0.75*1.5, 1*1.5)};
             pCurrentAnt->template moveBy(rWorld, offset);

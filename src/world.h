@@ -97,7 +97,7 @@ public:
     static constexpr std::size_t NO_OF_CHUNKS_Y = MAP_SIZE_Y;
 
     ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> chunkMap;
-    ObjectHolder<Ant> ants{Chunk::MAX_OBJECTS_PER_TYPE * MAP_SIZE_X * MAP_SIZE_Y};
+    //ObjectHolder<Ant> ants{Chunk::MAX_OBJECTS_PER_TYPE * MAP_SIZE_X * MAP_SIZE_Y};
     ObjectsController<Ant, MAP_SIZE_X, MAP_SIZE_Y> antController;
 
     ObjectHolder<Pheromone> pheromons{Chunk::MAX_OBJECTS_PER_TYPE * MAP_SIZE_X * MAP_SIZE_Y};
