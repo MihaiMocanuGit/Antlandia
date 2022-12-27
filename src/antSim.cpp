@@ -43,7 +43,7 @@ void initAnts(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize)
 
 
     rWorld.antController.objectHolder.insertAllNewObjectsIntoHolder();
-    rWorld.insertAntHolderIntoWorldChunks();
+    rWorld.antController.insertObjectHolderIntoWorldChunks();
 
 }
 

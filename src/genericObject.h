@@ -40,13 +40,13 @@ public:
     template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
     void moveTo(World<MAP_SIZE_X, MAP_SIZE_Y> &rWorld, sf::Vector2f position)
     {
-        rWorld.moveAntAtIndexTo(m_indexInHolder, position);
+        rWorld.antController.moveObjectAtIndexTo(m_indexInHolder, position);
     }
 
     template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
     void moveBy(World<MAP_SIZE_X, MAP_SIZE_Y> &rWorld, sf::Vector2f offset)
     {
-        rWorld.moveAntAtIndexBy(m_indexInHolder, offset);
+        rWorld.antController.moveObjectAtIndexBy(m_indexInHolder, offset);
     }
 
     const Chunk *getPtrHomeChunk() const;
