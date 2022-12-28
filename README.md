@@ -27,6 +27,5 @@ Shortcuts:
 
 # Notes: 
 * Checking `docs/` might help to better understand this project.
-* I am writing this project to get better at software engineering. I know my code is in no way perfect, but I do strive to do better.
-* It is a work in progress and unfortunately, as I am studying Math and CS, I cannot dedicate as much time to it as I would love. Therefore progress might prove to be slow.
+
 
