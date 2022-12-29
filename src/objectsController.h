@@ -41,10 +41,10 @@ public:
     }
 
     /*
-     * TODO: add a member variable in genericObject: m_indexInChunk so that findIndexInChunkOfObject() won't be needed anymore
+     * TODO: add a member variable in genericObject: m_indexInChunk so that m_findIndexInChunkOfObject() won't be needed anymore
      *  Might prove quite a performance improvement
      */
-    unsigned int findIndexInChunkOfObject(unsigned int indexOfObject)
+    unsigned int m_findIndexInChunkOfObject(unsigned int indexOfObject)
     {
         T *pCurrentObject = &objectHolder.inUseObjects[indexOfObject];
         sf::Vector2u objectMapIndex = pChunkMap->identifyMapIndexFromPosition(pCurrentObject->getPosition());
@@ -59,12 +59,12 @@ public:
     }
 
 
-    void removeObjectFromWorldChunk(unsigned int indexOfObject)
+    void m_removeObjectFromWorldChunk(unsigned int indexOfObject)
     {
         T *pCurrentObject = &objectHolder.inUseObjects[indexOfObject];
 
         sf::Vector2u objectMapIndex = pChunkMap->identifyMapIndexFromPosition(pCurrentObject->getPosition());
-        unsigned int indexInChunk = findIndexInChunkOfObject(indexOfObject);
+        unsigned int indexInChunk = m_findIndexInChunkOfObject(indexOfObject);
         ChunkObjectArray<T> *pCurrentChunkArray = chunkMapObjectArrays.pObjectArrayMap[objectMapIndex.y][objectMapIndex.x];
 
         pCurrentChunkArray->objectsInChunk[indexInChunk] = nullptr;
@@ -75,7 +75,7 @@ public:
         if (indexInChunk < m_lastKnownFreeSpace) m_lastKnownFreeSpace = indexInChunk;
     }
 
-    void insertObjectIntoWorldChunk(unsigned int indexOfObject)
+    void m_insertObjectIntoWorldChunk(unsigned int indexOfObject)
     {
         /*
          * We are searching through the array for the first empty spot. The array is not sorted, so it will have
@@ -115,8 +115,13 @@ public:
     {
         for (unsigned int i = 0; i < objectHolder.inUseObjects.size(); ++i)
         {
-            insertObjectIntoWorldChunk(i);
+            m_insertObjectIntoWorldChunk(i);
         }
+    }
+
+    void insertObjectIntoWorldChunk(unsigned int indexInHolder)
+    {
+        m_insertObjectIntoWorldChunk(indexInHolder);
     }
 
     void moveObjectAtIndexTo(unsigned int index, sf::Vector2f newPosition)
@@ -132,9 +137,9 @@ public:
                 pCurrentObject->setPosition(newPosition);
             } else
             {
-                removeObjectFromWorldChunk(index);
+                m_removeObjectFromWorldChunk(index);
                 pCurrentObject->setPosition(newPosition);
-                insertObjectIntoWorldChunk(index);
+                m_insertObjectIntoWorldChunk(index);
 
             }
         }
@@ -144,6 +149,27 @@ public:
     {
         moveObjectAtIndexTo(index, objectHolder.inUseObjects[index].getPosition() + positionOffset);
     }
+
+    ///
+    /// \tparam DischargedT
+    /// \param indexParent
+    /// \param rDischargedObject It will always inherit the ant's position
+    /// \param rDischargedObjCntrl It is assumed that MAP_SIZE_X/Y is the same for both the parent's controller
+    /// and discharged objects's controller
+    /// \return The index in DischargedT type holder
+    template <class DischargedT>
+    unsigned int dischargeObjectFromParentAtIndex(unsigned int indexParent, DischargedT &rDischargedObject,
+                                          ObjectsController<DischargedT, MAP_SIZE_X, MAP_SIZE_Y> &rDischargedObjCntrl)
+    {
+        static_assert(std::is_base_of<GenericObject, DischargedT>::value, "DischargedT must inherit from GenericObject");
+        //inherit the ant's position
+        rDischargedObject.setPosition(objectHolder.inUseObjects[indexParent].getPosition());
+
+        rDischargedObjCntrl.objectHolder.insertGivenObjectIntoHolder(rDischargedObject);
+        insertObjectIntoWorldChunk(rDischargedObject.getIndexInHolder());
+        return rDischargedObject.getIndexInHolder();
+    }
+
 };
 
 

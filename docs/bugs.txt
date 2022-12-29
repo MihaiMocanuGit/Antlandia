@@ -1,2 +1,3 @@
 Memory leak in SFML or nVidia driver (not sure, doesn't seem to be caused by me)
 #No other known bugs as of yet, let's hope there really are none :))
+

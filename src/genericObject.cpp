@@ -27,7 +27,9 @@ void GenericObject::m_initPtrShape()
 
 GenericObject::GenericObject()
 {
+    //used when initing a genericObject created with no parameters
     m_initPtrShape();
+
 }
 
 GenericObject::GenericObject(sf::CircleShape &aShape)

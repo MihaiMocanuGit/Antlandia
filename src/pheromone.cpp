@@ -10,9 +10,10 @@ Pheromone::Pheromone()
 }
 
 
-Pheromone::Pheromone(sf::CircleShape &aShape, float aPower, float aPowerReducingFactor)
+Pheromone::Pheromone(sf::CircleShape &aShape, int aType, float aPower, float aPowerReducingFactor)
 {
     m_pShape = &aShape;
+    type = aType;
     powerReducingFactor = aPowerReducingFactor;
     power = aPower;
 
@@ -20,7 +21,7 @@ Pheromone::Pheromone(sf::CircleShape &aShape, float aPower, float aPowerReducing
      * TODO: rethink if this should be implemented as an error or a neutral value reallocation
     */
     if(powerReducingFactor < 1)
-        powerReducingFactor = Pheromone::DEFAULT_POWER_REDUCING_FACTOR;
+        powerReducingFactor = 1;//Pheromone::DEFAULT_POWER_REDUCING_FACTOR;
 
 }
 

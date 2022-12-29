@@ -33,7 +33,7 @@ public:
     int type;
 
     Pheromone();
-    Pheromone(sf::CircleShape &aShape, float aPower, float aPowerReducingFactor);
+    Pheromone(sf::CircleShape &aShape, int aType, float aPower, float aPowerReducingFactor);
 
 
 

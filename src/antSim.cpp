@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <algorithm>
 
 #include "world.h"
 
@@ -25,16 +26,22 @@ template<std::size_t SIZE_X, std::size_t SIZE_Y>
 void initAnts(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize)
 {
     //rWorld.ants.createNewObjects((1 << 6) * SIZE_X * SIZE_Y);
-    rWorld.antController.objectHolder.createNewObjects((1 << 6) * SIZE_X * SIZE_Y);
+    rWorld.antController.objectHolder.createNewObjects((1 << 7));
 
 
     srand(time(0));
 
     for(auto & ant : rWorld.antController.objectHolder.newObjects)
     {
-        sf::CircleShape shape(1);
+        sf::CircleShape shape(1.5);
         shape.setFillColor(sf::Color::Black);
-        shape.setPosition(tempTestRand(0, windowSize.x), tempTestRand(0, windowSize.y));
+
+        sf::Vector2f middlePoint(SIZE_X*Chunk::CHUNK_SIZE.x/2.0,
+                                 SIZE_Y*Chunk::CHUNK_SIZE.y/2.0);
+        sf::Vector2f  offset(Chunk::CHUNK_SIZE.x/1.5,
+                             Chunk::CHUNK_SIZE.y/1.5);
+        shape.setPosition(tempTestRand(middlePoint.x - offset.x, middlePoint.x + offset.x),
+                          tempTestRand(middlePoint.x - offset.x, middlePoint.x + offset.x));
 
         sf::Vector2f velocity{0.07, 0.1};
         ant.init(shape, velocity, 100, 100, 5);
@@ -47,6 +54,43 @@ void initAnts(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize)
 
 }
 
+void modifyOriginByKeyboard(sf::Vector2f &rOrigin, float maxSpeed)
+{
+    constexpr float STEP = 0.1;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+    {
+        // move up...
+        rOrigin.y -= STEP;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+    {
+        // move down...
+        rOrigin.y += STEP;
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+    {
+        // move left...
+        rOrigin.x -= STEP;
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    {
+        // move right...
+        rOrigin.x += STEP;
+    }
+
+    rOrigin.x = std::clamp(rOrigin.x, -maxSpeed, maxSpeed);
+    rOrigin.y = std::clamp(rOrigin.y, -maxSpeed, maxSpeed);
+}
+
+Pheromone getGenericPheromone()
+{
+    sf::CircleShape shape(1);
+    shape.setFillColor(sf::Color::Green);
+    Pheromone pheromone(shape, 2, 100, 1.25);
+
+    return pheromone;
+}
 template<std::size_t SIZE_X, std::size_t SIZE_Y>
 void startApp(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize, const std::string &windowTitle)
 {
@@ -55,6 +99,14 @@ void startApp(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize, con
     sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), windowTitle);
     window.setFramerateLimit(60);
 
+    sf::Vector2f origin(0, 0);
+    sf::Vector2f boundary(1.5, 1.5);
+    /*
+     * Random movement logic
+     * x: _______-1.0____0.0____1.0_______
+     * (user changes origin, eg (0.5,0.5)
+     * x: _________-0.5____0.5____1.5_____
+     */
     while (window.isOpen())
     {
         closeWindowIfEvent(window);
@@ -63,12 +115,21 @@ void startApp(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize, con
         window.clear(sf::Color::White);
 
         std::vector<Ant> *pInUseAnts = &rWorld.antController.objectHolder.inUseObjects;
+        modifyOriginByKeyboard(origin, 1);
         for(auto & ant : *pInUseAnts)
         {
-            sf::Vector2f offset{tempTestRand(-0.75*1.25, 1*1.25), tempTestRand(-0.75*1.5, 1*1.5)};
+            sf::Vector2f offset{tempTestRand(origin.x - boundary.x, origin.x + boundary.x),
+                                tempTestRand(origin.y - boundary.y, origin.y + boundary.y)};
             ant.template moveBy(rWorld, offset);
-
+            Pheromone pheromone = getGenericPheromone();
+            ant.template dischargePheromone(rWorld, pheromone);
             window.draw(ant.getShape());
+        }
+
+        std::vector<Pheromone> *pInUsePheromons = &rWorld.pheromoneController.objectHolder.inUseObjects;
+        for(auto & pheromone : *pInUsePheromons)
+        {
+            window.draw(pheromone.getShape());
         }
         window.display();
 

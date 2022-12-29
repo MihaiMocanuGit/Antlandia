@@ -56,6 +56,13 @@ public:
         newObjects.clear();
     }
 
+    void insertGivenObjectIntoHolder(T &givenObject)
+    {
+        unsigned int index = inUseObjects.size();
+        givenObject.setIndexInHolder(index++);
+        inUseObjects.push_back(givenObject);
+    }
+
 
     //best value Chunk::MAX_OBJECTS_PER_TYPE * World.noOfChunksX * World.noOfChunksY
     void changeReservedVectorSpace(std::size_t newReservedSpace)
