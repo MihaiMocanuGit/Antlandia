@@ -166,7 +166,7 @@ public:
         rDischargedObject.setPosition(objectHolder.inUseObjects[indexParent].getPosition());
 
         rDischargedObjCntrl.objectHolder.insertGivenObjectIntoHolder(rDischargedObject);
-        insertObjectIntoWorldChunk(rDischargedObject.getIndexInHolder());
+        rDischargedObjCntrl.insertObjectIntoWorldChunk(rDischargedObject.getIndexInHolder());
         return rDischargedObject.getIndexInHolder();
     }
 

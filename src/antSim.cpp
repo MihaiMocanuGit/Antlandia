@@ -26,14 +26,14 @@ template<std::size_t SIZE_X, std::size_t SIZE_Y>
 void initAnts(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize)
 {
     //rWorld.ants.createNewObjects((1 << 6) * SIZE_X * SIZE_Y);
-    rWorld.antController.objectHolder.createNewObjects((1 << 0));
+    rWorld.antController.objectHolder.createNewObjects((1));
 
 
     srand(time(0));
 
     for(auto & ant : rWorld.antController.objectHolder.newObjects)
     {
-        sf::CircleShape shape(1.5);
+        sf::CircleShape shape(2);
         shape.setFillColor(sf::Color::Black);
 
         sf::Vector2f middlePoint(SIZE_X*Chunk::CHUNK_SIZE.x/2.0,
