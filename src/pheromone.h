@@ -20,6 +20,9 @@ public:
     static constexpr int PATH_TYPE = 2;
     static constexpr int HOME_TYPE = 3;
     static constexpr float DEFAULT_POWER_REDUCING_FACTOR = 1.25;
+
+    int type;
+    float power;
     /*
      * a sort of power half life, pretty much every frame we divide power by a certain value, this value being
      * power_reducing_factor which must be > 1 or = 1 if you want it to last forever
@@ -28,9 +31,9 @@ public:
      */
     float powerReducingFactor;
 
-    float power;
 
-    int type;
+
+
 
     Pheromone() = default;
     Pheromone(sf::CircleShape &aShape, int aType, float aPower, float aPowerReducingFactor);

@@ -77,6 +77,24 @@ GenericObject::GenericObject(GenericObject&& other) noexcept
     swap(*this, other);
 }
 
+GenericObject& GenericObject::operator=(GenericObject&& other) noexcept
+{
+
+    if (this != &other)
+    {
+        // Free the existing resource.
+        delete m_pShape;
+
+        swap(*this, other);
+        // Release the data pointer from the source object so that
+        // the destructor does not free the memory multiple times.
+        other.m_pShape = nullptr;
+        other.m_pHomeChunk = nullptr;
+    }
+    return *this;
+}
+
+
 GenericObject::~GenericObject()
 {
     //std::cout << '-' << pShape << '\t';

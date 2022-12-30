@@ -47,10 +47,11 @@ public:
     void insertGivenObjectIntoHolder(T &givenObject)
     {
         createNewObjects(1);
-        newObjects.back() = givenObject;
 
         unsigned int index = inUseObjects.size();
-        newObjects.back().setIndexInHolder(index);
+        givenObject.setIndexInHolder(index);
+        newObjects.back() = givenObject;
+
         inUseObjects.push_back(newObjects.back());
 
 

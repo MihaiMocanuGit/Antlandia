@@ -26,7 +26,7 @@ template<std::size_t SIZE_X, std::size_t SIZE_Y>
 void initAnts(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize)
 {
     //rWorld.ants.createNewObjects((1 << 6) * SIZE_X * SIZE_Y);
-    rWorld.antController.objectHolder.createNewObjects((1 << 7));
+    rWorld.antController.objectHolder.createNewObjects((1 << 0));
 
 
     srand(time(0));

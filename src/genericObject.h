@@ -39,6 +39,8 @@ public:
 
     GenericObject& operator=(GenericObject other);
     GenericObject(GenericObject&& other) noexcept;
+    GenericObject& operator=(GenericObject&& other) noexcept;
+
     ~GenericObject();
 
     template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
