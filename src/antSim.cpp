@@ -49,7 +49,7 @@ void initAnts(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize)
     }
 
 
-    rWorld.antController.objectHolder.insertAllNewObjectsIntoHolder();
+    rWorld.antController.objectHolder.moveAllNewObjectsIntoHolder();
     rWorld.antController.insertObjectHolderIntoWorldChunks();
 
 }
@@ -121,8 +121,13 @@ void startApp(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize, con
             sf::Vector2f offset{tempTestRand(origin.x - boundary.x, origin.x + boundary.x),
                                 tempTestRand(origin.y - boundary.y, origin.y + boundary.y)};
             ant.template moveBy(rWorld, offset);
-            Pheromone pheromone = getGenericPheromone();
+
+            sf::CircleShape shape(1);
+            shape.setFillColor(sf::Color::Green);
+            Pheromone pheromone(shape, 2, 100, 1.25);
+
             ant.template dischargePheromone(rWorld, pheromone);
+
             window.draw(ant.getShape());
         }
 

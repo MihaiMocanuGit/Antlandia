@@ -11,6 +11,7 @@ class ChunkObjectArray
 {
 public:
     static_assert(std::is_base_of<GenericObject, T>::value, "T must inherit from GenericObject");
+
     static constexpr unsigned int MAX_OBJECTS_PER_TYPE = 1024;
     unsigned int noOfObjects = 0;
 

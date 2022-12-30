@@ -4,24 +4,9 @@
 
 #include "pheromone.h"
 
-Pheromone::Pheromone()
-{
-
-}
-
-
 Pheromone::Pheromone(sf::CircleShape &aShape, int aType, float aPower, float aPowerReducingFactor)
+    : GenericObject(aShape, {0, 0}), type(aType), power(aPower), powerReducingFactor(aPowerReducingFactor < 1 ? 1 : aPowerReducingFactor )
 {
-    m_pShape = &aShape;
-    type = aType;
-    powerReducingFactor = aPowerReducingFactor;
-    power = aPower;
-
-    /*
-     * TODO: rethink if this should be implemented as an error or a neutral value reallocation
-    */
-    if(powerReducingFactor < 1)
-        powerReducingFactor = 1;//Pheromone::DEFAULT_POWER_REDUCING_FACTOR;
 
 }
 

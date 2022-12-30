@@ -11,29 +11,17 @@ template<class T>
 class ObjectHolder
 {
     static_assert(std::is_base_of<GenericObject, T>::value, "T must inherit from GenericObject");
-private:
 
-    unsigned int m_RESERVED_VECTOR_SPACE = -1;
 public:
 
     //all initialized objects are in here
     std::vector<T> inUseObjects;
 
-    //is a temporal holding place where new objects are waiting to be initialized, after they were initialized call insertAllNewObjectsIntoHolder()
+    //is a temporal holding place where new objects are waiting to be initialized, after they were initialized call moveAllNewObjectsIntoHolder()
     //so that all new objects are sent to inUseObjects
     std::vector<T> newObjects;
 
-    ObjectHolder()
-    {
-        //we make the assumption that the chunk map is 10 by 10 and one chunk can hold at most Chunk::MAX_OBJECTS_PER_TYPE
-        //changeReservedVectorSpace(Chunk::MAX_OBJECTS_PER_TYPE * 10 * 10);
-    }
-
-    //best value Chunk::MAX_OBJECTS_PER_TYPE * World.noOfChunksX * World.noOfChunksY
-    ObjectHolder(std::size_t aproximateVectorSize)
-    {
-        //changeReservedVectorSpace(aproximateVectorSize);
-    }
+    ObjectHolder() = default;
 
 
     //creates new objects which have to be manually initialized by user right after.
@@ -44,7 +32,7 @@ public:
 
     //don't forget to manually init objects before;
     //Note: this doesn't actually insert the objects into map
-    void insertAllNewObjectsIntoHolder()
+    void moveAllNewObjectsIntoHolder()
     {
         //inUseObjects.insert(inUseObjects.end(), newObjects.begin(), newObjects.end());
         unsigned int index = inUseObjects.size();
@@ -58,19 +46,18 @@ public:
 
     void insertGivenObjectIntoHolder(T &givenObject)
     {
+        createNewObjects(1);
+        newObjects.back() = givenObject;
+
         unsigned int index = inUseObjects.size();
-        givenObject.setIndexInHolder(index++);
-        inUseObjects.push_back(givenObject);
+        newObjects.back().setIndexInHolder(index);
+        inUseObjects.push_back(newObjects.back());
+
+
+        newObjects.pop_back();
     }
 
 
-    //best value Chunk::MAX_OBJECTS_PER_TYPE * World.noOfChunksX * World.noOfChunksY
-    void changeReservedVectorSpace(std::size_t newReservedSpace)
-    {
-        m_RESERVED_VECTOR_SPACE = newReservedSpace;
-        inUseObjects.reserve(newReservedSpace);
-        newObjects.reserve(newReservedSpace);
-    }
 };
 
 

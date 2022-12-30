@@ -34,6 +34,7 @@ public:
     World()
     {
         antController = ObjectsController<Ant, MAP_SIZE_X, MAP_SIZE_Y>(&chunkMap);
+        pheromoneController = ObjectsController<Pheromone, MAP_SIZE_X, MAP_SIZE_Y>(&chunkMap);
     }
 
 };

@@ -29,13 +29,13 @@ public:
     static constexpr unsigned int INIT_AS_ANTS = 1;
     static constexpr unsigned int INIT_AS_PHEROMONES = 2;
 
-    ObjectHolder<T> objectHolder{Chunk::MAX_OBJECTS_PER_TYPE * MAP_SIZE_X * MAP_SIZE_Y / 4};
-    ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> *pChunkMap;
+    ObjectHolder<T> objectHolder;
+    ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> *pChunkMap = nullptr;
 
     ChunkMapObjectArraysCopy<T, MAP_SIZE_X, MAP_SIZE_Y> chunkMapObjectArrays;
 
     ObjectsController() = default;
-    ObjectsController(ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> *pAChunkMap) : pChunkMap{pAChunkMap}
+    explicit ObjectsController(ChunkMap<MAP_SIZE_X, MAP_SIZE_Y> *pAChunkMap) : pChunkMap{pAChunkMap}
     {
         chunkMapObjectArrays = ChunkMapObjectArraysCopy<T, MAP_SIZE_X, MAP_SIZE_Y>(pAChunkMap);
     }
@@ -94,7 +94,7 @@ public:
          *  so i = m_lastKnownFreeSpace instead of i = 0
          */
 
-        for (unsigned int i = m_lastKnownFreeSpace; i < pCurrentChunkArray->MAX_OBJECTS_PER_TYPE; ++i)
+        for (unsigned int i = 0; i < pCurrentChunkArray->MAX_OBJECTS_PER_TYPE; ++i)
         {
             if (pCurrentChunkArray->objectsInChunk[i] == nullptr)
             {
@@ -110,7 +110,7 @@ public:
     }
 
 
-    //needs to be called only once after every objectHolder.insertAllNewObjectsIntoHolder() call
+    //needs to be called only once after every objectHolder.moveAllNewObjectsIntoHolder() call
     void insertObjectHolderIntoWorldChunks()
     {
         for (unsigned int i = 0; i < objectHolder.inUseObjects.size(); ++i)

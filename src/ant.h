@@ -21,7 +21,7 @@ class Ant : public  GenericObject
 		int getStatusCode();
 		void setStatusCode(int statusCode);
 
-		Ant();
+		Ant() = default;
 		Ant(sf::CircleShape &aShape, sf::Vector2f &aVelocity,  float aHealth, float aEnergy, float aInteractingRadius);
 
         /*
@@ -38,7 +38,8 @@ class Ant : public  GenericObject
         template<std::size_t MAP_SIZE_X, std::size_t MAP_SIZE_Y>
         unsigned int dischargePheromone(World<MAP_SIZE_X, MAP_SIZE_Y> &rWorld, Pheromone &rPheromone)
         {
-            return rWorld.antController.dischargeObjectFromParentAtIndex(m_indexInHolder, rPheromone, rWorld.pheromoneController);
+            return rWorld.antController.dischargeObjectFromParentAtIndex(m_indexInHolder,
+                                                                         rPheromone, rWorld.pheromoneController);
         }
 
 		void init(sf::CircleShape &aShape, sf::Vector2f &aVelocity,

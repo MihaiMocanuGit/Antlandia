@@ -1,3 +1,6 @@
 Memory leak in SFML or nVidia driver (not sure, doesn't seem to be caused by me)
 #No other known bugs as of yet, let's hope there really are none :))
 
+https://stackoverflow.com/questions/10565209/segmentation-fault-strongly-because-of-heap-stack-corruption
+https://stackoverflow.com/questions/41712386/segmentation-fault-when-push-back-to-vector-c
+check the rule of three

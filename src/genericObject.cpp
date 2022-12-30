@@ -32,14 +32,7 @@ GenericObject::GenericObject()
 
 }
 
-GenericObject::GenericObject(sf::CircleShape &aShape)
-{
-
-    m_initPtrShape(aShape);
-    m_velocity = {0, 0};
-}
-
-GenericObject::GenericObject(sf::CircleShape &aShape, sf::Vector2f aVelocity) 
+GenericObject::GenericObject(sf::CircleShape &aShape, sf::Vector2f aVelocity)
 {
 
     m_initPtrShape(aShape);
@@ -57,6 +50,32 @@ GenericObject::GenericObject(const GenericObject &object)
     this->m_velocity = object.m_velocity;
 }
 
+void swap(GenericObject &first, GenericObject &second)
+{
+    ///https://stackoverflow.com/questions/3279543/what-is-the-copy-and-swap-idiom
+    // enable ADL (not necessary in our case, but good practice)
+    using std::swap;
+
+    // by swapping the members of two objects,
+    // the two objects are effectively swapped
+    swap(first.m_pHomeChunk, second.m_pHomeChunk);
+    swap(first.m_indexInHolder, second.m_indexInHolder);
+    swap(first.m_pShape, second.m_pShape);
+    swap(first.m_velocity, second.m_velocity);
+}
+
+GenericObject& GenericObject::operator = (GenericObject other)
+{
+    swap(*this, other);
+
+    return *this;
+
+}
+
+GenericObject::GenericObject(GenericObject&& other) noexcept
+{
+    swap(*this, other);
+}
 
 GenericObject::~GenericObject()
 {
