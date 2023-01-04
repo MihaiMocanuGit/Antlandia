@@ -21,6 +21,31 @@ class ObjectsController
     static_assert(std::is_base_of<GenericObject, T>::value, "T must inherit from GenericObject");
 private:
     unsigned int m_lastKnownFreeSpace = 0;
+
+    void m_erase_if(std::vector<T> &rObjects, bool (*p)(const T&))
+    {
+        auto first = rObjects.begin();
+        auto last = rObjects.end();
+        //https://en.cppreference.com/w/cpp/algorithm/remove
+        first = std::find_if(first, last, p);
+        if (first != last)
+            for (auto i = first; ++i != last;)
+                if (!p(*i))
+                {
+                    //m_removeObjectFromWorldChunk((*first).getIndexInHolder());
+                    *first++ = std::move(*i);
+                }
+
+        //https://en.cppreference.com/w/cpp/container/vector/erase2
+        //auto r = std::distance(first, last);
+
+        for(auto it = first; it < last; it++)
+            m_removeObjectFromWorldChunk((*it).getIndexInHolder());
+        rObjects.erase(first, last);
+
+        //return r;
+    }
+
 public:
     static constexpr std::size_t NO_OF_CHUNKS_X = MAP_SIZE_X;
     static constexpr std::size_t NO_OF_CHUNKS_Y = MAP_SIZE_Y;
@@ -71,18 +96,28 @@ public:
         pCurrentChunkArray->noOfObjects--;
 
         pCurrentObject->setPtrHomeChunk(nullptr);
-
+        //forgot to differentiate between chunks
         if (indexInChunk < m_lastKnownFreeSpace) m_lastKnownFreeSpace = indexInChunk;
     }
 
-    void m_insertObjectIntoWorldChunk(unsigned int indexOfObject)
+
+    //needs to be called only once after every objectHolder.moveAllNewObjectsIntoHolder() call
+    void insertObjectHolderIntoWorldChunks()
+    {
+        for (unsigned int i = 0; i < objectHolder.inUseObjects.size(); ++i)
+        {
+            insertObjectIntoWorldChunk(i);
+        }
+    }
+
+    void insertObjectIntoWorldChunk(unsigned int indexInHolder)
     {
         /*
-         * We are searching through the array for the first empty spot. The array is not sorted, so it will have
-         * empty spots inside itself.
-         * When such a spot is found, we put our object into it and increment the objects in chunk counter
-         */
-        T *pCurrentObject = &objectHolder.inUseObjects[indexOfObject];
+        * We are searching through the array for the first empty spot. The array is not sorted, so it will have
+        * empty spots inside itself.
+        * When such a spot is found, we put our object into it and increment the objects in chunk counter
+        */
+        T *pCurrentObject = &objectHolder.inUseObjects[indexInHolder];
         sf::Vector2u objectMapIndex = pChunkMap->identifyMapIndexFromPosition(pCurrentObject->getPosition());
 
         ChunkObjectArray<T> *pCurrentChunkArray = chunkMapObjectArrays.pObjectArrayMap[objectMapIndex.y][objectMapIndex.x];
@@ -110,18 +145,9 @@ public:
     }
 
 
-    //needs to be called only once after every objectHolder.moveAllNewObjectsIntoHolder() call
-    void insertObjectHolderIntoWorldChunks()
+    void removeDeadObjects()
     {
-        for (unsigned int i = 0; i < objectHolder.inUseObjects.size(); ++i)
-        {
-            m_insertObjectIntoWorldChunk(i);
-        }
-    }
-
-    void insertObjectIntoWorldChunk(unsigned int indexInHolder)
-    {
-        m_insertObjectIntoWorldChunk(indexInHolder);
+        m_erase_if(objectHolder.inUseObjects, [](const T &x){ return x.isDead; });
     }
 
     void moveObjectAtIndexTo(unsigned int index, sf::Vector2f newPosition)
@@ -139,7 +165,7 @@ public:
             {
                 m_removeObjectFromWorldChunk(index);
                 pCurrentObject->setPosition(newPosition);
-                m_insertObjectIntoWorldChunk(index);
+                insertObjectIntoWorldChunk(index);
 
             }
         }
@@ -166,7 +192,20 @@ public:
         rDischargedObject.setPosition(objectHolder.inUseObjects[indexParent].getPosition());
 
         rDischargedObjCntrl.objectHolder.insertGivenObjectIntoHolder(rDischargedObject);
-        rDischargedObjCntrl.insertObjectIntoWorldChunk(rDischargedObject.getIndexInHolder());
+
+        try
+        {
+            rDischargedObjCntrl.insertObjectIntoWorldChunk(rDischargedObject.getIndexInHolder());
+        }
+        catch (const std::exception& e)
+        {
+            //std::cout << e.what();
+
+            auto pVector =  &rDischargedObjCntrl.objectHolder.inUseObjects;
+            unsigned int index = rDischargedObject.getIndexInHolder();
+            pVector->erase(pVector->begin() + index);
+        }
+
         return rDischargedObject.getIndexInHolder();
     }
 

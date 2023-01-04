@@ -25,11 +25,12 @@ protected:
     Chunk *m_pHomeChunk = nullptr;
     unsigned int m_indexInHolder;
 
+
     sf::CircleShape *m_pShape = nullptr;
     sf::Vector2f m_velocity;
 
 public:
-
+    bool isDead = false;
 
     GenericObject();
     explicit GenericObject(sf::CircleShape &aShape, sf::Vector2f aVelocity = {0, 0});

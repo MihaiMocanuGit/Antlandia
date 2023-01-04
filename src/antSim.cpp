@@ -26,7 +26,7 @@ template<std::size_t SIZE_X, std::size_t SIZE_Y>
 void initAnts(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize)
 {
     //rWorld.ants.createNewObjects((1 << 6) * SIZE_X * SIZE_Y);
-    rWorld.antController.objectHolder.createNewObjects((1));
+    rWorld.antController.objectHolder.createNewObjects(64);
 
 
     srand(time(0));
@@ -87,10 +87,11 @@ Pheromone getGenericPheromone()
 {
     sf::CircleShape shape(1);
     shape.setFillColor(sf::Color::Green);
-    Pheromone pheromone(shape, 2, 100, 1.25);
+    Pheromone pheromone(shape, 2, 100, 1.0075);
 
     return pheromone;
 }
+
 template<std::size_t SIZE_X, std::size_t SIZE_Y>
 void startApp(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize, const std::string &windowTitle)
 {
@@ -107,8 +108,11 @@ void startApp(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize, con
      * (user changes origin, eg (0.5,0.5)
      * x: _________-0.5____0.5____1.5_____
      */
+    unsigned int frameMod15 = 0;
     while (window.isOpen())
     {
+        frameMod15++;
+        frameMod15 = frameMod15 % 15;
         closeWindowIfEvent(window);
 
         //clear screen and fill with background color
@@ -122,20 +126,30 @@ void startApp(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize, con
                                 tempTestRand(origin.y - boundary.y, origin.y + boundary.y)};
             ant.template moveBy(rWorld, offset);
 
-            sf::CircleShape shape(1);
-            shape.setFillColor(sf::Color::Green);
-            Pheromone pheromone(shape, 2, 100, 1.25);
+            if(frameMod15 == 0)
+            {
+                Pheromone pheromone = getGenericPheromone();
+                ant.template dischargePheromone(rWorld, pheromone);
+            }
 
-            ant.template dischargePheromone(rWorld, pheromone);
 
             window.draw(ant.getShape());
+        }
+
+
+        if(frameMod15 == 0)
+        {
+            rWorld.pheromoneController.removeDeadObjects();
         }
 
         std::vector<Pheromone> *pInUsePheromons = &rWorld.pheromoneController.objectHolder.inUseObjects;
         for(auto & pheromone : *pInUsePheromons)
         {
-            window.draw(pheromone.getShape());
+            pheromone.update();
+            if (!pheromone.isDead)
+                window.draw(pheromone.getShape());
         }
+
         window.display();
 
     }

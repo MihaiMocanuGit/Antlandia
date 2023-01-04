@@ -98,7 +98,6 @@ GenericObject& GenericObject::operator=(GenericObject&& other) noexcept
 GenericObject::~GenericObject()
 {
     //std::cout << '-' << pShape << '\t';
-    
     delete m_pShape;
     m_pShape = nullptr;
     //std::cout << '-' << pShape << '\n';  

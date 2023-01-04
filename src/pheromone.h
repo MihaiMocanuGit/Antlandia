@@ -19,7 +19,7 @@ public:
     static constexpr int REPELLENT_TYPE = 1;
     static constexpr int PATH_TYPE = 2;
     static constexpr int HOME_TYPE = 3;
-    static constexpr float DEFAULT_POWER_REDUCING_FACTOR = 1.25;
+    static constexpr float DEFAULT_POWER_REDUCING_FACTOR = 1.005;
 
     int type;
     float power;
@@ -31,14 +31,14 @@ public:
      */
     float powerReducingFactor;
 
-
+    /*
+     * TODO: move this to property to genericObject
+     */
 
 
 
     Pheromone() = default;
     Pheromone(sf::CircleShape &aShape, int aType, float aPower, float aPowerReducingFactor);
-
-
 
 
     /*
@@ -51,7 +51,7 @@ public:
      * This needs to be called after each update to see if the object should be deleted
      * TODO: think how to delete the object, it probably should be done external
      */
-    bool isThisPheromoneDepleted();
+    bool isThisDepleted();
 };
 
 

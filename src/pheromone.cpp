@@ -13,9 +13,10 @@ Pheromone::Pheromone(sf::CircleShape &aShape, int aType, float aPower, float aPo
 void Pheromone::update()
 {
     power = power/powerReducingFactor;
+    isDead = isThisDepleted();
 }
 
-bool Pheromone::isThisPheromoneDepleted()
+bool Pheromone::isThisDepleted()
 {
     return power < Pheromone::epsilon_zero_power;
 }
