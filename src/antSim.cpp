@@ -26,7 +26,7 @@ template<std::size_t SIZE_X, std::size_t SIZE_Y>
 void initAnts(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize)
 {
     //rWorld.ants.createNewObjects((1 << 6) * SIZE_X * SIZE_Y);
-    rWorld.antController.objectHolder.createNewObjects(64);
+    rWorld.antController.objectHolder.createNewObjects(128);
 
 
     srand(time(0));
@@ -118,6 +118,20 @@ void startApp(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize, con
         //clear screen and fill with background color
         window.clear(sf::Color::White);
 
+        if(frameMod15 == 0)
+        {
+            rWorld.pheromoneController.removeDeadObjects();
+        }
+
+        std::vector<Pheromone> *pInUsePheromons = &rWorld.pheromoneController.objectHolder.inUseObjects;
+        for(auto & pheromone : *pInUsePheromons)
+        {
+            pheromone.update();
+            if (!pheromone.isDead)
+                window.draw(pheromone.getShape());
+        }
+
+
         std::vector<Ant> *pInUseAnts = &rWorld.antController.objectHolder.inUseObjects;
         modifyOriginByKeyboard(origin, 1);
         for(auto & ant : *pInUseAnts)
@@ -136,19 +150,6 @@ void startApp(World<SIZE_X, SIZE_Y> &rWorld, const sf::Vector2u &windowSize, con
             window.draw(ant.getShape());
         }
 
-
-        if(frameMod15 == 0)
-        {
-            rWorld.pheromoneController.removeDeadObjects();
-        }
-
-        std::vector<Pheromone> *pInUsePheromons = &rWorld.pheromoneController.objectHolder.inUseObjects;
-        for(auto & pheromone : *pInUsePheromons)
-        {
-            pheromone.update();
-            if (!pheromone.isDead)
-                window.draw(pheromone.getShape());
-        }
 
         window.display();
 
