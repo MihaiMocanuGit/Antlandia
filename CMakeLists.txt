@@ -9,14 +9,6 @@ set(CMAKE_CXX_FLAGS_DEBUG  "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -fsaniti
 set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
 
 
-# Docs only available if this is the main app
-find_package(Doxygen)
-if(DOXYGEN_FOUND)
-    add_subdirectory(docs)
-else()
-    message(STATUS "Doxygen not found, not building docs")
-endif()
-
 add_subdirectory(src)
 
 add_executable(${PROJECT_NAME} main.cpp)
