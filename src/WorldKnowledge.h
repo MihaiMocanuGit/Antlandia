@@ -1,11 +1,19 @@
 #pragma once
 #include <SFML/System/Vector2.hpp>
+#include <vector>
 
+#include "Types.h"
+class Chunk;
+
+template <class T>
 class WorldKnowledge
 {
+
 private:
-    sf::Vector2i m_chunk = {-1, -1};
+    Chunk *m_pHomeChunk = nullptr;
+    RefVector_t<T>::iterator m_chunkIt = {};
 public:
     WorldKnowledge() = default;
-    WorldKnowledge(int x, int y);
+    explicit WorldKnowledge(Chunk *pHomeChunk) : m_pHomeChunk(pHomeChunk)
+    {}
 };

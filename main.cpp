@@ -1,10 +1,8 @@
 #include <iostream>
-#include "src/objects/GenericObject.h"
+#include "src/Antalndia.h"
 
 int main()
 {
-    GenericObject obj;
-    obj.test();
-    std::cout << "Hello, World!" << std::endl;
+    Ant ant;
     return 0;
 }

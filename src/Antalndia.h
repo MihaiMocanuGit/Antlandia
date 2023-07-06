@@ -1,3 +1,3 @@
 #pragma once
-#include "Body.h"
+#include "Ant.h"
 //#include "objects/GenericObject.h"

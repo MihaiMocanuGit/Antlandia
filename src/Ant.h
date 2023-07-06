@@ -6,17 +6,18 @@ class Ant
 {
 private:
     Body m_body = {};
-    WorldKnowledge m_world = {};
+    WorldKnowledge<Ant> m_knowledge = {};
+
 public:
     Ant() = default;
-    explicit Ant(Body body, WorldKnowledge word = {});
+    explicit Ant(Body body, WorldKnowledge<Ant> knowledge = {});
 
     [[nodiscard]] const Body& body() const;
     Body& body();
 
-    void insertWorldKnowledge(const WorldKnowledge &world);
-    [[nodiscard]] const WorldKnowledge& world() const;
-    WorldKnowledge& world();
+    void insertWorldKnowledge(const WorldKnowledge<Ant> &knowledge);
+    [[nodiscard]] const WorldKnowledge<Ant>& knowledge() const;
+    WorldKnowledge<Ant>& knowledge();
 
 
 };

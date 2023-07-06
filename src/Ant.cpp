@@ -1,7 +1,7 @@
 #include <utility>
 #include "Ant.h"
 
-Ant::Ant(Body body, WorldKnowledge word) : m_body{std::move(body)}, m_world{std::move(word)}
+Ant::Ant(Body body, WorldKnowledge<Ant> knowledge) : m_body{std::move(body)}, m_knowledge{std::move(knowledge)}
 {
 
 }
@@ -16,17 +16,17 @@ Body &Ant::body()
     return m_body;
 }
 
-void Ant::insertWorldKnowledge(const WorldKnowledge &world)
+void Ant::insertWorldKnowledge(const WorldKnowledge<Ant> &knowledge)
 {
-    m_world = world;
+    m_knowledge = knowledge;
 }
 
-const WorldKnowledge &Ant::world() const
+const WorldKnowledge<Ant> &Ant::knowledge() const
 {
-    return m_world;
+    return m_knowledge;
 }
 
-WorldKnowledge &Ant::world()
+WorldKnowledge<Ant> &Ant::knowledge()
 {
-    return m_world;
+    return m_knowledge;
 }
