@@ -1,13 +1,14 @@
 #pragma once
 #include "GenericObject.h"
 
-class Pheromone
+
+class Food
 {
 private:
     GenericObject m_genericObject = {};
 
 public:
-    Pheromone() = default;
+    Food() = default;
     GenericObject& genericObject();
     const GenericObject& genericObject() const;
 };
