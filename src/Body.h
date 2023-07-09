@@ -5,8 +5,8 @@ class Body
 {
 private:
     sf::Vector2f m_position {-1.0f, -1.0f};
-    float m_size = 1;
-    float m_mass = 1;
+    float m_size = -1;
+    float m_mass = -1;
     sf::Vector3<unsigned char> m_color = {0, 0, 0};
 public:
     Body() = default;

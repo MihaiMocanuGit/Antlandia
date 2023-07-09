@@ -1,13 +1,16 @@
 #pragma once
 #include "GenericObject.h"
-class Ant
+
+class Pheromone
 {
 private:
     GenericObject m_genericObject = {};
 
-public:
-    Ant() = default;
+public
+    Pheromone() = default;
     GenericObject& genericObject();
     const GenericObject& genericObject() const;
 };
+
+
 
