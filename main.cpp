@@ -3,6 +3,6 @@
 
 int main()
 {
-    Ant ant;
+    GenericObject ant;
     return 0;
 }
