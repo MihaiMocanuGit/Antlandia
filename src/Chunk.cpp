@@ -1,5 +1,5 @@
 #include "Chunk.h"
-const sf::Vector2i Chunk::CHUNK_SIZE = {32, 32};
+const sf::Vector2u Chunk::CHUNK_SIZE = {32, 32};
 
 Chunk::Chunk(sf::Vector2u index) : m_index{index}
 {

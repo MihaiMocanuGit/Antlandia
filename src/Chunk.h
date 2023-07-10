@@ -21,11 +21,13 @@ private:
                                  {nullptr, this, nullptr},
                                  {nullptr, nullptr, nullptr}};
 public:
+    static const sf::Vector2u CHUNK_SIZE;
+
     Chunk() = default;
     explicit Chunk(sf::Vector2u index);
     Chunk(unsigned x, unsigned y);
 
-    static const sf::Vector2i CHUNK_SIZE;
+
     ChunkContainer ants;
     ChunkContainer pheromones;
     ChunkContainer food;
