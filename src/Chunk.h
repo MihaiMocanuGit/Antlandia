@@ -10,20 +10,25 @@ class Chunk
 {
     friend class ChunkMap;
 private:
-    ChunkContainer m_ants;
-    sf::Vector2i m_index;
+
+    sf::Vector2i m_index = {-1, -1};
 
     /// \brief
     /// UpperLeft   UpperMid    UpperRight\n
     /// Left        Itself       Right\n
     /// LowerLeft   LowerMid     LowerRight
-    Chunk *m_neighbours[3][3] = {{}};
+    Chunk *m_neighbours[3][3] = {{nullptr, nullptr, nullptr},
+                                 {nullptr, this, nullptr},
+                                 {nullptr, nullptr, nullptr}};
 public:
+    Chunk() = default;
+    explicit Chunk(sf::Vector2u index);
+    Chunk(unsigned x, unsigned y);
+
     static const sf::Vector2i CHUNK_SIZE;
-    /// \brief Removes the ant and updates the indexes of the other ants (they remain valid)
-    /// \param index - The index of the ant to be removed;
-    void removeAnt(size_t index);
-    void addAnt(Ant& ant);
+    ChunkContainer ants;
+    ChunkContainer pheromones;
+    ChunkContainer food;
 
 };
 
