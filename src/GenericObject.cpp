@@ -1,7 +1,7 @@
 #include <utility>
 #include "GenericObject.h"
 
-GenericObject::GenericObject(Body body, WorldKnowledge<GenericObject> knowledge) : m_body{std::move(body)}, m_knowledge{std::move(knowledge)}
+GenericObject::GenericObject(Body body, WorldKnowledge knowledge) : m_body{std::move(body)}, m_knowledge{std::move(knowledge)}
 {
 
 }

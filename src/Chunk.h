@@ -28,9 +28,9 @@ public:
     Chunk(unsigned x, unsigned y);
 
 
-    ChunkContainer ants;
-    ChunkContainer pheromones;
-    ChunkContainer food;
+    SpecializedVector<GenericObject*> ants{SpecializedVector<GenericObject*>::SWAP_CHUNK};
+    SpecializedVector<GenericObject*> pheromones{SpecializedVector<GenericObject*>::SWAP_CHUNK};
+    SpecializedVector<GenericObject*> food{SpecializedVector<GenericObject*>::SWAP_CHUNK};
 
 };
 
