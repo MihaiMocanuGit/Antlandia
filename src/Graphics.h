@@ -14,7 +14,7 @@ void m_closeWindowIfEvent(sf::RenderWindow &window)
 void startWorld(unsigned numberOfAnts, const sf::Vector2u &noChunks)
 {
 
-    sf::RenderWindow window(sf::VideoMode(noChunks.x * Chunk::CHUNK_SIZE.x, noChunks.y * Chunk::CHUNK_SIZE.y), "Antlandia");
+    sf::RenderWindow window(sf::VideoMode(noChunks.x * Chunk::CHUNK_SIZE_X, noChunks.y * Chunk::CHUNK_SIZE_Y), "Antlandia");
     window.setFramerateLimit(60);
 
 

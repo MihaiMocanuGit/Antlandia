@@ -24,8 +24,10 @@ private:
 public:
     static void SWAP_CHUNK(GenericObject* & elem1, size_t atIndex1,
                            GenericObject* & elem2, size_t atIndex2);
+    static void SWAP_WORLD(GenericObject & elem1, size_t atIndex1,
+                           GenericObject & elem2, size_t atIndex2);
 
-    explicit SpecializedVector(SwapFunction_t<T> swap, size_t reserve = 16);
+    explicit SpecializedVector(SwapFunction_t<T> swap, size_t reserve = 128);
 
     T toBeRemoved(std::size_t index);
     void removeAll();
@@ -38,6 +40,15 @@ public:
     inline size_t size() const;
 
 };
+
+template <typename T>
+void SpecializedVector<T>::SWAP_WORLD(GenericObject &elem1, size_t atIndex1, GenericObject &elem2, size_t atIndex2)
+{
+    std::swap(elem1, elem2);
+
+    elem1.knowledge().m_indexWorld = atIndex1;
+    elem2.knowledge().m_indexWorld = atIndex2;
+}
 
 template <typename T>
 void SpecializedVector<T>::SWAP_CHUNK(GenericObject *&elem1, size_t atIndex1, GenericObject *&elem2, size_t atIndex2)
