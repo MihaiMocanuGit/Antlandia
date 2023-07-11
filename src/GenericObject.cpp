@@ -16,17 +16,17 @@ Body &GenericObject::body()
     return m_body;
 }
 
-void GenericObject::insertWorldKnowledge(const WorldKnowledge<GenericObject> &knowledge)
+void GenericObject::insertWorldKnowledge(const WorldKnowledge &knowledge)
 {
     m_knowledge = knowledge;
 }
 
-const WorldKnowledge<GenericObject> &GenericObject::knowledge() const
+const WorldKnowledge &GenericObject::knowledge() const
 {
     return m_knowledge;
 }
 
-WorldKnowledge<GenericObject> &GenericObject::knowledge()
+WorldKnowledge &GenericObject::knowledge()
 {
     return m_knowledge;
 }

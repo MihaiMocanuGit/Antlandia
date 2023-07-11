@@ -5,10 +5,11 @@
 #include "Types.h"
 class Chunk;
 
-template <class T>
+
 class WorldKnowledge
 {
-    friend class ChunkContainer;
+    template <typename T>
+    friend class SpecializedVector;
 private:
     Chunk *m_pHomeChunk = nullptr;
     size_t m_indexChunk = -1; //size_t max

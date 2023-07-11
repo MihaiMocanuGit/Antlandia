@@ -6,18 +6,18 @@ class GenericObject
 {
 private:
     Body m_body = {};
-    WorldKnowledge<GenericObject> m_knowledge = {};
+    WorldKnowledge m_knowledge = {};
 
 public:
     GenericObject() = default;
-    explicit GenericObject(Body body, WorldKnowledge<GenericObject> knowledge = {});
+    explicit GenericObject(Body body, WorldKnowledge knowledge = {});
 
     [[nodiscard]] const Body& body() const;
     Body& body();
 
-    void insertWorldKnowledge(const WorldKnowledge<GenericObject> &knowledge);
-    [[nodiscard]] const WorldKnowledge<GenericObject>& knowledge() const;
-    WorldKnowledge<GenericObject>& knowledge();
+    void insertWorldKnowledge(const WorldKnowledge &knowledge);
+    [[nodiscard]] const WorldKnowledge& knowledge() const;
+    WorldKnowledge& knowledge();
 
 
 };
