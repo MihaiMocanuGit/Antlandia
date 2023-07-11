@@ -2,4 +2,4 @@
 
 
 template <class T>
-using RefT_t = std::reference_wrapper<T>;
+using SwapFunction_t = void (*)(T&, size_t, T&, size_t);

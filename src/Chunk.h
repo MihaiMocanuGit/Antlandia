@@ -5,7 +5,7 @@
 
 #include "GenericObject.h"
 #include "Ant.h"
-#include "ChunkContainer.h"
+#include "SpecializedVector.h"
 class Chunk
 {
     friend class ChunkMap;
