@@ -9,3 +9,8 @@ const GenericObject &Ant::genericObject() const
 {
     return m_genericObject;
 }
+
+Ant::Ant(GenericObject genericObject) : m_genericObject{std::move(genericObject)}
+{
+
+}

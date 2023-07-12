@@ -105,7 +105,7 @@ bool SpecializedVector<T>::m_emptyErase() const
 template <typename T>
 void SpecializedVector<T>::toBeAdded(T &element)
 {
-    m_addBuffer.push_back(&element);
+    m_addBuffer.push_back(element);
 }
 
 

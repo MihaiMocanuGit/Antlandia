@@ -15,8 +15,9 @@ public:
     explicit ChunkMap(sf::Vector2u size);
     ChunkMap(unsigned sizeX, unsigned sizeY);
 
-    Chunk& at(sf::Vector2u index);
-    Chunk& at(unsigned int x, unsigned int y);
+    Chunk& at(sf::Vector2i index);
+    Chunk& at(int x, int y);
 
+    sf::Vector2i computeHomeChunk(sf::Vector2f position) const;
     [[nodiscard]] sf::Vector2u size() const;
 };

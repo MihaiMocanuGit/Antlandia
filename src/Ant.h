@@ -7,6 +7,8 @@ private:
 
 public:
     Ant() = default;
+    Ant(GenericObject genericObject);
+
     GenericObject& genericObject();
     const GenericObject& genericObject() const;
 };

@@ -1,11 +1,11 @@
 #include "ChunkMap.h"
 
-Chunk &ChunkMap::at(unsigned int x, unsigned int y)
+Chunk &ChunkMap::at(int x, int y)
 {
     return m_chunkMap[y * m_size.x + x];
 }
 
-Chunk &ChunkMap::at(sf::Vector2u index)
+Chunk &ChunkMap::at(sf::Vector2i index)
 {
     return at(index.x, index.y);
 }
@@ -64,4 +64,10 @@ ChunkMap::ChunkMap(unsigned int sizeX, unsigned int sizeY) : ChunkMap(sf::Vector
 sf::Vector2u ChunkMap::size() const
 {
     return m_size;
+}
+
+sf::Vector2i ChunkMap::computeHomeChunk(sf::Vector2f position) const
+{
+    sf::Vector2i chunkIndex(position.x/Chunk::CHUNK_SIZE_X, position.y/Chunk::CHUNK_SIZE_Y);
+    return chunkIndex;
 }
