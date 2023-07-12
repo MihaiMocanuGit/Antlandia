@@ -17,4 +17,6 @@ public:
 
     Chunk& at(sf::Vector2u index);
     Chunk& at(unsigned int x, unsigned int y);
+
+    [[nodiscard]] sf::Vector2u size() const;
 };

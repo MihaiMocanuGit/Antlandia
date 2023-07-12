@@ -60,3 +60,8 @@ ChunkMap::ChunkMap(unsigned int sizeX, unsigned int sizeY) : ChunkMap(sf::Vector
 {
 
 }
+
+sf::Vector2u ChunkMap::size() const
+{
+    return m_size;
+}

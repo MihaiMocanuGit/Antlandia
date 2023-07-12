@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+#include "World.h"
+
 void m_closeWindowIfEvent(sf::RenderWindow &window)
 {
     sf::Event event;
@@ -11,10 +13,10 @@ void m_closeWindowIfEvent(sf::RenderWindow &window)
     }
 }
 
-void startWorld(unsigned numberOfAnts, const sf::Vector2u &noChunks)
+void startGameLoop(World& world)
 {
 
-    sf::RenderWindow window(sf::VideoMode(noChunks.x * Chunk::CHUNK_SIZE_X, noChunks.y * Chunk::CHUNK_SIZE_Y), "Antlandia");
+    sf::RenderWindow window(sf::VideoMode(world.size().x * Chunk::CHUNK_SIZE_X, world.size().y * Chunk::CHUNK_SIZE_Y), "Antlandia");
     window.setFramerateLimit(60);
 
 

@@ -10,5 +10,5 @@ add_library(src Antalndia.h
         Pheromone.cpp Pheromone.h
         Food.cpp Food.h
         ChunkMap.cpp ChunkMap.h
-        Graphics.h World.cpp World.h)
+        AppLogic.h World.cpp World.h)
 #target_link_libraries(src objects)

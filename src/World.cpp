@@ -29,3 +29,8 @@ ChunkMap &World::map()
 {
     return m_map;
 }
+
+sf::Vector2u World::size() const
+{
+    return m_map.size();
+}

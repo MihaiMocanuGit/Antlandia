@@ -19,4 +19,6 @@ public:
     SpecializedVector<Pheromone>& pheromones();
     SpecializedVector<Food>& food();
 
+    [[nodiscard]] sf::Vector2u size() const;
+
 };

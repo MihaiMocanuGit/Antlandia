@@ -23,8 +23,8 @@ private:
                                  {nullptr, this, nullptr},
                                  {nullptr, nullptr, nullptr}};
 public:
-    static constexpr unsigned CHUNK_SIZE_X = 32;
-    static constexpr unsigned CHUNK_SIZE_Y = 32;
+    static constexpr unsigned CHUNK_SIZE_X = 64;
+    static constexpr unsigned CHUNK_SIZE_Y = 64;
 
     Chunk() = default;
     explicit Chunk(sf::Vector2u index);
