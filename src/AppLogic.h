@@ -13,26 +13,39 @@ void m_closeWindowIfEvent(sf::RenderWindow &window)
     }
 }
 
+
+
+
+sf::CircleShape getShape(const GenericObject &genericObject)
+{
+    float size = genericObject.body().getSize();
+    sf::CircleShape shape(size);
+
+    const sf::Vector3<unsigned char> &color = genericObject.body().getColor();
+    sf::Color colorSf(color.x, color.y, color.z);
+    shape.setFillColor(colorSf);
+
+    sf::Vector2f position(genericObject.body().getPosition());
+    shape.setPosition(position);
+
+    return shape;
+}
 void m_drawAnts(World& world, sf::RenderWindow& window)
 {
     for (size_t i = 0; i < world.ants().size(); ++i)
-    {
-        const Ant &ref_ant = world.ants()[i];
-        float size = ref_ant.genericObject().body().getSize();
-        sf::CircleShape shape(size);
-
-        const sf::Vector3<unsigned char> &color = ref_ant.genericObject().body().getColor();
-        sf::Color colorSf(color.x, color.y, color.z);
-        shape.setFillColor(colorSf);
-
-        sf::Vector2f position(ref_ant.genericObject().body().getPosition());
-        shape.setPosition(position);
-
-        window.draw(shape);
-    }
+        window.draw(getShape(world.ants()[i].genericObject()));
 }
-void m_drawPheromones(World& world, sf::RenderWindow& window);
-void m_drawFood(World& world, sf::RenderWindow& window);
+void m_drawPheromones(World& world, sf::RenderWindow& window)
+{
+    for (size_t i = 0; i < world.ants().size(); ++i)
+        window.draw(getShape(world.pheromones()[i].genericObject()));
+}
+void m_drawFood(World& world, sf::RenderWindow& window)
+{
+    for (size_t i = 0; i < world.ants().size(); ++i)
+        window.draw(getShape(world.food()[i].genericObject()));
+}
+
 void startGameLoop(World& world)
 {
 
@@ -45,7 +58,10 @@ void startGameLoop(World& world)
         m_closeWindowIfEvent(window);
         window.clear(sf::Color::White);
 
+        m_drawPheromones(world, window);
+        m_drawFood(world, window);
         m_drawAnts(world, window);
+
         window.display();
     }
     window.close();

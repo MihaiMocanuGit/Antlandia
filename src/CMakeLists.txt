@@ -1,5 +1,5 @@
 #add_subdirectory(objects)
-add_library(src Antalndia.h
+add_library(src Antlandia.h
         Body.cpp Body.h
         GenericObject.cpp GenericObject.h
         WordKnowledge.cpp WorldKnowledge.h

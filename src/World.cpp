@@ -34,3 +34,4 @@ sf::Vector2u World::size() const
 {
     return m_map.size();
 }
+

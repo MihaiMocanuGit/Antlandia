@@ -21,4 +21,21 @@ public:
 
     [[nodiscard]] sf::Vector2u size() const;
 
+    template <class T>
+    T createObject(const Body& body);
+
+
 };
+
+template <class T>
+T World::createObject(const Body &body)
+{
+    sf::Vector2i chunkIndex = m_map.computeHomeChunk(body.getPosition());
+    Chunk *ptrHome = &m_map.at(chunkIndex);
+    WorldKnowledge knowledge(this, ptrHome);
+    GenericObject genericObject(body, knowledge);
+
+    return T{genericObject};
+}
+
+
