@@ -23,12 +23,12 @@ public:
 
     [[nodiscard]] sf::Vector2u size() const;
 
-    Ant& addAnt(sf::Vector2f position, float size = 1, float mass = 1,
+    Ant& addAnt(sf::Vector2f position, float size = 2, float mass = 1,
                 const sf::Vector3<unsigned char> &color = {0, 0, 0});
-    Pheromone& addPheromone(sf::Vector2f position, float size = 0.5, float mass = 1,
+    Pheromone& addPheromone(sf::Vector2f position, float size = 1, float mass = 1,
                 const sf::Vector3<unsigned char> &color = {0, 255, 0});
-    Food& addFood(sf::Vector2f position, float size = 1, float mass = 1,
-                const sf::Vector3<unsigned char> &color = {0, 0, 0});
+    Food& addFood(sf::Vector2f position, float size = 1.5, float mass = 1,
+                const sf::Vector3<unsigned char> &color = {255, 0, 0});
 
 
 
