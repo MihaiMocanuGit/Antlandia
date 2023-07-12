@@ -8,6 +8,8 @@ private:
 
 public:
     Pheromone() = default;
+    explicit Pheromone(GenericObject genericObject);
+
     GenericObject& genericObject();
     const GenericObject& genericObject() const;
 };

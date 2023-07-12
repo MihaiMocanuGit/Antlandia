@@ -9,3 +9,8 @@ const GenericObject &Pheromone::genericObject() const
 {
     return m_genericObject;
 }
+
+Pheromone::Pheromone(GenericObject genericObject) : m_genericObject{std::move(genericObject)}
+{
+
+}

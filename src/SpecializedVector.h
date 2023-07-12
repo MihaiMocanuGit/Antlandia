@@ -36,10 +36,36 @@ public:
     void addAll();
 
     T& operator[](size_t index);
-
+    T& at(size_t index);
     inline size_t size() const;
 
+    /// \brief Gets an element from the temporal buffer used for adding elements
+    /// \param index The index of the element in the add buffer
+    /// \return Reference to the element
+    /// \note All references will be invalidated after a call to addAll();
+    /// \note No index validation
+    T& atAddBuffer(size_t index);
+    inline size_t sizeAddBuffer() const;
+
 };
+
+template <typename T>
+T &SpecializedVector<T>::at(size_t index)
+{
+    return m_data[index];
+}
+
+template <typename T>
+T &SpecializedVector<T>::atAddBuffer(size_t index)
+{
+    return m_addBuffer[index];
+}
+
+template <typename T>
+size_t SpecializedVector<T>::sizeAddBuffer() const
+{
+    return m_addBuffer.size();
+}
 
 template <typename T>
 void SpecializedVector<T>::SWAP_WORLD(T &elem1, size_t atIndex1, T &elem2, size_t atIndex2)

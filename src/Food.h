@@ -9,6 +9,8 @@ private:
 
 public:
     Food() = default;
+    explicit Food(GenericObject genericObject);
+
     GenericObject& genericObject();
     const GenericObject& genericObject() const;
 };

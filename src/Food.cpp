@@ -10,3 +10,8 @@ const GenericObject &Food::genericObject() const
 {
     return m_genericObject;
 }
+
+Food::Food(GenericObject genericObject) : m_genericObject{std::move(genericObject)}
+{
+
+}

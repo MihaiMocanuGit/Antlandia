@@ -7,12 +7,9 @@ void startApp()
 {
     World world(10, 10);
 
-    for (int i = 0; i < 100; ++i)
-    {
-        Body body(sf::Vector2f(i*5.0f, i*5.0f), 1, 1, sf::Vector3<unsigned char>{0, 0, 0});
-        Ant ant = world.createObject<Ant>(body);
-        world.ants().toBeAdded(ant);
-    }
+    for (int i = 0; i < 125; ++i)
+        world.addAnt(sf::Vector2f(i*5.0f, i*5.0f));
+
 
     world.ants().addAll();
     startGameLoop(world);
