@@ -5,6 +5,8 @@
 
 #include "GenericObject.h"
 #include "Ant.h"
+#include "Pheromone.h"
+#include "Food.h"
 #include "SpecializedVector.h"
 class Chunk
 {
@@ -29,9 +31,9 @@ public:
     Chunk(unsigned x, unsigned y);
 
 
-    SpecializedVector<GenericObject*> ants{SpecializedVector<GenericObject*>::SWAP_CHUNK};
-    SpecializedVector<GenericObject*> pheromones{SpecializedVector<GenericObject*>::SWAP_CHUNK};
-    SpecializedVector<GenericObject*> food{SpecializedVector<GenericObject*>::SWAP_CHUNK};
+    SpecializedVector<Ant*> ants{SpecializedVector<Ant*>::SWAP_CHUNK};
+    SpecializedVector<Pheromone*> pheromones{SpecializedVector<Pheromone*>::SWAP_CHUNK};
+    SpecializedVector<Food*> food{SpecializedVector<Food*>::SWAP_CHUNK};
 
 };
 

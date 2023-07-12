@@ -22,10 +22,10 @@ private:
     [[nodiscard]] inline bool m_emptyErase() const;
 
 public:
-    static void SWAP_CHUNK(GenericObject* & elem1, size_t atIndex1,
-                           GenericObject* & elem2, size_t atIndex2);
-    static void SWAP_WORLD(GenericObject & elem1, size_t atIndex1,
-                           GenericObject & elem2, size_t atIndex2);
+    static void SWAP_CHUNK(T & elem1, size_t atIndex1,
+                           T & elem2, size_t atIndex2);
+    static void SWAP_WORLD(T & elem1, size_t atIndex1,
+                           T & elem2, size_t atIndex2);
 
     explicit SpecializedVector(SwapFunction_t<T> swap, size_t reserve = 128);
 
@@ -42,21 +42,21 @@ public:
 };
 
 template <typename T>
-void SpecializedVector<T>::SWAP_WORLD(GenericObject &elem1, size_t atIndex1, GenericObject &elem2, size_t atIndex2)
+void SpecializedVector<T>::SWAP_WORLD(T &elem1, size_t atIndex1, T &elem2, size_t atIndex2)
 {
     std::swap(elem1, elem2);
 
-    elem1.knowledge().m_indexWorld = atIndex1;
-    elem2.knowledge().m_indexWorld = atIndex2;
+    elem1.genericObject().knowledge().m_indexWorld = atIndex1;
+    elem2.genericObject().knowledge().m_indexWorld = atIndex2;
 }
 
 template <typename T>
-void SpecializedVector<T>::SWAP_CHUNK(GenericObject *&elem1, size_t atIndex1, GenericObject *&elem2, size_t atIndex2)
+void SpecializedVector<T>::SWAP_CHUNK(T &elem1, size_t atIndex1,T &elem2, size_t atIndex2)
 {
     std::swap(elem1, elem2);
 
-    elem1->knowledge().m_indexChunk = atIndex1;
-    elem2->knowledge().m_indexChunk = atIndex2;
+    elem1->genericObject().knowledge().m_indexChunk = atIndex1;
+    elem2->genericObject().knowledge().m_indexChunk = atIndex2;
 }
 
 

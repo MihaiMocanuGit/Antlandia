@@ -10,17 +10,17 @@ World::World(unsigned int sizeX, unsigned int sizeY) : World(sf::Vector2u {sizeX
 
 }
 
-SpecializedVector<GenericObject> &World::ants()
+SpecializedVector<Ant> &World::ants()
 {
     return m_ants;
 }
 
-SpecializedVector<GenericObject> &World::food()
+SpecializedVector<Food> &World::food()
 {
     return m_food;
 }
 
-SpecializedVector<GenericObject> &World::pheromones()
+SpecializedVector<Pheromone> &World::pheromones()
 {
     return m_pheromones;
 }
