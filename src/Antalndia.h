@@ -18,6 +18,7 @@ void startApp()
         world.ants().toBeAdded(ant);
     }
 
+    world.ants().addAll();
     startGameLoop(world);
 }
 //#include "objects/GenericObject.h"
