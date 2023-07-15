@@ -1,15 +1,19 @@
 #pragma once
-#include "GenericObject.h"
+#include "Body.h"
+#include "WorldKnowledge.h"
 class Ant
 {
 private:
-    GenericObject m_genericObject = {};
-
+    Body m_body = {};
+    WorldKnowledge m_worldKnowledge = {};
 public:
     Ant() = default;
-    explicit Ant(GenericObject genericObject);
+    Ant(Body body, WorldKnowledge worldKnowledge);
 
-    GenericObject& genericObject();
-    const GenericObject& genericObject() const;
+    Body &body();
+    const Body &body() const;
+
+    WorldKnowledge &knowledge();
+    const WorldKnowledge &knowledge() const;
 };
 

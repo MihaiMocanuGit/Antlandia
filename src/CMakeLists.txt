@@ -1,7 +1,6 @@
 #add_subdirectory(objects)
 add_library(src Antlandia.h
         Body.cpp Body.h
-        GenericObject.cpp GenericObject.h
         WordKnowledge.cpp WorldKnowledge.h
         Chunk.cpp Chunk.h
         Types.h
