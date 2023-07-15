@@ -1,6 +1,6 @@
 #include "Pheromone.h"
 
-Pheromone::Pheromone(Body body, WorldKnowledge worldKnowledge) : m_body{std::move(body)}, m_worldKnowledge{std::move(worldKnowledge)}
+Pheromone::Pheromone(Body body, WorldKnowledge<Pheromone> worldKnowledge) : m_body{std::move(body)}, m_worldKnowledge{std::move(worldKnowledge)}
 {
 
 }
@@ -15,12 +15,12 @@ const Body &Pheromone::body() const
     return m_body;
 }
 
-WorldKnowledge &Pheromone::knowledge()
+WorldKnowledge<Pheromone> &Pheromone::knowledge()
 {
     return m_worldKnowledge;
 }
 
-const WorldKnowledge &Pheromone::knowledge() const
+const WorldKnowledge<Pheromone> &Pheromone::knowledge() const
 {
     return m_worldKnowledge;
 }

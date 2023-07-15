@@ -5,15 +5,15 @@ class Food
 {
 private:
     Body m_body = {};
-    WorldKnowledge m_worldKnowledge = {};
+    WorldKnowledge<Food> m_worldKnowledge = {};
 public:
     Food() = default;
-    Food(Body body, WorldKnowledge worldKnowledge);
+    Food(Body body, WorldKnowledge<Food> worldKnowledge);
 
     Body &body();
     const Body &body() const;
 
-    WorldKnowledge &knowledge();
-    const WorldKnowledge &knowledge() const;
+    WorldKnowledge<Food> &knowledge();
+    const WorldKnowledge<Food> &knowledge() const;
 };
 

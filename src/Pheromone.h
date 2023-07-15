@@ -5,15 +5,15 @@ class Pheromone
 {
 private:
     Body m_body = {};
-    WorldKnowledge m_worldKnowledge = {};
+    WorldKnowledge<Pheromone> m_worldKnowledge = {};
 public:
     Pheromone() = default;
-    Pheromone(Body body, WorldKnowledge worldKnowledge);
+    Pheromone(Body body, WorldKnowledge<Pheromone> worldKnowledge);
 
     Body &body();
     const Body &body() const;
 
-    WorldKnowledge &knowledge();
-    const WorldKnowledge &knowledge() const;
+    WorldKnowledge<Pheromone> &knowledge();
+    const WorldKnowledge<Pheromone> &knowledge() const;
 };
 

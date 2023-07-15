@@ -5,15 +5,15 @@ class Ant
 {
 private:
     Body m_body = {};
-    WorldKnowledge m_worldKnowledge = {};
+    WorldKnowledge<Ant> m_worldKnowledge = {};
 public:
     Ant() = default;
-    Ant(Body body, WorldKnowledge worldKnowledge);
+    Ant(Body body, WorldKnowledge<Ant> worldKnowledge);
 
     Body &body();
     const Body &body() const;
 
-    WorldKnowledge &knowledge();
-    const WorldKnowledge &knowledge() const;
+    WorldKnowledge<Ant> &knowledge();
+    const WorldKnowledge<Ant> &knowledge() const;
 };
 
