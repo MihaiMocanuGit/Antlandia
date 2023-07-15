@@ -3,7 +3,6 @@
 #include <vector>
 #include <functional>
 
-#include "GenericObject.h"
 #include "Ant.h"
 #include "Pheromone.h"
 #include "Food.h"

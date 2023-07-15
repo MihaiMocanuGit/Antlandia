@@ -2,7 +2,7 @@
 
 Chunk &ChunkMap::at(int x, int y)
 {
-    return m_chunkMap[y * m_size.x + x];
+    return m_antChunks[y * m_size.x + x];
 }
 
 Chunk &ChunkMap::at(sf::Vector2i index)
@@ -12,44 +12,9 @@ Chunk &ChunkMap::at(sf::Vector2i index)
 
 ChunkMap::ChunkMap(sf::Vector2u size) : m_size(size)
 {
-    m_initChunks();
+    m_initMaps();
 }
 
-void ChunkMap::m_initChunks()
-{
-    m_chunkMap.resize(m_size.x * m_size.y);
-
-
-    for (unsigned int y = 0; y < m_size.y; ++y)
-    {
-        for (unsigned int x = 0; x < m_size.x; ++x)
-        {
-            this->at(x, y) = Chunk(x, y);
-
-            if (m_isValidIndex(x-1, y-1))
-                this->at(x, y).m_neighbours[0][0] = &this->at(x-1, y-1);
-            if (m_isValidIndex(x, y-1))
-                this->at(x, y).m_neighbours[0][1] = &this->at(x, y-1);
-            if (m_isValidIndex(x+1, y-1))
-                this->at(x, y).m_neighbours[0][2] = &this->at(x+1, y-1);
-
-            if (m_isValidIndex(x-1, y))
-                this->at(x, y).m_neighbours[1][0] = &this->at(x-1, y);
-            if (m_isValidIndex(x, y))
-                this->at(x, y).m_neighbours[1][1] = &this->at(x, y);
-            if (m_isValidIndex(x+1, y))
-                this->at(x, y).m_neighbours[1][2] = &this->at(x+1, y);
-
-            if (m_isValidIndex(x-1, y+1))
-                this->at(x, y).m_neighbours[2][0] = &this->at(x-1, y+1);
-            if (m_isValidIndex(x, y+1))
-                this->at(x, y).m_neighbours[2][1] = &this->at(x, y+1);
-            if (m_isValidIndex(x+1, y+1))
-                this->at(x, y).m_neighbours[2][2] = &this->at(x+1, y+1);
-        }
-    }
-
-}
 
 bool ChunkMap::m_isValidIndex(unsigned int x, unsigned int y) const
 {
@@ -66,8 +31,15 @@ sf::Vector2u ChunkMap::size() const
     return m_size;
 }
 
-sf::Vector2i ChunkMap::computeHomeChunk(sf::Vector2f position) const
+sf::Vector2i ChunkMap::computeHomeChunk(const sf::Vector2f &position) const
 {
-    sf::Vector2i chunkIndex(position.x/Chunk::CHUNK_SIZE_X, position.y/Chunk::CHUNK_SIZE_Y);
+    sf::Vector2i chunkIndex(position.x/Chunk<void>::CHUNK_SIZE_X, position.y/Chunk<void>::CHUNK_SIZE_Y);
     return chunkIndex;
+}
+
+void ChunkMap::m_initMaps()
+{
+    m_initChunks(m_maps.antMap);
+    m_initChunks(m_maps.pheromoneMap);
+    m_initChunks(m_maps.foodMap);
 }

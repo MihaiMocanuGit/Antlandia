@@ -1,7 +1,5 @@
 #pragma once
 #include <vector>
-#include "GenericObject.h"
-
 
 
 
@@ -72,8 +70,8 @@ void SpecializedVector<T>::SWAP_WORLD(T &elem1, size_t atIndex1, T &elem2, size_
 {
     std::swap(elem1, elem2);
 
-    elem1.genericObject().knowledge().m_indexWorld = atIndex1;
-    elem2.genericObject().knowledge().m_indexWorld = atIndex2;
+    elem1.knowledge().m_indexWorld = atIndex1;
+    elem2.knowledge().m_indexWorld = atIndex2;
 }
 
 template <typename T>
@@ -81,8 +79,8 @@ void SpecializedVector<T>::SWAP_CHUNK(T &elem1, size_t atIndex1,T &elem2, size_t
 {
     std::swap(elem1, elem2);
 
-    elem1->genericObject().knowledge().m_indexChunk = atIndex1;
-    elem2->genericObject().knowledge().m_indexChunk = atIndex2;
+    elem1->knowledge().m_indexChunk = atIndex1;
+    elem2->knowledge().m_indexChunk = atIndex2;
 }
 
 

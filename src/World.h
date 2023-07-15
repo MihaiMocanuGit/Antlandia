@@ -40,11 +40,10 @@ template <class T>
 T World::m_createObject(const Body &body)
 {
     sf::Vector2i chunkIndex = m_map.computeHomeChunk(body.getPosition());
-    Chunk *ptrHome = &m_map.at(chunkIndex);
-    WorldKnowledge knowledge(this, ptrHome);
-    GenericObject genericObject(body, knowledge);
+    Chunk<T> *ptrHome = &m_map.at(chunkIndex);
+    WorldKnowledge<T> knowledge(this, ptrHome);
 
-    return T{genericObject};
+    return T{body, knowledge};
 }
 
 
