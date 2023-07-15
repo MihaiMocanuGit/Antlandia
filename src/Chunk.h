@@ -8,6 +8,8 @@
 #include "Pheromone.h"
 #include "Food.h"
 #include "SpecializedVector.h"
+
+template <class T>
 class Chunk
 {
     friend class ChunkMap;
@@ -31,10 +33,20 @@ public:
     Chunk(unsigned x, unsigned y);
 
 
-    SpecializedVector<Ant*> ants{SpecializedVector<Ant*>::SWAP_CHUNK};
-    SpecializedVector<Pheromone*> pheromones{SpecializedVector<Pheromone*>::SWAP_CHUNK};
-    SpecializedVector<Food*> food{SpecializedVector<Food*>::SWAP_CHUNK};
+    SpecializedVector<T*> objects{SpecializedVector<T*>::SWAP_CHUNK};
+
 
 };
 
 
+template <class T>
+Chunk<T>::Chunk(sf::Vector2u index) : m_index{index}
+{
+
+}
+
+template <class T>
+Chunk<T>::Chunk(unsigned int x, unsigned int y) : Chunk(sf::Vector2u(x, y))
+{
+
+}
