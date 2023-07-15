@@ -1,17 +1,26 @@
-
 #include "Food.h"
 
-GenericObject &Food::genericObject()
+Food::Food(Body body, WorldKnowledge worldKnowledge) : m_body{std::move(body)}, m_worldKnowledge{std::move(worldKnowledge)}
 {
-    return m_genericObject;
+
 }
 
-const GenericObject &Food::genericObject() const
+Body &Food::body()
 {
-    return m_genericObject;
+    return m_body;
 }
 
-Food::Food(GenericObject genericObject) : m_genericObject{std::move(genericObject)}
+const Body &Food::body() const
 {
+    return m_body;
+}
 
+WorldKnowledge &Food::knowledge()
+{
+    return m_worldKnowledge;
+}
+
+const WorldKnowledge &Food::knowledge() const
+{
+    return m_worldKnowledge;
 }

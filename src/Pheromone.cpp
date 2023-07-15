@@ -1,16 +1,26 @@
 #include "Pheromone.h"
 
-GenericObject &Pheromone::genericObject()
+Pheromone::Pheromone(Body body, WorldKnowledge worldKnowledge) : m_body{std::move(body)}, m_worldKnowledge{std::move(worldKnowledge)}
 {
-    return m_genericObject;
+
 }
 
-const GenericObject &Pheromone::genericObject() const
+Body &Pheromone::body()
 {
-    return m_genericObject;
+    return m_body;
 }
 
-Pheromone::Pheromone(GenericObject genericObject) : m_genericObject{std::move(genericObject)}
+const Body &Pheromone::body() const
 {
+    return m_body;
+}
 
+WorldKnowledge &Pheromone::knowledge()
+{
+    return m_worldKnowledge;
+}
+
+const WorldKnowledge &Pheromone::knowledge() const
+{
+    return m_worldKnowledge;
 }
