@@ -10,7 +10,7 @@ private:
     SpecializedVector<Food> m_food{SpecializedVector<Food>::SWAP_WORLD};
 
     template <class T>
-    T m_createObject(const Body& body);
+    T m_createObject(const Body& body, std::vector<Chunk<T>>& objectMap);
 public:
     World() = default;
     explicit World(sf::Vector2u size);
@@ -37,10 +37,10 @@ public:
 };
 
 template <class T>
-T World::m_createObject(const Body &body)
+T World::m_createObject(const Body &body, std::vector<Chunk<T>>& objectMap)
 {
     sf::Vector2i chunkIndex = m_map.computeHomeChunk(body.getPosition());
-    Chunk<T> *ptrHome = &m_map.at(chunkIndex);
+    Chunk<T> *ptrHome = &m_map.at(chunkIndex.x, chunkIndex.y, objectMap);
     WorldKnowledge<T> knowledge(this, ptrHome);
 
     return T{body, knowledge};

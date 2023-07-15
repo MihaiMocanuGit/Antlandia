@@ -16,16 +16,16 @@ void m_closeWindowIfEvent(sf::RenderWindow &window)
 
 
 
-sf::CircleShape getShape(const GenericObject &genericObject)
+sf::CircleShape getShape(const Body &body)
 {
-    float size = genericObject.body().getSize();
+    float size = body.getSize();
     sf::CircleShape shape(size);
 
-    const sf::Vector3<unsigned char> &color = genericObject.body().getColor();
+    const sf::Vector3<unsigned char> &color = body.getColor();
     sf::Color colorSf(color.x, color.y, color.z);
     shape.setFillColor(colorSf);
 
-    sf::Vector2f position(genericObject.body().getPosition());
+    sf::Vector2f position(body.getPosition());
     shape.setPosition(position);
 
     return shape;
@@ -33,23 +33,23 @@ sf::CircleShape getShape(const GenericObject &genericObject)
 void m_drawAnts(World& world, sf::RenderWindow& window)
 {
     for (size_t i = 0; i < world.ants().size(); ++i)
-        window.draw(getShape(world.ants()[i].genericObject()));
+        window.draw(getShape(world.ants()[i].body()));
 }
 void m_drawPheromones(World& world, sf::RenderWindow& window)
 {
     for (size_t i = 0; i < world.ants().size(); ++i)
-        window.draw(getShape(world.pheromones()[i].genericObject()));
+        window.draw(getShape(world.pheromones()[i].body()));
 }
 void m_drawFood(World& world, sf::RenderWindow& window)
 {
     for (size_t i = 0; i < world.ants().size(); ++i)
-        window.draw(getShape(world.food()[i].genericObject()));
+        window.draw(getShape(world.food()[i].body()));
 }
 
 void startGameLoop(World& world)
 {
 
-    sf::RenderWindow window(sf::VideoMode(world.size().x * Chunk::CHUNK_SIZE_X, world.size().y * Chunk::CHUNK_SIZE_Y), "Antlandia");
+    sf::RenderWindow window(sf::VideoMode(world.size().x * Chunk<void>::CHUNK_SIZE_X, world.size().y * Chunk<void>::CHUNK_SIZE_Y), "Antlandia");
     window.setFramerateLimit(60);
 
 

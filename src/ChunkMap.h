@@ -2,6 +2,12 @@
 #include "Chunk.h"
 
 
+struct OverlapedChunks
+{
+    Chunk<Ant> &ref_antChunk;
+    Chunk<Pheromone> &ref_pheromoneChunk;
+    Chunk<Food> &ref_foodChunk;
+};
 
 struct Maps
 {
@@ -9,14 +15,14 @@ struct Maps
     std::vector<Chunk<Ant>> antMap = {};
     std::vector<Chunk<Pheromone>> pheromoneMap = {};
     std::vector<Chunk<Food>> foodMap = {};
+
+    OverlapedChunks at(int index)
+    {
+        return {antMap[index], pheromoneMap[index], foodMap[index]};
+    }
 };
 
-struct OverlapedChunks
-{
-    Chunk<Ant> &ref_antChunk;
-    Chunk<Pheromone> &ref_pheromoneChunk;
-    Chunk<Food> &ref_foodChunk;
-};
+
 class ChunkMap
 {
 private:
@@ -30,16 +36,22 @@ private:
     template <class T>
     void m_initChunks(std::vector<Chunk<T>> &objectMap);
     void m_initMaps();
+
+    int m_xyToIndex(int x, int y) const;
 public:
     ChunkMap() = default;
     explicit ChunkMap(sf::Vector2u size);
     ChunkMap(unsigned sizeX, unsigned sizeY);
 
-    OverlapedChunks& at(sf::Vector2i index);
-    OverlapedChunks& at(int x, int y);
-
+    OverlapedChunks at(sf::Vector2i index);
+    OverlapedChunks at(int x, int y);
     template <class T>
     Chunk<T>& at(int x, int y, std::vector<Chunk<T>> &objectMap);
+    template <class T>
+    Chunk<T>& at(int x, int y, std::vector<Chunk<T>> &objectMap) const;
+
+    Maps &maps();
+    const Maps &maps() const;
 
     sf::Vector2i computeHomeChunk(const sf::Vector2f &position) const;
     [[nodiscard]] sf::Vector2u size() const;
@@ -80,4 +92,16 @@ void ChunkMap::m_initChunks(std::vector<Chunk<T>> &objectMap)
         }
     }
 
+}
+
+template <class T>
+Chunk<T> &ChunkMap::at(int x, int y, std::vector<Chunk<T>> &objectMap) const
+{
+    return objectMap[m_xyToIndex(x, y)];
+}
+
+template <class T>
+Chunk<T> &ChunkMap::at(int x, int y, std::vector<Chunk<T>> &objectMap)
+{
+    return objectMap[m_xyToIndex(x, y)];
 }

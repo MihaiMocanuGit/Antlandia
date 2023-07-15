@@ -38,7 +38,7 @@ sf::Vector2u World::size() const
 Ant &World::addAnt(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)
 {
     Body body(position, size, mass, color);
-    Ant ant = m_createObject<Ant>(body);
+    Ant ant = m_createObject<Ant>(body, m_map.maps().antMap);
     m_ants.toBeAdded(ant);
     return m_ants.atAddBuffer(m_ants.sizeAddBuffer() - 1);
 }
@@ -46,7 +46,7 @@ Ant &World::addAnt(sf::Vector2f position, float size, float mass, const sf::Vect
 Pheromone &World::addPheromone(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)
 {
     Body body(position, size, mass, color);
-    Pheromone pheromone = m_createObject<Pheromone>(body);
+    Pheromone pheromone = m_createObject<Pheromone>(body, m_map.maps().pheromoneMap);
     m_pheromones.toBeAdded(pheromone);
     return m_pheromones.atAddBuffer(m_ants.sizeAddBuffer() - 1);
 }
@@ -54,7 +54,7 @@ Pheromone &World::addPheromone(sf::Vector2f position, float size, float mass, co
 Food &World::addFood(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)
 {
     Body body(position, size, mass, color);
-    Food food = m_createObject<Food>(body);
+    Food food = m_createObject<Food>(body, m_map.maps().foodMap);
     m_food.toBeAdded(food);
     return m_food.atAddBuffer(m_ants.sizeAddBuffer() - 1);
 }

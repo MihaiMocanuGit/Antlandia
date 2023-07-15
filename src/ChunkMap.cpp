@@ -1,11 +1,11 @@
 #include "ChunkMap.h"
 
-Chunk &ChunkMap::at(int x, int y)
+OverlapedChunks ChunkMap::at(int x, int y)
 {
-    return m_antChunks[y * m_size.x + x];
+    return m_maps.at(y * m_size.x + x);
 }
 
-Chunk &ChunkMap::at(sf::Vector2i index)
+OverlapedChunks ChunkMap::at(sf::Vector2i index)
 {
     return at(index.x, index.y);
 }
@@ -43,3 +43,19 @@ void ChunkMap::m_initMaps()
     m_initChunks(m_maps.pheromoneMap);
     m_initChunks(m_maps.foodMap);
 }
+
+Maps &ChunkMap::maps()
+{
+    return m_maps;
+}
+
+const Maps &ChunkMap::maps() const
+{
+    return m_maps;
+}
+
+int ChunkMap::m_xyToIndex(int x, int y) const
+{
+    return y * m_size.x + x;
+}
+
