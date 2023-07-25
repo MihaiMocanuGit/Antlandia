@@ -14,13 +14,29 @@ SpecializedVector<Ant> &World::ants()
 {
     return m_ants;
 }
+const SpecializedVector<Ant> &World::ants() const
+{
+    return m_ants;
+}
+
+
 
 SpecializedVector<Food> &World::food()
 {
     return m_food;
 }
 
+const SpecializedVector<Food> &World::food() const
+{
+    return m_food;
+}
+
+
 SpecializedVector<Pheromone> &World::pheromones()
+{
+    return m_pheromones;
+}
+const SpecializedVector<Pheromone> &World::pheromones() const
 {
     return m_pheromones;
 }
@@ -58,4 +74,5 @@ Food &World::addFood(sf::Vector2f position, float size, float mass, const sf::Ve
     m_food.toBeAdded(food);
     return m_food.atAddBuffer(m_ants.sizeAddBuffer() - 1);
 }
+
 

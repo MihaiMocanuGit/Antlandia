@@ -18,8 +18,13 @@ public:
 
     ChunkMap& map();
     SpecializedVector<Ant>& ants();
+    const SpecializedVector<Ant>& ants() const;
+
     SpecializedVector<Pheromone>& pheromones();
+    const SpecializedVector<Pheromone>& pheromones() const;
+
     SpecializedVector<Food>& food();
+    const SpecializedVector<Food>& food() const;
 
     [[nodiscard]] sf::Vector2u size() const;
 

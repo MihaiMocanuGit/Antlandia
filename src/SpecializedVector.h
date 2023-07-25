@@ -34,7 +34,11 @@ public:
     void addAll();
 
     T& operator[](size_t index);
+    const T& operator[](size_t index) const;
+
     T& at(size_t index);
+    const T& at(size_t index) const;
+
     inline size_t size() const;
 
     /// \brief Gets an element from the temporal buffer used for adding elements
@@ -46,6 +50,18 @@ public:
     inline size_t sizeAddBuffer() const;
 
 };
+
+template <typename T>
+const T &SpecializedVector<T>::at(size_t index) const
+{
+    return m_data[index];
+}
+
+template <typename T>
+const T &SpecializedVector<T>::operator[](size_t index) const
+{
+    return m_data[index];
+}
 
 template <typename T>
 T &SpecializedVector<T>::at(size_t index)
