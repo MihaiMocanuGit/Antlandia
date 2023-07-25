@@ -3,7 +3,7 @@
 
 #include "World.h"
 
-void m_closeWindowIfEvent(sf::RenderWindow &window)
+static void m_closeWindowIfEvent(sf::RenderWindow &window)
 {
     sf::Event event;
     while (window.pollEvent(event))
@@ -16,7 +16,7 @@ void m_closeWindowIfEvent(sf::RenderWindow &window)
 
 
 
-sf::CircleShape getShape(const Body &body)
+static sf::CircleShape getShape(const Body &body)
 {
     float size = body.getSize();
     sf::CircleShape shape(size);
@@ -30,31 +30,31 @@ sf::CircleShape getShape(const Body &body)
 
     return shape;
 }
-void m_drawAnts(const World& world, sf::RenderWindow& window)
+static void m_drawAnts(const World& world, sf::RenderWindow& window)
 {
     for (size_t i = 0; i < world.ants().size(); ++i)
         window.draw(getShape(world.ants()[i].body()));
 }
-void m_drawPheromones(const World& world, sf::RenderWindow& window)
+static void m_drawPheromones(const World& world, sf::RenderWindow& window)
 {
     for (size_t i = 0; i < world.pheromones().size(); ++i)
         window.draw(getShape(world.pheromones()[i].body()));
 }
-void m_drawFood(const World& world, sf::RenderWindow& window)
+static void m_drawFood(const World& world, sf::RenderWindow& window)
 {
     for (size_t i = 0; i < world.food().size(); ++i)
         window.draw(getShape(world.food()[i].body()));
 }
 
-void m_getInput(World& world, sf::RenderWindow& window)
+static void m_getInput(World& world, sf::RenderWindow& window)
 {
 
 }
-void m_updateState(World& world, sf::RenderWindow& window)
+static void m_updateState(World& world, sf::RenderWindow& window)
 {
 
 }
-void m_refreshScreen(const World& world, sf::RenderWindow& window)
+static void m_refreshScreen(const World& world, sf::RenderWindow& window)
 {
     window.clear(sf::Color::White);
 
