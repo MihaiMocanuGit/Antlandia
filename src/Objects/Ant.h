@@ -1,6 +1,6 @@
 #pragma once
-#include "Body.h"
-#include "WorldKnowledge.h"
+#include "../ObjectComponents/Body.h"
+#include "../ObjectComponents/WorldKnowledge.h"
 class Ant
 {
 private:

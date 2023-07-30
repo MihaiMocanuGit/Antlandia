@@ -3,10 +3,10 @@
 #include <vector>
 #include <functional>
 
-#include "Ant.h"
-#include "Pheromone.h"
-#include "Food.h"
-#include "SpecializedVector.h"
+#include "../Objects/Ant.h"
+#include "../Objects/Pheromone.h"
+#include "../Objects/Food.h"
+#include "../Utils/SpecializedVector.h"
 
 template <class T>
 class Chunk

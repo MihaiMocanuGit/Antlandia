@@ -1,6 +1,6 @@
 #pragma once
-#include "ChunkMap.h"
-#include "AppLogic.h"
+#include "World/ChunkMap.h"
+#include "AppLogic/AppLogic.h"
 
 
 void startApp();

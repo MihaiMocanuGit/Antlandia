@@ -21,8 +21,8 @@ void m_addObjects(World &world)
 
 void startApp()
 {
-World world(10, 10);
-m_addObjects(world);
+    World world(10, 10);
+    m_addObjects(world);
 
-startGameLoop(world);
+    startGameLoop(world);
 }

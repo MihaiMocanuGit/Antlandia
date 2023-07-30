@@ -1,16 +1,16 @@
-#add_subdirectory(objects)
+#add_subdirectory(Objects)
 add_library(src
         Antlandia.h Antlandia.cpp
-        AppLogic.cpp AppLogic.cpp
-        Body.cpp Body.h
-        WordKnowledge.cpp WorldKnowledge.h
-        Chunk.cpp Chunk.h
-        Types.h
-        SpecializedVector.h
-        Ant.cpp Ant.h
-        Pheromone.cpp Pheromone.h
-        Food.cpp Food.h
-        ChunkMap.cpp ChunkMap.h
-        World.cpp World.h
-        )
-#target_link_libraries(src objects)
+        AppLogic/AppLogic.cpp AppLogic/AppLogic.cpp
+        ObjectComponents/Body.cpp ObjectComponents/Body.h
+        ObjectComponents/WorldKnowledge.cpp ObjectComponents/WorldKnowledge.h
+        World/Chunk.cpp World/Chunk.h
+        Utils/Types.h
+        Utils/SpecializedVector.h
+        Objects/Ant.cpp Objects/Ant.h
+        Objects/Pheromone.cpp Objects/Pheromone.h
+        Objects/Food.cpp Objects/Food.h
+        World/ChunkMap.cpp World/ChunkMap.h
+        World/World.cpp World/World.h
+        Utils/utils.cpp Utils/Utils.h)
+#target_link_libraries(src Objects)

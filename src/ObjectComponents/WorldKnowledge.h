@@ -2,7 +2,7 @@
 #include <SFML/System/Vector2.hpp>
 #include <vector>
 
-#include "Types.h"
+#include "../Utils/Types.h"
 template <class T>
 class Chunk;
 

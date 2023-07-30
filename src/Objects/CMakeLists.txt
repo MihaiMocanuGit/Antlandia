@@ -1,0 +1,1 @@
+#add_library(Objects GenericObject.h GenericObject.cpp)
