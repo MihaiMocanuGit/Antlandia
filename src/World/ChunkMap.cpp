@@ -1,11 +1,11 @@
 #include "ChunkMap.h"
 
-OverlapedChunks ChunkMap::at(int x, int y)
+AllChunksTypes ChunkMap::at(int x, int y)
 {
     return m_maps.at(y * m_size.x + x);
 }
 
-OverlapedChunks ChunkMap::at(sf::Vector2i index)
+AllChunksTypes ChunkMap::at(sf::Vector2i index)
 {
     return at(index.x, index.y);
 }
@@ -59,3 +59,7 @@ int ChunkMap::m_xyToIndex(int x, int y) const
     return y * m_size.x + x;
 }
 
+AllChunksTypes::AllChunksTypes(Chunk<Ant> &ref_antChunk, Chunk<Pheromone> &ref_pheromoneChunk,
+                               Chunk<Food> &ref_foodChunk)
+        : ref_antChunk{ref_antChunk}, ref_pheromoneChunk{ref_pheromoneChunk}, ref_foodChunk{ref_foodChunk}
+{}

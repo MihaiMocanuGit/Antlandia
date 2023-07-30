@@ -2,11 +2,14 @@
 #include "Chunk.h"
 
 
-struct OverlapedChunks
+struct AllChunksTypes
 {
     Chunk<Ant> &ref_antChunk;
     Chunk<Pheromone> &ref_pheromoneChunk;
     Chunk<Food> &ref_foodChunk;
+
+    AllChunksTypes(Chunk<Ant> &ref_antChunk, Chunk<Pheromone> &ref_pheromoneChunk, Chunk<Food> &ref_foodChunk);
+
 };
 
 struct Maps
@@ -16,9 +19,9 @@ struct Maps
     std::vector<Chunk<Pheromone>> pheromoneMap = {};
     std::vector<Chunk<Food>> foodMap = {};
 
-    OverlapedChunks at(int index)
+    AllChunksTypes at(int index)
     {
-        return {antMap[index], pheromoneMap[index], foodMap[index]};
+        return AllChunksTypes{antMap[index], pheromoneMap[index], foodMap[index]};
     }
 };
 
@@ -43,8 +46,8 @@ public:
     explicit ChunkMap(sf::Vector2u size);
     ChunkMap(unsigned sizeX, unsigned sizeY);
 
-    OverlapedChunks at(sf::Vector2i index);
-    OverlapedChunks at(int x, int y);
+    AllChunksTypes at(sf::Vector2i index);
+    AllChunksTypes at(int x, int y);
     template <class T>
     Chunk<T>& at(int x, int y, std::vector<Chunk<T>> &objectMap);
     template <class T>
