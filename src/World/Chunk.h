@@ -32,7 +32,7 @@ public:
     Chunk(unsigned x, unsigned y);
 
 
-    SpecializedVector<T*> objects{SpecializedVector<T*>::SWAP_CHUNK};
+    SpecializedVector<T*> objects{SpecializedVector<T*>::INIT_CHUNK, SpecializedVector<T*>::SWAP_CHUNK};
 
 
 };

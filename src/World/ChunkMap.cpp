@@ -28,11 +28,13 @@ sf::Vector2u ChunkMap::size() const
     return m_size;
 }
 
-sf::Vector2i ChunkMap::computeHomeChunk(const sf::Vector2f &position) const
+sf::Vector2i ChunkMap::computeChunkIndex(const sf::Vector2f &position) const
 {
     sf::Vector2i chunkIndex(position.x/Chunk<void>::CHUNK_SIZE_X, position.y/Chunk<void>::CHUNK_SIZE_Y);
     return chunkIndex;
 }
+
+
 
 void ChunkMap::m_initMaps()
 {

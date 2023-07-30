@@ -5,9 +5,9 @@ class World
 {
 private:
     ChunkMap m_map = {};
-    SpecializedVector<Ant> m_ants{SpecializedVector<Ant>::SWAP_WORLD};
-    SpecializedVector<Pheromone> m_pheromones{SpecializedVector<Pheromone>::SWAP_WORLD};
-    SpecializedVector<Food> m_food{SpecializedVector<Food>::SWAP_WORLD};
+    SpecializedVector<Ant> m_ants{SpecializedVector<Ant>::INIT_WORLD, SpecializedVector<Ant>::SWAP_WORLD};
+    SpecializedVector<Pheromone> m_pheromones{SpecializedVector<Pheromone>::INIT_WORLD, SpecializedVector<Pheromone>::SWAP_WORLD};
+    SpecializedVector<Food> m_food{SpecializedVector<Food>::INIT_WORLD, SpecializedVector<Food>::SWAP_WORLD};
 
     template <class T>
     T m_createObject(const Body& body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T>& objectMap);
@@ -44,7 +44,7 @@ public:
 template <class T>
 T World::m_createObject(const Body &body, SpecializedVector<T> &worldObjectVector, std::vector<Chunk<T>>& objectMap)
 {
-    sf::Vector2i chunkIndex = m_map.computeHomeChunk(body.getPosition());
+    sf::Vector2i chunkIndex = m_map.computeChunkIndex(body.getPosition());
 
     assert(m_map.isValidIndex(chunkIndex.x, chunkIndex.y));
 

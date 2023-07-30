@@ -10,6 +10,7 @@ template <typename U>
 class SpecializedVector;
 
 class World;
+class ChunkMap;
 struct PrimitiveChunkMaps;
 
 template <class T>

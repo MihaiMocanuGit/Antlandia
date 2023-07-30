@@ -60,7 +60,7 @@ public:
     PrimitiveChunkMaps &primitiveChunkMaps();
     const PrimitiveChunkMaps &primitiveChunkMaps() const;
 
-    sf::Vector2i computeHomeChunk(const sf::Vector2f &position) const;
+    sf::Vector2i computeChunkIndex(const sf::Vector2f &position) const;
     [[nodiscard]] sf::Vector2u size() const;
 };
 
