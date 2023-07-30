@@ -7,6 +7,7 @@ template <class T>
 class Chunk;
 
 class World;
+struct PrimitiveChunkMaps;
 
 template <class T>
 class WorldKnowledge
@@ -15,6 +16,7 @@ class WorldKnowledge
     friend class SpecializedVector;
 private:
     World *m_pWorld = nullptr;
+    PrimitiveChunkMap_t<T> *m_pChunkMap = nullptr;
     Chunk<T> *m_pHomeChunk = nullptr;
 
     size_t m_indexChunk = -1; //size_t max

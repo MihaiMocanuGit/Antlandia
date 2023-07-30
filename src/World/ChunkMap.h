@@ -2,26 +2,29 @@
 #include "Chunk.h"
 
 
-struct AllChunksTypes
+struct ChunksPaired
 {
     Chunk<Ant> &ref_antChunk;
     Chunk<Pheromone> &ref_pheromoneChunk;
     Chunk<Food> &ref_foodChunk;
 
-    AllChunksTypes(Chunk<Ant> &ref_antChunk, Chunk<Pheromone> &ref_pheromoneChunk, Chunk<Food> &ref_foodChunk);
+    ChunksPaired() = delete;
+    ChunksPaired(Chunk<Ant> &ref_antChunk, Chunk<Pheromone> &ref_pheromoneChunk, Chunk<Food> &ref_foodChunk);
 
 };
 
-struct Maps
-{
-    //we will consider it to be a matrix
-    std::vector<Chunk<Ant>> antMap = {};
-    std::vector<Chunk<Pheromone>> pheromoneMap = {};
-    std::vector<Chunk<Food>> foodMap = {};
 
-    AllChunksTypes at(int index)
+
+struct PrimitiveChunkMaps
+{
+
+    PrimitiveChunkMap_t<Ant> antMap = {};
+    PrimitiveChunkMap_t<Pheromone> pheromoneMap = {};
+    PrimitiveChunkMap_t<Food> foodMap = {};
+
+    ChunksPaired at(int index)
     {
-        return AllChunksTypes{antMap[index], pheromoneMap[index], foodMap[index]};
+        return ChunksPaired{antMap[index], pheromoneMap[index], foodMap[index]};
     }
 };
 
@@ -29,8 +32,7 @@ struct Maps
 class ChunkMap
 {
 private:
-    //we will consider it to be a matrix
-    Maps m_maps;
+    PrimitiveChunkMaps m_primitiveMaps;
 
     sf::Vector2u m_size = {0, 0};
 
@@ -46,15 +48,15 @@ public:
     explicit ChunkMap(sf::Vector2u size);
     ChunkMap(unsigned sizeX, unsigned sizeY);
 
-    AllChunksTypes at(sf::Vector2i index);
-    AllChunksTypes at(int x, int y);
+    ChunksPaired at(sf::Vector2i index);
+    ChunksPaired at(int x, int y);
     template <class T>
     Chunk<T>& at(int x, int y, std::vector<Chunk<T>> &objectMap);
     template <class T>
     Chunk<T>& at(int x, int y, std::vector<Chunk<T>> &objectMap) const;
 
-    Maps &maps();
-    const Maps &maps() const;
+    PrimitiveChunkMaps &primitiveChunkMaps();
+    const PrimitiveChunkMaps &primitiveChunkMaps() const;
 
     sf::Vector2i computeHomeChunk(const sf::Vector2f &position) const;
     [[nodiscard]] sf::Vector2u size() const;
