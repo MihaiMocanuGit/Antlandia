@@ -12,5 +12,5 @@ add_library(src
         Objects/Food.cpp Objects/Food.h
         World/ChunkMap.cpp World/ChunkMap.h
         World/World.cpp World/World.h
-        Utils/utils.cpp Utils/Utils.h)
+        Utils/Utils.cpp Utils/Utils.h)
 #target_link_libraries(src Objects)
