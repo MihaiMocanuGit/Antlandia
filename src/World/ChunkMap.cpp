@@ -16,10 +16,7 @@ ChunkMap::ChunkMap(sf::Vector2u size) : m_size(size)
 }
 
 
-bool ChunkMap::m_isValidIndex(unsigned int x, unsigned int y) const
-{
-    return x >= 0 and x < m_size.x and y >= 0 and y < m_size.y;
-}
+
 
 ChunkMap::ChunkMap(unsigned int sizeX, unsigned int sizeY) : ChunkMap(sf::Vector2u(sizeX, sizeY))
 {

@@ -1,6 +1,6 @@
 #pragma once
 #include "ChunkMap.h"
-
+#include <cassert>
 class World
 {
 private:
@@ -10,7 +10,7 @@ private:
     SpecializedVector<Food> m_food{SpecializedVector<Food>::SWAP_WORLD};
 
     template <class T>
-    T m_createObject(const Body& body, std::vector<Chunk<T>>& objectMap);
+    T m_createObject(const Body& body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T>& objectMap);
 public:
     World() = default;
     explicit World(sf::Vector2u size);
@@ -42,11 +42,13 @@ public:
 };
 
 template <class T>
-T World::m_createObject(const Body &body, std::vector<Chunk<T>>& objectMap)
+T World::m_createObject(const Body &body, SpecializedVector<T> &worldObjectVector, std::vector<Chunk<T>>& objectMap)
 {
     sf::Vector2i chunkIndex = m_map.computeHomeChunk(body.getPosition());
-    Chunk<T> *ptrHome = &m_map.at(chunkIndex.x, chunkIndex.y, objectMap);
-    WorldKnowledge<T> knowledge(this, ptrHome);
+
+    assert(m_map.isValidIndex(chunkIndex.x, chunkIndex.y));
+
+    WorldKnowledge<T> knowledge(this, &worldObjectVector, &objectMap);
 
     return T{body, knowledge};
 }

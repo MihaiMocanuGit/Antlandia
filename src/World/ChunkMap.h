@@ -36,7 +36,7 @@ private:
 
     sf::Vector2u m_size = {0, 0};
 
-    [[nodiscard]] inline bool m_isValidIndex(unsigned x, unsigned y) const;
+
 
     template <class T>
     void m_initChunks(std::vector<Chunk<T>> &objectMap);
@@ -44,6 +44,8 @@ private:
 
     int m_xyToIndex(int x, int y) const;
 public:
+    [[nodiscard]] inline bool isValidIndex(unsigned x, unsigned y) const;
+
     ChunkMap() = default;
     explicit ChunkMap(sf::Vector2u size);
     ChunkMap(unsigned sizeX, unsigned sizeY);
@@ -74,25 +76,25 @@ void ChunkMap::m_initChunks(std::vector<Chunk<T>> &objectMap)
         {
             this->at(x, y, objectMap) = Chunk<T>(x, y);
 
-            if (m_isValidIndex(x-1, y-1))
+            if (isValidIndex(x - 1, y - 1))
                 this->at(x, y, objectMap).m_neighbours[0][0] = &this->at(x-1, y-1, objectMap);
-            if (m_isValidIndex(x, y-1))
+            if (isValidIndex(x, y - 1))
                 this->at(x, y, objectMap).m_neighbours[0][1] = &this->at(x, y-1, objectMap);
-            if (m_isValidIndex(x+1, y-1))
+            if (isValidIndex(x + 1, y - 1))
                 this->at(x, y, objectMap).m_neighbours[0][2] = &this->at(x+1, y-1, objectMap);
 
-            if (m_isValidIndex(x-1, y))
+            if (isValidIndex(x - 1, y))
                 this->at(x, y, objectMap).m_neighbours[1][0] = &this->at(x-1, y, objectMap);
-            if (m_isValidIndex(x, y))
+            if (isValidIndex(x, y))
                 this->at(x, y, objectMap).m_neighbours[1][1] = &this->at(x, y, objectMap);
-            if (m_isValidIndex(x+1, y))
+            if (isValidIndex(x + 1, y))
                 this->at(x, y, objectMap).m_neighbours[1][2] = &this->at(x+1, y, objectMap);
 
-            if (m_isValidIndex(x-1, y+1))
+            if (isValidIndex(x - 1, y + 1))
                 this->at(x, y, objectMap).m_neighbours[2][0] = &this->at(x-1, y+1, objectMap);
-            if (m_isValidIndex(x, y+1))
+            if (isValidIndex(x, y + 1))
                 this->at(x, y, objectMap).m_neighbours[2][1] = &this->at(x, y+1, objectMap);
-            if (m_isValidIndex(x+1, y+1))
+            if (isValidIndex(x + 1, y + 1))
                 this->at(x, y, objectMap).m_neighbours[2][2] = &this->at(x+1, y+1, objectMap);
         }
     }
@@ -109,4 +111,8 @@ template <class T>
 Chunk<T> &ChunkMap::at(int x, int y, std::vector<Chunk<T>> &objectMap)
 {
     return objectMap[m_xyToIndex(x, y)];
+}
+bool ChunkMap::isValidIndex(unsigned int x, unsigned int y) const
+{
+    return x >= 0 and x < m_size.x * Chunk<void>::CHUNK_SIZE_X and y >= 0 and y < m_size.y * Chunk<void>::CHUNK_SIZE_Y;
 }
