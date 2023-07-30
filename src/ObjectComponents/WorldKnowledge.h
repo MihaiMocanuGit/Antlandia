@@ -24,10 +24,12 @@ private:
 
 
     PrimitiveChunkMap_t<T> *m_pPrimitiveChunkMap = nullptr;
-    Chunk<T> *m_pHomeChunk = nullptr;
+    sf::Vector2i m_homeChunkIndexes = sf::Vector2i {-1, -1};
 
-    bool m_indexesWereGiven = false;
+    bool m_worldIndexWasGiven = false;
     size_t m_indexWorld = -1; //size_t max
+
+    bool m_chunkIndexWasGiven = false;
     size_t m_indexChunk = -1; //size_t max
 
 
@@ -46,6 +48,27 @@ public:
                    m_pPrimitiveChunkMap(pPrimitiveChunkMap)
     {}
 
-    void giveVectorIndexes(const size_t& indexInWorldVector, Chunk<T> *pHomeChunk, const size_t& indexInChunkVector);
-    void changeHomeChunk(Chunk<T> *pHomeChunk, const size_t& indexInChunkVector);
+    void giveWorldData(const size_t& indexInWorldVector);
+    void giveChunkData(const sf::Vector2i &homeChunkIndexes, const size_t& indexInChunkVector);
 };
+
+template <class T>
+void WorldKnowledge<T>::giveWorldData(const size_t &indexInWorldVector)
+{
+    //TODO: assert index validity
+    m_indexWorld = indexInWorldVector;
+
+    m_worldIndexWasGiven = true;
+}
+
+template <class T>
+void WorldKnowledge<T>::giveChunkData(const sf::Vector2i &homeChunkIndexes, const size_t &indexInChunkVector)
+{
+    //TODO: assert index/homeChunk validity
+    m_homeChunkIndexes = homeChunkIndexes;
+    m_indexChunk = indexInChunkVector;
+
+    m_worldIndexWasGiven = true;
+}
+
+
