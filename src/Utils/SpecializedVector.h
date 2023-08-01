@@ -13,8 +13,9 @@ private:
     std::size_t m_eraseStart = 0;
     std::vector<T> m_addBuffer = {};
 
-    SwapFunction_t<T> m_swap;
     InitFunction_t<T> m_init;
+    SwapFunction_t<T> m_swap;
+
 
     [[nodiscard]] inline size_t m_actualDataSize() const;
     [[nodiscard]] inline size_t m_eraseSize() const;
@@ -22,13 +23,7 @@ private:
     [[nodiscard]] inline bool m_emptyErase() const;
 
 public:
-    static void SWAP_CHUNK(T & elem1, size_t atIndex1,
-                           T & elem2, size_t atIndex2);
-    static void INIT_CHUNK(T & elem, size_t indexChunk);
 
-    static void SWAP_WORLD(T & elem1, size_t atIndex1,
-                           T & elem2, size_t atIndex2);
-    static void INIT_WORLD(T & elem, size_t indexWorld);
 
     explicit SpecializedVector(InitFunction_t<T> init, SwapFunction_t<T> swap, size_t reserve = 128);
 
@@ -87,35 +82,6 @@ size_t SpecializedVector<T>::sizeAddBuffer() const
     return m_addBuffer.size();
 }
 
-template <typename T>
-void SpecializedVector<T>::SWAP_WORLD(T &elem1, size_t atIndex1, T &elem2, size_t atIndex2)
-{
-    std::swap(elem1, elem2);
-
-    elem1.knowledge().m_indexWorld = atIndex1;
-    elem2.knowledge().m_indexWorld = atIndex2;
-}
-template <typename T>
-void SpecializedVector<T>::INIT_WORLD(T &elem, size_t indexWorld)
-{
-    elem.knowledge().giveWorldData(indexWorld);
-}
-template <typename T>
-void SpecializedVector<T>::SWAP_CHUNK(T &elem1, size_t atIndex1,T &elem2, size_t atIndex2)
-{
-    std::swap(elem1, elem2);
-
-    elem1->knowledge().m_indexChunk = atIndex1;
-    elem2->knowledge().m_indexChunk = atIndex2;
-}
-template <typename T>
-void SpecializedVector<T>::INIT_CHUNK(T &elem, size_t indexChunk)
-{
-    sf::Vector2f position = elem->body().getPosition();
-    sf::Vector2i homeChunkIndex = elem->knowledge().m_pWorld->map().computeChunkIndex(position);
-
-    elem->knowledge().giveChunkData(homeChunkIndex, indexChunk);
-}
 
 template <typename T>
 T SpecializedVector<T>::toBeRemoved(std::size_t index)

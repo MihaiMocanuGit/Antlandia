@@ -16,8 +16,7 @@ struct PrimitiveChunkMaps;
 template <class T>
 class WorldKnowledge
 {
-    template <typename U>
-    friend class SpecializedVector;
+    friend class World;
 private:
 
     World *m_pWorld = nullptr;
@@ -51,7 +50,15 @@ public:
 
     void giveWorldData(const size_t& indexInWorldVector);
     void giveChunkData(const sf::Vector2i &homeChunkIndexes, const size_t& indexInChunkVector);
+
+    World & world();
 };
+
+template <class T>
+World &WorldKnowledge<T>::world()
+{
+    return *m_pWorld;
+}
 
 template <class T>
 void WorldKnowledge<T>::giveWorldData(const size_t &indexInWorldVector)

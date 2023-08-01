@@ -5,9 +5,9 @@ class World
 {
 private:
     ChunkMap m_map = {};
-    SpecializedVector<Ant> m_ants{SpecializedVector<Ant>::INIT_WORLD, SpecializedVector<Ant>::SWAP_WORLD};
-    SpecializedVector<Pheromone> m_pheromones{SpecializedVector<Pheromone>::INIT_WORLD, SpecializedVector<Pheromone>::SWAP_WORLD};
-    SpecializedVector<Food> m_food{SpecializedVector<Food>::INIT_WORLD, SpecializedVector<Food>::SWAP_WORLD};
+    SpecializedVector<Ant> m_ants{World::INIT_WORLD, World::SWAP_WORLD};
+    SpecializedVector<Pheromone> m_pheromones{World::INIT_WORLD, World::SWAP_WORLD};
+    SpecializedVector<Food> m_food{World::INIT_WORLD, World::SWAP_WORLD};
 
     template <class T>
     T m_createObject(const Body& body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T>& objectMap);
@@ -15,6 +15,11 @@ public:
     World() = default;
     explicit World(sf::Vector2u size);
     World(unsigned sizeX, unsigned sizeY);
+
+    template <typename T>
+    static void SWAP_WORLD(T &elem1, size_t atIndex1, T &elem2, size_t atIndex2);
+    template <typename T>
+    static void INIT_WORLD(T &elem, size_t indexWorld);
 
     ChunkMap& map();
     SpecializedVector<Ant>& ants();
@@ -54,3 +59,17 @@ T World::m_createObject(const Body &body, SpecializedVector<T> &worldObjectVecto
 }
 
 
+
+template <typename T>
+void World::SWAP_WORLD(T &elem1, size_t atIndex1, T &elem2, size_t atIndex2)
+{
+    std::swap(elem1, elem2);
+
+    elem1.knowledge().m_indexWorld = atIndex1;
+    elem2.knowledge().m_indexWorld = atIndex2;
+}
+template <typename T>
+void World::INIT_WORLD(T &elem, size_t indexWorld)
+{
+    elem.knowledge().giveWorldData(indexWorld);
+}
