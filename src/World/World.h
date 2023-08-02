@@ -65,8 +65,8 @@ void World::SWAP_WORLD(T &elem1, size_t atIndex1, T &elem2, size_t atIndex2)
 {
     std::swap(elem1, elem2);
 
-    elem1.knowledge().m_indexWorld = atIndex1;
-    elem2.knowledge().m_indexWorld = atIndex2;
+    elem1.knowledge().giveWorldIndex(atIndex1);
+    elem2.knowledge().giveWorldIndex(atIndex2);
 }
 template <typename T>
 void World::INIT_WORLD(T &elem, size_t indexWorld)

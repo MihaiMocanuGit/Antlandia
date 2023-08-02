@@ -16,7 +16,6 @@ struct PrimitiveChunkMaps;
 template <class T>
 class WorldKnowledge
 {
-    friend class World;
 private:
 
     World *m_pWorld = nullptr;
