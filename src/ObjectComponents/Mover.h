@@ -1,11 +1,16 @@
 #pragma once
 
-#include "GenericObject.h"
+#include "Body.h"
+#include "WorldKnowledge.h"
 
+template <class T>
 class Mover
 {
 private:
-    GenericObject &m_ref_genericBody;
+    Body &m_ref_body;
+    WorldKnowledge<T> &m_ref_worldKnowledge;
 public:
-    explicit Mover(GenericObject &ref_genericBody);
+    Mover(Body &ref_body, WorldKnowledge<T> & ref_worldKnowledge)
+    : m_ref_body{ref_body}, m_ref_worldKnowledge{ref_worldKnowledge}
+    {}
 };
