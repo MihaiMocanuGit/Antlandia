@@ -66,17 +66,13 @@ void Chunk<T>::SWAP_CHUNK(U &elem1, size_t atIndex1, U &elem2, size_t atIndex2)
 
     std::swap(elem1, elem2);
 
-    elem1->knowledge().m_indexChunk = atIndex1;
-    elem2->knowledge().m_indexChunk = atIndex2;
+    elem1->knowledge().giveChunkIndex(atIndex1);
+    elem2->knowledge().giveChunkIndex(atIndex2);
 }
 template <typename T>
 template <typename U>
 void Chunk<T>::INIT_CHUNK(U &elem, size_t indexChunk)
 {
     static_assert(std::is_same<T*,U>::value);
-
-    sf::Vector2f position = elem->body().getPosition();
-    sf::Vector2i homeChunkIndex = elem->knowledge().world().map().computeChunkIndex(position);
-
-    elem->knowledge().giveChunkData(homeChunkIndex, indexChunk);
+    elem->knowledge().giveChunkIndex(indexChunk);
 }

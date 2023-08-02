@@ -71,5 +71,5 @@ void World::SWAP_WORLD(T &elem1, size_t atIndex1, T &elem2, size_t atIndex2)
 template <typename T>
 void World::INIT_WORLD(T &elem, size_t indexWorld)
 {
-    elem.knowledge().giveWorldData(indexWorld);
+    elem.knowledge().giveWorldIndex(indexWorld);
 }

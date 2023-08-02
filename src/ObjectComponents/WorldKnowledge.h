@@ -48,11 +48,22 @@ public:
                    m_pPrimitiveChunkMap(pPrimitiveChunkMap)
     {}
 
-    void giveWorldData(const size_t& indexInWorldVector);
+    void giveWorldIndex(const size_t& indexInWorldVector);
+    void giveChunkIndex(const size_t& indexInChunkVector);
+
     void giveChunkData(const sf::Vector2i &homeChunkIndexes, const size_t& indexInChunkVector);
 
     World & world();
 };
+
+template <class T>
+void WorldKnowledge<T>::giveChunkIndex(const size_t &indexInChunkVector)
+{
+    //TODO: assert index validity
+    m_indexChunk = indexInChunkVector;
+
+    m_chunkIndexWasGiven = true;
+}
 
 template <class T>
 World &WorldKnowledge<T>::world()
@@ -61,7 +72,7 @@ World &WorldKnowledge<T>::world()
 }
 
 template <class T>
-void WorldKnowledge<T>::giveWorldData(const size_t &indexInWorldVector)
+void WorldKnowledge<T>::giveWorldIndex(const size_t &indexInWorldVector)
 {
     //TODO: assert index validity
     m_indexWorld = indexInWorldVector;
