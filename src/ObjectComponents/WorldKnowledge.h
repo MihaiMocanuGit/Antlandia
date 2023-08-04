@@ -84,8 +84,6 @@ void WorldKnowledge<T>::giveHomeChunk(const sf::Vector2i &homeChunkIndexes)
 {
     //TODO: assert index of homeChunk validity
     m_homeChunkIndexes = homeChunkIndexes;
-
-    m_worldIndexWasGiven = true;
 }
 
 

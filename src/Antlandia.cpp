@@ -17,6 +17,16 @@ void m_addObjects(World &world)
     world.ants().addAll();
     world.food().addAll();
     world.pheromones().addAll();
+
+    for (unsigned y = 0; y < world.size().y; ++y)
+    {
+        for (unsigned x = 0; x < world.size().x; ++x)
+        {
+            world.map().at(x, y).ref_antChunk.objects.addAll();
+            world.map().at(x, y).ref_pheromoneChunk.objects.addAll();
+            world.map().at(x, y).ref_foodChunk.objects.addAll();
+        }
+    }
 }
 
 void startApp()

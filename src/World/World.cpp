@@ -58,8 +58,12 @@ Ant &World::addAnt(sf::Vector2f position, float size, float mass, const sf::Vect
     Ant ant = m_createObject<Ant>(body, m_ants, m_map.primitiveChunkMaps().antMap);
     sf::Vector2i homeChunkIndex = m_map.computeChunkIndex(position);
     ant.knowledge().giveHomeChunk(homeChunkIndex);
+
     m_ants.toBeAdded(ant);
-    return m_ants.atAddBuffer(m_ants.sizeAddBuffer() - 1);
+
+    Ant &refReturn = m_ants.atAddBuffer(m_ants.sizeAddBuffer() - 1);
+    m_map.at(homeChunkIndex).ref_antChunk.objects.toBeAdded(&refReturn);
+    return refReturn;
 }
 
 Pheromone &World::addPheromone(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)
@@ -68,18 +72,27 @@ Pheromone &World::addPheromone(sf::Vector2f position, float size, float mass, co
     Pheromone pheromone = m_createObject<Pheromone>(body, m_pheromones, m_map.primitiveChunkMaps().pheromoneMap);
     sf::Vector2i homeChunkIndex = m_map.computeChunkIndex(position);
     pheromone.knowledge().giveHomeChunk(homeChunkIndex);
+
     m_pheromones.toBeAdded(pheromone);
-    return m_pheromones.atAddBuffer(m_ants.sizeAddBuffer() - 1);
+
+    Pheromone &refReturn = m_pheromones.atAddBuffer(m_pheromones.sizeAddBuffer() - 1);
+    m_map.at(homeChunkIndex).ref_pheromoneChunk.objects.toBeAdded(&refReturn);
+    return refReturn;
 }
 
 Food &World::addFood(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)
 {
     Body body(position, size, mass, color);
     Food food = m_createObject<Food>(body, m_food, m_map.primitiveChunkMaps().foodMap);
+
     sf::Vector2i homeChunkIndex = m_map.computeChunkIndex(position);
     food.knowledge().giveHomeChunk(homeChunkIndex);
+
     m_food.toBeAdded(food);
-    return m_food.atAddBuffer(m_ants.sizeAddBuffer() - 1);
+
+    Food &refReturn = m_food.atAddBuffer(m_food.sizeAddBuffer() - 1);
+    m_map.at(homeChunkIndex).ref_foodChunk.objects.toBeAdded(&refReturn);
+    return refReturn;
 }
 
 

@@ -30,6 +30,7 @@ public:
     T toBeRemoved(std::size_t index);
     void removeAll();
 
+    void toBeAdded(T &&element);
     void toBeAdded(T &element);
     void addAll();
 
@@ -131,6 +132,11 @@ void SpecializedVector<T>::toBeAdded(T &element)
     m_addBuffer.push_back(element);
 }
 
+template <typename T>
+void SpecializedVector<T>::toBeAdded(T &&element)
+{
+    toBeAdded(element);
+}
 
 template <typename T>
 void SpecializedVector<T>::removeAll()
