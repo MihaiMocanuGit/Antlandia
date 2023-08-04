@@ -53,7 +53,15 @@ public:
     void giveHomeChunk(const sf::Vector2i &homeChunkIndexes);
 
     World & world();
+    sf::Vector2i homeChunkIndex();
 };
+
+template <class T>
+sf::Vector2i WorldKnowledge<T>::homeChunkIndex()
+{
+    return m_homeChunkIndexes;
+}
+
 
 template <class T>
 void WorldKnowledge<T>::giveChunkIndex(const size_t &indexInChunkVector)

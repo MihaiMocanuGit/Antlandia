@@ -54,6 +54,7 @@ T World::m_createObject(const Body &body, SpecializedVector<T> &worldObjectVecto
     assert(m_map.isValidIndex(chunkIndex.x, chunkIndex.y));
 
     WorldKnowledge<T> knowledge(this, &worldObjectVector, &objectMap);
+    knowledge.giveHomeChunk(chunkIndex);
 
     return T{body, knowledge};
 }
