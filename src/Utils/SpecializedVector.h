@@ -1,31 +1,54 @@
 #pragma once
 #include <vector>
+#include <stdexcept>
 
 
-
-
+/// A specialized vector has the scope of maintaining the validity of indexes while having the
+/// benefit of cache-locality and fast removals/additions. The fundamental way it works is the following:
+///
+/// 1) We use a buffer for add and delete, meaning that you must first mark all elements to be deleted/added and
+/// after that send a final command to permanently add/remove the chosen objects.
+///
+/// 2) It uses the delete by-swap idiom. Meaning that when marking an element for deletion, we first swap it with
+/// the last element which is not also marked for deletion. It updates the memorised indexes through a given custom function.
+///
+/// 3) As such, the buffer used for removal is actually at the end of the original vector. The buffer for
+/// additions is a separate vector
+/// \note It is built upon std::vector.
+/// \brief Optimized vector for frequent additions and random removals. It maintains index validity.
+/// \tparam T copy-constructable and copy-assignable element
 template <typename T>
 class SpecializedVector
 {
 private:
-    //elements will
     std::vector<T> m_data = {};
+
+    /// \brief also represents the size of the section of already added elements
     std::size_t m_eraseStart = 0;
+
+    /// \brief additional vector where we temporally store the elements that will later be added
     std::vector<T> m_addBuffer = {};
 
     InitFunction_t<T> m_init;
     SwapFunction_t<T> m_swap;
 
 
-    [[nodiscard]] inline size_t m_actualDataSize() const;
+    /// \brief The size of the section of already added elements, ignoring the 2 buffers
+    /// \return The number of elements
+    [[nodiscard]] inline size_t m_oldDataSize() const;
+
+    /// \brief The size of the section of elements marked for deletion
+    /// \return The number of elements
     [[nodiscard]] inline size_t m_eraseSize() const;
 
+    /// \brief Checks if we do not have any elements that need to be deleted
+    /// \return bool
     [[nodiscard]] inline bool m_emptyErase() const;
 
 public:
 
 
-    explicit SpecializedVector(InitFunction_t<T> init, SwapFunction_t<T> swap, size_t reserve = 128);
+    SpecializedVector(InitFunction_t<T> init, SwapFunction_t<T> swap, size_t reserve = 128);
 
     T toBeRemoved(std::size_t index);
     void removeAll();
@@ -34,19 +57,36 @@ public:
     void toBeAdded(T &element);
     void addAll();
 
+    /// \brief Gets an element only from the section of already added elements.
+    /// \param index
+    /// \return Reference to the element at the given index
+    /// \note Bounds are not checked. As such you might unintentionally access the removal buffer
     T& operator[](size_t index);
     const T& operator[](size_t index) const;
 
+    /// \brief Gets an element from the vector. If the given index is greater than the size of
+    /// the section of already added elements, then it will access the elements that were marked for
+    /// insertion.
+    /// \param index The index of the element you want to access
+    /// \return Reference to the given object
+    /// \note Bounds are checked, you cannot access the removal buffer by mistake.
+    /// \throws std::out_of_range if out of bounds
+    /// \note The index is given relative to the first element from the section of already added elements in the array
+    /// the i'th element that was marked for insertion will be found at the index: size() + i
     T& at(size_t index);
     const T& at(size_t index) const;
 
+    /// \brief Gets the size of the section of already added elements.
+    /// \return The no of elements.
     inline size_t size() const;
 
     /// \brief Gets an element from the temporal buffer used for adding elements
-    /// \param index The index of the element in the add buffer
+    /// \param index The index of the element in the add buffer.
     /// \return Reference to the element
     /// \note All references will be invalidated after a call to addAll();
-    /// \note No index validation
+    /// \note Bounds are checked.
+    /// \throws std::out_of_range if out of bounds
+    /// \note The index is given relative to the start of the add buffer
     T& atAddBuffer(size_t index);
     inline size_t sizeAddBuffer() const;
 
@@ -56,7 +96,28 @@ public:
 template <typename T>
 const T &SpecializedVector<T>::at(size_t index) const
 {
-    return m_data[index];
+    if (index < m_oldDataSize())
+        return m_data[index];
+    //  implies we access the temporal buffer for additions
+    else if (index > m_oldDataSize() and index < m_oldDataSize() + m_addBuffer.size())
+        return  m_addBuffer[index - m_oldDataSize()];
+    // we got an invalid index
+    else
+        throw std::out_of_range("Invalid index, check bounds!");
+
+}
+
+template <typename T>
+T &SpecializedVector<T>::at(size_t index)
+{
+    if (index < m_oldDataSize())
+        return m_data[index];
+        //  implies we access the temporal buffer for additions
+    else if (index > m_oldDataSize() and index < m_oldDataSize() + m_addBuffer.size())
+        return  m_addBuffer[index - m_oldDataSize()];
+        // we got an invalid index
+    else
+        throw std::out_of_range("Invalid index, check bounds!");
 }
 
 template <typename T>
@@ -66,15 +127,19 @@ const T &SpecializedVector<T>::operator[](size_t index) const
 }
 
 template <typename T>
-T &SpecializedVector<T>::at(size_t index)
+T & SpecializedVector<T>::operator[](size_t index)
 {
     return m_data[index];
 }
 
+
 template <typename T>
 T &SpecializedVector<T>::atAddBuffer(size_t index)
 {
-    return m_addBuffer[index];
+    if (index < m_addBuffer.size())
+        return m_addBuffer[index];
+    else
+        throw std::out_of_range("Invalid index, check bounds!");
 }
 
 template <typename T>
@@ -105,17 +170,12 @@ SpecializedVector<T>::SpecializedVector(InitFunction_t<T> init, SwapFunction_t<T
 
 
 template <typename T>
-size_t SpecializedVector<T>::m_actualDataSize() const
+size_t SpecializedVector<T>::m_oldDataSize() const
 {
     return m_eraseStart;
 }
 
 
-template <typename T>
-T & SpecializedVector<T>::operator[](size_t index)
-{
-    return m_data[index];
-}
 
 
 
@@ -184,7 +244,7 @@ void SpecializedVector<T>::addAll()
 template <typename T>
 size_t SpecializedVector<T>::size() const
 {
-    return m_actualDataSize();
+    return m_oldDataSize();
 }
 
 
