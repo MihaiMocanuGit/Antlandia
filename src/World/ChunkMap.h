@@ -114,5 +114,6 @@ Chunk<T> &ChunkMap::at(int x, int y, std::vector<Chunk<T>> &objectMap)
 }
 bool ChunkMap::isValidIndex(unsigned int x, unsigned int y) const
 {
-    return x >= 0 and x < m_size.x * Chunk<void>::CHUNK_SIZE_X and y >= 0 and y < m_size.y * Chunk<void>::CHUNK_SIZE_Y;
+    //return x >= 0 and x < m_size.x * Chunk<void>::CHUNK_SIZE_X and y >= 0 and y < m_size.y * Chunk<void>::CHUNK_SIZE_Y;
+    return x < m_size.x * Chunk<void*>::CHUNK_SIZE_X and y < m_size.y * Chunk<void*>::CHUNK_SIZE_Y;
 }
