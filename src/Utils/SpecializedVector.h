@@ -15,6 +15,9 @@
 /// 3) As such, the buffer used for removal is actually at the end of the original vector. The buffer for
 /// additions is a separate vector
 /// \note It is built upon std::vector.
+//TODO: check swap behavior between data sectors
+/// \note The logic should allow swapping elements from the add buffer with the ones in the old data section. I don't
+/// recommend doing it yet, as I'm not sure if it works correctly.
 /// \brief Optimized vector for frequent additions and random removals. It maintains index validity.
 /// \tparam T copy-constructable and copy-assignable element
 template <typename T>
@@ -50,6 +53,13 @@ public:
 
     SpecializedVector(InitFunction_t<T> init, SwapFunction_t<T> swap, size_t reserve = 128);
 
+    /// \brief Marks for deletion elements that were already added
+    /// \param index The index is relative only to the section of already added elements. You
+    /// cannot remove an element that was marked for insertion/removal
+    /// \note Bounds are checked.
+    /// \note By marking an element to be deleted, the indexes of elements from the add buffer that were
+    /// relative to the start of already added elements will be invalidated
+    /// \return A copy to the element that was marked for removal
     T toBeRemoved(std::size_t index);
     void removeAll();
 
@@ -152,6 +162,9 @@ size_t SpecializedVector<T>::sizeAddBuffer() const
 template <typename T>
 T SpecializedVector<T>::toBeRemoved(std::size_t index)
 {
+    if (index >= m_oldDataSize())
+        throw std::out_of_range("Invalid index, check bounds!");
+
     m_eraseStart--;
 
     m_swap(m_data[index], index, m_eraseStart, m_data[m_eraseStart]);
