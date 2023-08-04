@@ -10,17 +10,21 @@ ChunksPaired ChunkMap::at(sf::Vector2i index)
     return at(index.x, index.y);
 }
 
-ChunkMap::ChunkMap(sf::Vector2u size) : m_size(size)
+ChunkMap::ChunkMap(sf::Vector2u size, SpecializedVectorAllTypes &allWorldObjects) : m_size(size)
 {
-    m_initMaps();
+    m_initMaps(allWorldObjects);
+}
+
+ChunkMap::ChunkMap(sf::Vector2u size, SpecializedVectorAllTypes &&allWorldObjects) : ChunkMap(size, allWorldObjects)
+{
 }
 
 
-
-
-ChunkMap::ChunkMap(unsigned int sizeX, unsigned int sizeY) : ChunkMap(sf::Vector2u(sizeX, sizeY))
+ChunkMap::ChunkMap(unsigned int sizeX, unsigned int sizeY, SpecializedVectorAllTypes &allWorldObjects) : ChunkMap(sf::Vector2u(sizeX, sizeY), allWorldObjects)
 {
-
+}
+ChunkMap::ChunkMap(unsigned int sizeX, unsigned int sizeY, SpecializedVectorAllTypes &&allWorldObjects) : ChunkMap(sizeX, sizeY, allWorldObjects)
+{
 }
 
 sf::Vector2u ChunkMap::size() const
@@ -36,11 +40,11 @@ sf::Vector2i ChunkMap::computeChunkIndex(const sf::Vector2f &position) const
 
 
 
-void ChunkMap::m_initMaps()
+void ChunkMap::m_initMaps(SpecializedVectorAllTypes &allWorldObjects)
 {
-    m_initChunks(m_primitiveMaps.antMap);
-    m_initChunks(m_primitiveMaps.pheromoneMap);
-    m_initChunks(m_primitiveMaps.foodMap);
+    m_initChunks(m_primitiveMaps.antMap, allWorldObjects.ref_worldAnts);
+    m_initChunks(m_primitiveMaps.pheromoneMap,  allWorldObjects.ref_worldPheromones);
+    m_initChunks(m_primitiveMaps.foodMap,  allWorldObjects.ref_worldFoods);
 }
 
 PrimitiveChunkMaps &ChunkMap::primitiveChunkMaps()

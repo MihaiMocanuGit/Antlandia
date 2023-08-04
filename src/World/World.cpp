@@ -1,7 +1,7 @@
 #include "World.h"
 
 
-World::World(sf::Vector2u size) : m_map(size)
+World::World(sf::Vector2u size) : m_map(size,SpecializedVectorAllTypes(m_ants, m_food, m_pheromones))
 {
 
 }
@@ -60,7 +60,7 @@ Ant &World::addAnt(sf::Vector2f position, float size, float mass, const sf::Vect
     m_ants.toBeAdded(ant);
 
     Ant &refReturn = m_ants.atAddBuffer(m_ants.sizeAddBuffer() - 1);
-    m_map.at(refReturn.knowledge().homeChunkIndex()).ref_antChunk.objects.toBeAdded(&refReturn);
+    //m_map.at(refReturn.knowledge().homeChunkIndex()).ref_antChunk.objects.toBeAdded(&refReturn);
     return refReturn;
 }
 
@@ -73,7 +73,7 @@ Pheromone &World::addPheromone(sf::Vector2f position, float size, float mass, co
     m_pheromones.toBeAdded(pheromone);
 
     Pheromone &refReturn = m_pheromones.atAddBuffer(m_pheromones.sizeAddBuffer() - 1);
-    m_map.at(refReturn.knowledge().homeChunkIndex()).ref_pheromoneChunk.objects.toBeAdded(&refReturn);
+    //m_map.at(refReturn.knowledge().homeChunkIndex()).ref_pheromoneChunk.objects.toBeAdded(&refReturn);
     return refReturn;
 }
 
@@ -85,7 +85,7 @@ Food &World::addFood(sf::Vector2f position, float size, float mass, const sf::Ve
     m_food.toBeAdded(food);
 
     Food &refReturn = m_food.atAddBuffer(m_food.sizeAddBuffer() - 1);
-    m_map.at(refReturn.knowledge().homeChunkIndex()).ref_foodChunk.objects.toBeAdded(&refReturn);
+    //m_map.at(refReturn.knowledge().homeChunkIndex()).ref_foodChunk.objects.toBeAdded(&refReturn);
     return refReturn;
 }
 

@@ -28,6 +28,12 @@ struct PrimitiveChunkMaps
     }
 };
 
+struct SpecializedVectorAllTypes
+{
+    SpecializedVector<Ant> &ref_worldAnts;
+    SpecializedVector<Food> &ref_worldFoods;
+    SpecializedVector<Pheromone> &ref_worldPheromones;
+};
 
 class ChunkMap
 {
@@ -39,16 +45,18 @@ private:
 
 
     template <class T>
-    void m_initChunks(std::vector<Chunk<T>> &objectMap);
-    void m_initMaps();
+    void m_initChunks(std::vector<Chunk<T>> &objectMap, SpecializedVector<T> &worldObjects);
+    void m_initMaps(SpecializedVectorAllTypes &allWorldObjects);
 
     int m_xyToIndex(int x, int y) const;
 public:
     [[nodiscard]] inline bool isValidIndex(unsigned x, unsigned y) const;
 
     ChunkMap() = default;
-    explicit ChunkMap(sf::Vector2u size);
-    ChunkMap(unsigned sizeX, unsigned sizeY);
+    ChunkMap(sf::Vector2u size, SpecializedVectorAllTypes &allWorldObjects);
+    ChunkMap(sf::Vector2u size, SpecializedVectorAllTypes &&allWorldObjects);
+    ChunkMap(unsigned sizeX, unsigned sizeY, SpecializedVectorAllTypes &allWorldObjects);
+    ChunkMap(unsigned sizeX, unsigned sizeY, SpecializedVectorAllTypes &&allWorldObjects);
 
     ChunksPaired at(sf::Vector2i index);
     ChunksPaired at(int x, int y);
@@ -65,16 +73,16 @@ public:
 };
 
 template <class T>
-void ChunkMap::m_initChunks(std::vector<Chunk<T>> &objectMap)
+void ChunkMap::m_initChunks(std::vector<Chunk<T>> &objectMap, SpecializedVector<T> &worldObjects)
 {
-    objectMap.resize(m_size.x * m_size.y);
+    objectMap.resize(m_size.x * m_size.y, {-1, -1, &worldObjects});
 
 
     for (unsigned int y = 0; y < m_size.y; ++y)
     {
         for (unsigned int x = 0; x < m_size.x; ++x)
         {
-            this->at(x, y, objectMap) = Chunk<T>(x, y);
+            this->at(x, y, objectMap).m_index = sf::Vector2i(x, y);
 
             if (isValidIndex(x - 1, y - 1))
                 this->at(x, y, objectMap).m_neighbours[0][0] = &this->at(x-1, y-1, objectMap);

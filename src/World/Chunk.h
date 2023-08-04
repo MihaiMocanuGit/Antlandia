@@ -9,6 +9,12 @@
 #include "../Objects/Food.h"
 #include "../Utils/SpecializedVector.h"
 
+template <class T>
+struct SpecializedVectorIndexPair
+{
+    SpecializedVector<T> *ptrWorldObjects;
+    size_t index;
+};
 
 template <class T>
 class Chunk
@@ -25,54 +31,56 @@ private:
     Chunk *m_neighbours[3][3] = {{nullptr, nullptr, nullptr},
                                  {nullptr, this, nullptr},
                                  {nullptr, nullptr, nullptr}};
+
+    SpecializedVector<T> *m_ptrWorldObjects;
+
 public:
     static constexpr unsigned CHUNK_SIZE_X = 64;
     static constexpr unsigned CHUNK_SIZE_Y = 64;
 
+    SpecializedVector<SpecializedVectorIndexPair<T>> objects{Chunk<T>::INIT_CHUNK, Chunk<T>::SWAP_CHUNK};
+
+
     Chunk() = default;
-    explicit Chunk(sf::Vector2u index);
-    Chunk(unsigned x, unsigned y);
+    Chunk(sf::Vector2i index, SpecializedVector<T> *ptrWorldObjects);
+    Chunk(int x, int y, SpecializedVector<T> *ptrWorldObjects);
 
-    template <class U>
-    static void SWAP_CHUNK(U & elem1, size_t atIndex1,
-                           U & elem2, size_t atIndex2);
+    ///TODO: make them only SpecializedVectorIndexPair instead of template
+    static void SWAP_CHUNK(SpecializedVectorIndexPair<T> & elem1, size_t atIndex1,
+                           SpecializedVectorIndexPair<T> & elem2, size_t atIndex2);
 
-    template <class U>
-    static void INIT_CHUNK(U & elem, size_t indexChunk);
+    static void INIT_CHUNK(SpecializedVectorIndexPair<T> & elem, size_t indexChunk);
 
-    SpecializedVector<T*> objects{Chunk<T>::INIT_CHUNK<T*>, Chunk<T>::SWAP_CHUNK<T*>};
 
 
 };
 
 
 template <class T>
-Chunk<T>::Chunk(sf::Vector2u index) : m_index{index}
+Chunk<T>::Chunk(sf::Vector2i index, SpecializedVector<T> *ptrWorldObjects)
+: m_index{index}, m_ptrWorldObjects{ptrWorldObjects}
 {
 
 }
 
 template <class T>
-Chunk<T>::Chunk(unsigned int x, unsigned int y) : Chunk(sf::Vector2u(x, y))
+Chunk<T>::Chunk(int x, int y, SpecializedVector<T> *ptrWorldObjects) : Chunk(sf::Vector2i(x, y), ptrWorldObjects)
 {
 
 }
 
 template <typename T>
-template <typename U>
-void Chunk<T>::SWAP_CHUNK(U &elem1, size_t atIndex1, U &elem2, size_t atIndex2)
+void Chunk<T>::SWAP_CHUNK(SpecializedVectorIndexPair<T> &elem1, size_t atIndex1,
+                          SpecializedVectorIndexPair<T> &elem2, size_t atIndex2)
 {
-    static_assert(std::is_same<T*,U>::value);
-
+    //swapping only the index as the reference to the world objects will be the same
     std::swap(elem1, elem2);
 
-    elem1->knowledge().giveChunkIndex(atIndex1);
-    elem2->knowledge().giveChunkIndex(atIndex2);
+    elem1.ptrWorldObjects->at(elem1.index).knowledge().giveChunkIndex(atIndex1);
+    elem2.ptrWorldObjects->at(elem1.index).knowledge().giveChunkIndex(atIndex2);
 }
 template <typename T>
-template <typename U>
-void Chunk<T>::INIT_CHUNK(U &elem, size_t indexChunk)
+void Chunk<T>::INIT_CHUNK(SpecializedVectorIndexPair<T> &elem, size_t indexChunk)
 {
-    static_assert(std::is_same<T*,U>::value);
-    elem->knowledge().giveChunkIndex(indexChunk);
+    elem.ptrWorldObjects->at(elem.index).knowledge().giveChunkIndex(indexChunk);
 }
