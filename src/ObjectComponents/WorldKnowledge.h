@@ -50,7 +50,7 @@ public:
     void giveWorldIndex(const size_t& indexInWorldVector);
     void giveChunkIndex(const size_t& indexInChunkVector);
 
-    void giveChunkData(const sf::Vector2i &homeChunkIndexes, const size_t& indexInChunkVector);
+    void giveHomeChunk(const sf::Vector2i &homeChunkIndexes);
 
     World & world();
 };
@@ -80,11 +80,10 @@ void WorldKnowledge<T>::giveWorldIndex(const size_t &indexInWorldVector)
 }
 
 template <class T>
-void WorldKnowledge<T>::giveChunkData(const sf::Vector2i &homeChunkIndexes, const size_t &indexInChunkVector)
+void WorldKnowledge<T>::giveHomeChunk(const sf::Vector2i &homeChunkIndexes)
 {
-    //TODO: assert index/homeChunk validity
+    //TODO: assert index of homeChunk validity
     m_homeChunkIndexes = homeChunkIndexes;
-    m_indexChunk = indexInChunkVector;
 
     m_worldIndexWasGiven = true;
 }
