@@ -52,7 +52,7 @@ sf::Vector2u World::size() const
     return m_map.size();
 }
 
-Ant &World::addAnt(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)
+Ant &World::prepareAnt(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)
 {
     Body body(position, size, mass, color);
     Ant ant = m_createObject<Ant>(body, m_ants, m_map.primitiveChunkMaps().antMap);
@@ -64,7 +64,7 @@ Ant &World::addAnt(sf::Vector2f position, float size, float mass, const sf::Vect
     return refReturn;
 }
 
-Pheromone &World::addPheromone(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)
+Pheromone &World::preparePheromone(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)
 {
     Body body(position, size, mass, color);
     Pheromone pheromone = m_createObject<Pheromone>(body, m_pheromones, m_map.primitiveChunkMaps().pheromoneMap);
@@ -77,7 +77,7 @@ Pheromone &World::addPheromone(sf::Vector2f position, float size, float mass, co
     return refReturn;
 }
 
-Food &World::addFood(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)
+Food &World::prepareFood(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)
 {
     Body body(position, size, mass, color);
     Food food = m_createObject<Food>(body, m_food, m_map.primitiveChunkMaps().foodMap);
