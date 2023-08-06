@@ -2,23 +2,25 @@
 #include <vector>
 #include <stdexcept>
 
-
-/// A specialized vector has the scope of maintaining the validity of indexes while having the
+/// \brief Optimized vector for frequent additions and random removals. It maintains index validity.
+/// @n
+/// @n
+///     A specialized vector has the scope of maintaining the validity of indexes while having the
 /// benefit of cache-locality and fast removals/additions. The fundamental way it works is the following:
-///
+/// @n
 /// 1) We use a buffer for add and delete, meaning that you must first mark all elements to be deleted/added and
-/// after that send a final command to permanently add/remove the chosen objects.
-///
+/// after that send a final command to permanently add/remove all the chosen objects.
+/// @n
 /// 2) It uses the delete by-swap idiom. Meaning that when marking an element for deletion, we first swap it with
-/// the last element which is not also marked for deletion. It updates the memorised indexes through a given custom function.
-///
+/// the last element which is not also marked for deletion. It updates the cached indexes through a given custom function.
+/// @n
 /// 3) As such, the buffer used for removal is actually at the end of the original vector. The buffer for
-/// additions is a separate vector
+/// insertions is a separate vector which can be considered as existing in front of the original vector. This is
+/// represented by the way we access the elements in the insert buffer with negative indexes starting from 1
 /// \note It is built upon std::vector.
 //TODO: check swap behavior between data sectors
-/// \note The logic should allow swapping elements from the add buffer with the ones in the old data section. I don't
+/// \note The logic should allow swapping elements from the add buffer with the ones in that are already added. I don't
 /// recommend doing it yet, as I'm not sure if it works correctly.
-/// \brief Optimized vector for frequent additions and random removals. It maintains index validity.
 /// \tparam T copy-constructable and copy-assignable element
 template <typename T>
 class SpecializedVector
@@ -36,7 +38,7 @@ private:
     SwapFunction_t<T> m_swap;
 
 
-    /// \brief The size of the section of already added elements, ignoring the 2 buffers
+    /// \brief The size of the section of already added elements, ignoring the other 2 buffers
     /// \return The number of elements
     [[nodiscard]] inline size_t m_oldDataSize() const;
 
@@ -57,14 +59,12 @@ public:
     /// \param index The index is relative only to the section of already added elements. You
     /// cannot remove an element that was marked for insertion/removal
     /// \note Bounds are checked.
-    /// \note By marking an element to be deleted, the indexes of elements from the add buffer that were
-    /// relative to the start of already added elements will be invalidated
     /// \return A copy to the element that was marked for removal
     T toBeRemoved(std::size_t index);
     void removeAll();
 
-    void toBeAdded(T &&element);
-    void toBeAdded(T &element);
+    ptrdiff_t toBeAdded(T &&element);
+    ptrdiff_t toBeAdded(T &element);
     void addAll();
 
     /// \brief Gets an element only from the section of already added elements.
@@ -74,17 +74,14 @@ public:
     T& operator[](size_t index);
     const T& operator[](size_t index) const;
 
-    /// \brief Gets an element from the vector. If the given index is greater than the size of
-    /// the section of already added elements, then it will access the elements that were marked for
-    /// insertion.
-    /// \param index The index of the element you want to access
+    /// \brief Gets an element from the vector. If the given index is negative, then it will access the elements that
+    /// were marked for insertion. The indexing for these elements start at -1
+    /// \param index The index of the element you want to access, can be negative
     /// \return Reference to the given object
     /// \note Bounds are checked, you cannot access the removal buffer by mistake.
     /// \throws std::out_of_range if out of bounds
-    /// \note The index is given relative to the first element from the section of already added elements in the array
-    /// the i'th element that was marked for insertion will be found at the index: size() + i
-    T& at(size_t index);
-    const T& at(size_t index) const;
+    T& at(ptrdiff_t index);
+    const T& at(ptrdiff_t index) const;
 
     /// \brief Gets the size of the section of already added elements.
     /// \return The no of elements.
@@ -97,33 +94,35 @@ public:
     /// \note Bounds are checked.
     /// \throws std::out_of_range if out of bounds
     /// \note The index is given relative to the start of the add buffer
-    T& atAddBuffer(size_t index);
+    T& atAddBuffer(ptrdiff_t index);
     inline size_t sizeAddBuffer() const;
 
 };
 
 
 template <typename T>
-const T &SpecializedVector<T>::at(size_t index) const
+const T &SpecializedVector<T>::at(ptrdiff_t index) const
 {
-    if (index < m_oldDataSize())
+    //positive index starting from 0 with correct bound
+    if (0 <= index and index < (ptrdiff_t)m_oldDataSize())
         return m_data[index];
-    //  implies we access the temporal buffer for additions
-    else if (index > m_oldDataSize() and index < m_oldDataSize() + m_addBuffer.size())
+        //negative index starting from 1 with correct bound
+    else if (-1 * (ptrdiff_t)m_addBuffer.size() <= index and index < 0)
         return  m_addBuffer[index - m_oldDataSize()];
-    // we got an invalid index
+        // we got an invalid index
     else
         throw std::out_of_range("Invalid index, check bounds!");
 
 }
 
 template <typename T>
-T &SpecializedVector<T>::at(size_t index)
+T &SpecializedVector<T>::at(ptrdiff_t index)
 {
-    if (index < m_oldDataSize())
+    //positive index starting from 0 with correct bound
+    if (0 <= index and index < (ptrdiff_t)m_oldDataSize())
         return m_data[index];
-        //  implies we access the temporal buffer for additions
-    else if (index > m_oldDataSize() and index < m_oldDataSize() + m_addBuffer.size())
+    //negative index starting from 1 with correct bound
+    else if (-1 * (ptrdiff_t)m_addBuffer.size() <= index and index < 0)
         return  m_addBuffer[index - m_oldDataSize()];
         // we got an invalid index
     else
@@ -144,10 +143,12 @@ T & SpecializedVector<T>::operator[](size_t index)
 
 
 template <typename T>
-T &SpecializedVector<T>::atAddBuffer(size_t index)
+T &SpecializedVector<T>::atAddBuffer(ptrdiff_t index)
 {
-    if (index < m_addBuffer.size())
-        return m_addBuffer[index];
+    //index is negative, so we need to convert it back to a positive having the origin in 0 instead of 1
+    ptrdiff_t positiveIndex = -1 * index - 1;
+    if (0 <= positiveIndex and (size_t)positiveIndex < m_addBuffer.size())
+        return m_addBuffer[positiveIndex];
     else
         throw std::out_of_range("Invalid index, check bounds!");
 }
@@ -200,15 +201,16 @@ bool SpecializedVector<T>::m_emptyErase() const
 
 
 template <typename T>
-void SpecializedVector<T>::toBeAdded(T &element)
+ptrdiff_t SpecializedVector<T>::toBeAdded(T &element)
 {
     m_addBuffer.push_back(element);
+    return  -1 * m_addBuffer.size();
 }
 
 template <typename T>
-void SpecializedVector<T>::toBeAdded(T &&element)
+ptrdiff_t SpecializedVector<T>::toBeAdded(T &&element)
 {
-    toBeAdded(element);
+    return toBeAdded(element);
 }
 
 template <typename T>
