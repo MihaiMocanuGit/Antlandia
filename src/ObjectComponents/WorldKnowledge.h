@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/System/Vector2.hpp>
 #include <vector>
+#include <cstdint>
 
 #include "../Utils/Types.h"
 template <class T>
@@ -26,10 +27,10 @@ private:
     sf::Vector2i m_homeChunkIndexes = sf::Vector2i {-1, -1};
 
     bool m_worldIndexWasGiven = false;
-    size_t m_indexWorld = -1; //size_t max
+    ptrdiff_t m_indexWorld = PTRDIFF_MAX;
 
     bool m_chunkIndexWasGiven = false;
-    size_t m_indexChunk = -1; //size_t max
+    ptrdiff_t m_indexChunk = PTRDIFF_MAX;
 
 
 public:
@@ -47,17 +48,17 @@ public:
                    m_pPrimitiveChunkMap(pPrimitiveChunkMap)
     {}
 
-    void giveWorldIndex(const size_t& indexInWorldVector);
-    void giveChunkIndex(const size_t& indexInChunkVector);
+    void giveWorldIndex(const ptrdiff_t& indexInWorldVector);
+    void giveChunkIndex(const ptrdiff_t& indexInChunkVector);
 
     void giveHomeChunk(const sf::Vector2i &homeChunkIndexes);
 
     World & world();
-    size_t indexInWorld() const;
+    ptrdiff_t indexInWorld() const;
 
     PrimitiveChunkMap_t<T> & primitiveChunkMap();
     sf::Vector2i homeChunkIndex() const;
-    size_t indexInChunk() const;
+    ptrdiff_t indexInChunk() const;
     bool existsInChunk() const;
 };
 
@@ -68,13 +69,13 @@ bool WorldKnowledge<T>::existsInChunk() const
 }
 
 template <class T>
-size_t WorldKnowledge<T>::indexInChunk() const
+ptrdiff_t WorldKnowledge<T>::indexInChunk() const
 {
     return m_indexChunk;
 }
 
 template <class T>
-size_t WorldKnowledge<T>::indexInWorld() const
+ptrdiff_t WorldKnowledge<T>::indexInWorld() const
 {
     return m_indexWorld;
 }
@@ -93,7 +94,7 @@ sf::Vector2i WorldKnowledge<T>::homeChunkIndex() const
 
 
 template <class T>
-void WorldKnowledge<T>::giveChunkIndex(const size_t &indexInChunkVector)
+void WorldKnowledge<T>::giveChunkIndex(const ptrdiff_t &indexInChunkVector)
 {
     //TODO: assert index validity
     m_indexChunk = indexInChunkVector;
@@ -108,7 +109,7 @@ World &WorldKnowledge<T>::world()
 }
 
 template <class T>
-void WorldKnowledge<T>::giveWorldIndex(const size_t &indexInWorldVector)
+void WorldKnowledge<T>::giveWorldIndex(const ptrdiff_t &indexInWorldVector)
 {
     //TODO: assert index validity
     m_indexWorld = indexInWorldVector;

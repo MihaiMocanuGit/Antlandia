@@ -57,10 +57,14 @@ Ant &World::prepareAnt(sf::Vector2f position, float size, float mass, const sf::
     Body body(position, size, mass, color);
     Ant ant = m_createObject<Ant>(body, m_ants, m_map.primitiveChunkMaps().antMap);
 
-    m_ants.toBeAdded(ant);
+    ptrdiff_t index = m_ants.toBeAdded(ant);
 
-    Ant &refReturn = m_ants.atAddBuffer(m_ants.sizeAddBuffer() - 1);
-    //m_map.at(refReturn.knowledge().homeChunkIndex()).ref_antChunk.objects.toBeAdded(&refReturn);
+    Ant &refReturn = m_ants.atAddBuffer(index);
+
+    sf::Vector2i homeIndex = refReturn.knowledge().homeChunkIndex();
+    auto & objects = m_map.at(homeIndex).ref_antChunk.objects;
+    objects.toBeAdded(SpecializedVectorIndexPair<Ant>{&m_ants, index});
+
     return refReturn;
 }
 
@@ -69,11 +73,14 @@ Pheromone &World::preparePheromone(sf::Vector2f position, float size, float mass
     Body body(position, size, mass, color);
     Pheromone pheromone = m_createObject<Pheromone>(body, m_pheromones, m_map.primitiveChunkMaps().pheromoneMap);
 
+    ptrdiff_t index = m_pheromones.toBeAdded(pheromone);
 
-    m_pheromones.toBeAdded(pheromone);
+    Pheromone &refReturn = m_pheromones.atAddBuffer(index);
 
-    Pheromone &refReturn = m_pheromones.atAddBuffer(m_pheromones.sizeAddBuffer() - 1);
-    //m_map.at(refReturn.knowledge().homeChunkIndex()).ref_pheromoneChunk.objects.toBeAdded(&refReturn);
+    sf::Vector2i homeIndex = refReturn.knowledge().homeChunkIndex();
+    auto & objects = m_map.at(homeIndex).ref_pheromoneChunk.objects;
+    objects.toBeAdded(SpecializedVectorIndexPair<Pheromone>{&m_pheromones, index});
+
     return refReturn;
 }
 
@@ -82,10 +89,14 @@ Food &World::prepareFood(sf::Vector2f position, float size, float mass, const sf
     Body body(position, size, mass, color);
     Food food = m_createObject<Food>(body, m_food, m_map.primitiveChunkMaps().foodMap);
 
-    m_food.toBeAdded(food);
+    ptrdiff_t index = m_food.toBeAdded(food);
 
-    Food &refReturn = m_food.atAddBuffer(m_food.sizeAddBuffer() - 1);
-    //m_map.at(refReturn.knowledge().homeChunkIndex()).ref_foodChunk.objects.toBeAdded(&refReturn);
+    Food &refReturn = m_food.atAddBuffer(index);
+
+    sf::Vector2i homeIndex = refReturn.knowledge().homeChunkIndex();
+    auto & objects = m_map.at(homeIndex).ref_foodChunk.objects;
+    objects.toBeAdded(SpecializedVectorIndexPair<Food>{&m_food, index});
+
     return refReturn;
 }
 

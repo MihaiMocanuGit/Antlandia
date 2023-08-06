@@ -13,7 +13,7 @@ template <class T>
 struct SpecializedVectorIndexPair
 {
     SpecializedVector<T> *ptrWorldObjects;
-    size_t index;
+    ptrdiff_t index;
 };
 
 template <class T>
@@ -46,10 +46,10 @@ public:
     Chunk(int x, int y, SpecializedVector<T> *ptrWorldObjects);
 
     ///TODO: make them only SpecializedVectorIndexPair instead of template
-    static void SWAP_CHUNK(SpecializedVectorIndexPair<T> & elem1, size_t atIndex1,
-                           SpecializedVectorIndexPair<T> & elem2, size_t atIndex2);
+    static void SWAP_CHUNK(SpecializedVectorIndexPair<T> & elem1, ptrdiff_t atIndex1,
+                           SpecializedVectorIndexPair<T> & elem2, ptrdiff_t atIndex2);
 
-    static void INIT_CHUNK(SpecializedVectorIndexPair<T> & elem, size_t indexChunk);
+    static void INIT_CHUNK(SpecializedVectorIndexPair<T> & elem, ptrdiff_t indexChunk);
 
 
 
@@ -70,8 +70,8 @@ Chunk<T>::Chunk(int x, int y, SpecializedVector<T> *ptrWorldObjects) : Chunk(sf:
 }
 
 template <typename T>
-void Chunk<T>::SWAP_CHUNK(SpecializedVectorIndexPair<T> &elem1, size_t atIndex1,
-                          SpecializedVectorIndexPair<T> &elem2, size_t atIndex2)
+void Chunk<T>::SWAP_CHUNK(SpecializedVectorIndexPair<T> &elem1, ptrdiff_t atIndex1,
+                          SpecializedVectorIndexPair<T> &elem2, ptrdiff_t atIndex2)
 {
     //swapping only the index as the reference to the world objects will be the same
     std::swap(elem1, elem2);
@@ -80,7 +80,7 @@ void Chunk<T>::SWAP_CHUNK(SpecializedVectorIndexPair<T> &elem1, size_t atIndex1,
     elem2.ptrWorldObjects->at(elem2.index).knowledge().giveChunkIndex(atIndex2);
 }
 template <typename T>
-void Chunk<T>::INIT_CHUNK(SpecializedVectorIndexPair<T> &elem, size_t indexChunk)
+void Chunk<T>::INIT_CHUNK(SpecializedVectorIndexPair<T> &elem, ptrdiff_t indexChunk)
 {
     elem.ptrWorldObjects->at(elem.index).knowledge().giveChunkIndex(indexChunk);
 }

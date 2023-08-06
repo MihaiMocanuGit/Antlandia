@@ -14,15 +14,29 @@ private:
 
     template <class T>
     T m_createObject(const Body& body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T>& objectMap);
+
+    template <class T>
+    static void m_updateChunkVectorInfo(T& elem, size_t newIndex)
+    {
+        WorldKnowledge<T> &knowledge = elem.knowledge();
+        sf::Vector2u worldSize = knowledge.world().size();
+        sf::Vector2i homeChunkXyIndexes = knowledge.homeChunkIndex();
+
+        size_t homeIndex = xyToIndex(homeChunkXyIndexes.x, homeChunkXyIndexes.y, worldSize.x);
+        Chunk<T> &homeChunk = knowledge.primitiveChunkMap().at(homeIndex);
+        ptrdiff_t indexInChunk = knowledge.indexInChunk();
+        homeChunk.objects.at(indexInChunk).index = newIndex;
+
+    }
 public:
     World() = default;
     explicit World(sf::Vector2u size);
     World(unsigned sizeX, unsigned sizeY);
 
     template <typename T>
-    static void SWAP_WORLD(T &elem1, size_t atIndex1, T &elem2, size_t atIndex2);
+    static void SWAP_WORLD(T &elem1, ptrdiff_t atIndex1, T &elem2, ptrdiff_t atIndex2);
     template <typename T>
-    static void INIT_WORLD(T &elem, size_t indexWorld);
+    static void INIT_WORLD(T &elem, ptrdiff_t indexWorld);
 
     ChunkMap& map();
     SpecializedVector<Ant>& ants();
@@ -65,51 +79,26 @@ T World::m_createObject(const Body &body, SpecializedVector<T> &worldObjectVecto
 
 
 template <typename T>
-void World::SWAP_WORLD(T &elem1, size_t atIndex1, T &elem2, size_t atIndex2)
+void World::SWAP_WORLD(T &elem1, ptrdiff_t atIndex1, T &elem2, ptrdiff_t atIndex2)
 {
     //in a chunk we have a vector of indexes pointing to the index of said element
     //in the World vector. As such, if the position of an element in the world vector
     //is changed, we need to update the chunk vector too.
-    auto updateChunkVectorInfo = [](T& elem, size_t newIndex) -> void
-    {
-        WorldKnowledge<T> &knowledge = elem.knowledge();
-        sf::Vector2u worldSize = knowledge.world().size();
-        sf::Vector2i homeChunkIndex = knowledge.homeChunkIndex();
-
-        size_t homeIndex = xyToIndex(homeChunkIndex.x, homeChunkIndex.y, worldSize.x);
-        Chunk<T> &homeChunk = knowledge.primitiveChunkMap().at(homeIndex);
-        size_t indexInChunk = knowledge.indexInWorld();
-        homeChunk.objects.at(indexInChunk).index = newIndex;
-
-    };
-
     if (elem1.knowledge().existsInChunk())
-        updateChunkVectorInfo(elem1, atIndex2);
+        m_updateChunkVectorInfo(elem1, atIndex2);
     elem1.knowledge().giveWorldIndex(atIndex2);
 
-    if (elem1.knowledge().existsInChunk())
-        updateChunkVectorInfo(elem2, atIndex1);
+    if (elem2.knowledge().existsInChunk())
+        m_updateChunkVectorInfo(elem2, atIndex1);
     elem2.knowledge().giveWorldIndex(atIndex1);
 
     std::swap(elem1, elem2);
 }
 template <typename T>
-void World::INIT_WORLD(T &elem, size_t indexWorld)
+void World::INIT_WORLD(T &elem, ptrdiff_t indexWorld)
 {
-    auto updateChunkVectorInfo = [](T& elem, size_t newIndex) -> void
-    {
-        WorldKnowledge<T> &knowledge = elem.knowledge();
-        sf::Vector2u worldSize = knowledge.world().size();
-        sf::Vector2i homeChunkIndex = knowledge.homeChunkIndex();
-
-        size_t homeIndex = xyToIndex(homeChunkIndex.x, homeChunkIndex.y, worldSize.x);
-        Chunk<T> &homeChunk = knowledge.primitiveChunkMap().at(homeIndex);
-        size_t indexInChunk = knowledge.indexInWorld();
-        homeChunk.objects.at(indexInChunk).index = newIndex;
-
-    };
     if (elem.knowledge().existsInChunk())
-        updateChunkVectorInfo(elem, indexWorld);
+        m_updateChunkVectorInfo(elem, indexWorld);
 
     elem.knowledge().giveWorldIndex(indexWorld);
 
