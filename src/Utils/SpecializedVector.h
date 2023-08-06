@@ -204,7 +204,10 @@ template <typename T>
 ptrdiff_t SpecializedVector<T>::toBeAdded(T &element)
 {
     m_addBuffer.push_back(element);
-    return  -1 * m_addBuffer.size();
+
+    ptrdiff_t index = -1 * m_addBuffer.size();
+    m_init(m_addBuffer.back(), index);
+    return  index;
 }
 
 template <typename T>
@@ -239,8 +242,6 @@ void SpecializedVector<T>::addAll()
         m_data.push_back(m_addBuffer.back());
         m_addBuffer.pop_back();
 
-        //init the world knowledge with the vector indices
-        m_init(m_data.back(), m_data.size() - 1);
 
         //move the newly added element from the back of the whole vector to the back
         //of the active elements region
