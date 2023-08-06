@@ -14,3 +14,9 @@ sf::CircleShape getShape(const Body &body)
 
     return shape;
 }
+
+
+size_t xyToIndex(int x, int y, unsigned sizeX)
+{
+    return x + y * sizeX;
+}

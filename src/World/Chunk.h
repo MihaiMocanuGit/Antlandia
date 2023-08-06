@@ -77,7 +77,7 @@ void Chunk<T>::SWAP_CHUNK(SpecializedVectorIndexPair<T> &elem1, size_t atIndex1,
     std::swap(elem1, elem2);
 
     elem1.ptrWorldObjects->at(elem1.index).knowledge().giveChunkIndex(atIndex1);
-    elem2.ptrWorldObjects->at(elem1.index).knowledge().giveChunkIndex(atIndex2);
+    elem2.ptrWorldObjects->at(elem2.index).knowledge().giveChunkIndex(atIndex2);
 }
 template <typename T>
 void Chunk<T>::INIT_CHUNK(SpecializedVectorIndexPair<T> &elem, size_t indexChunk)

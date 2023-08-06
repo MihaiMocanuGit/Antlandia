@@ -53,11 +53,40 @@ public:
     void giveHomeChunk(const sf::Vector2i &homeChunkIndexes);
 
     World & world();
-    sf::Vector2i homeChunkIndex();
+    size_t indexInWorld() const;
+
+    PrimitiveChunkMap_t<T> & primitiveChunkMap();
+    sf::Vector2i homeChunkIndex() const;
+    size_t indexInChunk() const;
+    bool existsInChunk() const;
 };
 
 template <class T>
-sf::Vector2i WorldKnowledge<T>::homeChunkIndex()
+bool WorldKnowledge<T>::existsInChunk() const
+{
+    return m_chunkIndexWasGiven;
+}
+
+template <class T>
+size_t WorldKnowledge<T>::indexInChunk() const
+{
+    return m_indexChunk;
+}
+
+template <class T>
+size_t WorldKnowledge<T>::indexInWorld() const
+{
+    return m_indexWorld;
+}
+
+template <class T>
+PrimitiveChunkMap_t<T> &WorldKnowledge<T>::primitiveChunkMap()
+{
+    return *m_pPrimitiveChunkMap;
+}
+
+template <class T>
+sf::Vector2i WorldKnowledge<T>::homeChunkIndex() const
 {
     return m_homeChunkIndexes;
 }
