@@ -2,10 +2,10 @@
 
 
 template <class T>
-using SwapFunction_t = void (*)(T&, size_t, T&, size_t);
+using SwapFunction_t = void (*)(T&, ptrdiff_t , T&, ptrdiff_t);
 
 template <class T>
-using InitFunction_t = void (*)(T&, size_t);
+using InitFunction_t = void (*)(T&, ptrdiff_t);
 
 template <typename T>
 class Chunk;

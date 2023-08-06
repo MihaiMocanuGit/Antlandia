@@ -108,7 +108,7 @@ const T &SpecializedVector<T>::at(ptrdiff_t index) const
         return m_data[index];
         //negative index starting from 1 with correct bound
     else if (-1 * (ptrdiff_t)m_addBuffer.size() <= index and index < 0)
-        return  m_addBuffer[index - m_oldDataSize()];
+        return  m_addBuffer[-1 * index - 1];
         // we got an invalid index
     else
         throw std::out_of_range("Invalid index, check bounds!");
@@ -123,8 +123,8 @@ T &SpecializedVector<T>::at(ptrdiff_t index)
         return m_data[index];
     //negative index starting from 1 with correct bound
     else if (-1 * (ptrdiff_t)m_addBuffer.size() <= index and index < 0)
-        return  m_addBuffer[index - m_oldDataSize()];
-        // we got an invalid index
+        return  m_addBuffer[-1 * index - 1];
+    // we got an invalid index
     else
         throw std::out_of_range("Invalid index, check bounds!");
 }
@@ -236,6 +236,8 @@ void SpecializedVector<T>::addAll()
 {
 
     size_t noNewElements = m_addBuffer.size();
+    m_addBuffer.reserve(m_data.size() + noNewElements);
+
     for (size_t i = 0; i < noNewElements; ++i)
     {
         //pull out the last element and add it to the back of the data vector
