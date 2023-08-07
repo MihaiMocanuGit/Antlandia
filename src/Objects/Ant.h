@@ -1,13 +1,15 @@
 #pragma once
 #include "../ObjectComponents/Body.h"
 #include "../ObjectComponents/WorldKnowledge.h"
+#include "GenericObject.h"
+
 class Ant
 {
 private:
-    Body m_body = {};
-    WorldKnowledge<Ant> m_worldKnowledge = {};
+    GenericObject<Ant> m_genericObject;
 public:
     Ant() = default;
+    explicit Ant(GenericObject<Ant> genericObject);
     Ant(Body body, WorldKnowledge<Ant> worldKnowledge);
 
     Body &body();
@@ -15,5 +17,8 @@ public:
 
     WorldKnowledge<Ant> &knowledge();
     const WorldKnowledge<Ant> &knowledge() const;
+
+    GenericObject<Ant> &genericObject();
+    const GenericObject<Ant> &genericObject() const;
 };
 

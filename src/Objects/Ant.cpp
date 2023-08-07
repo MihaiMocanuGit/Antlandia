@@ -1,26 +1,41 @@
 #include "Ant.h"
 
-Ant::Ant(Body body, WorldKnowledge<Ant> worldKnowledge) : m_body{std::move(body)}, m_worldKnowledge{std::move(worldKnowledge)}
+Ant::Ant(Body body, WorldKnowledge<Ant> worldKnowledge) : Ant(GenericObject<Ant>{std::move(body), std::move(worldKnowledge)})
 {
 
 }
 
 Body &Ant::body()
 {
-    return m_body;
+    return genericObject().body();
 }
 
 const Body &Ant::body() const
 {
-    return m_body;
+    return genericObject().body();
 }
 
 WorldKnowledge<Ant> &Ant::knowledge()
 {
-    return m_worldKnowledge;
+    return genericObject().knowledge();
 }
 
 const WorldKnowledge<Ant> &Ant::knowledge() const
 {
-    return m_worldKnowledge;
+    return genericObject().knowledge();
+}
+
+Ant::Ant(GenericObject<Ant> genericObject) : m_genericObject{std::move(genericObject)}
+{
+
+}
+
+GenericObject<Ant> &Ant::genericObject()
+{
+    return m_genericObject;
+}
+
+const GenericObject<Ant> &Ant::genericObject() const
+{
+    return m_genericObject;
 }
