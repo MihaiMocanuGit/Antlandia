@@ -54,6 +54,7 @@ public:
     void giveHomeChunk(const sf::Vector2i &homeChunkIndexes);
 
     World & world();
+    SpecializedVector<T> *pWorldObjectVector();
     ptrdiff_t indexInWorld() const;
 
     PrimitiveChunkMap_t<T> & primitiveChunkMap();
@@ -61,6 +62,12 @@ public:
     ptrdiff_t indexInChunk() const;
     bool existsInChunk() const;
 };
+
+template <class T>
+SpecializedVector<T> *WorldKnowledge<T>::pWorldObjectVector()
+{
+    return m_pWorldObjectVector;
+}
 
 template <class T>
 bool WorldKnowledge<T>::existsInChunk() const

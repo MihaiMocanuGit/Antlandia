@@ -62,6 +62,11 @@ int ChunkMap::m_xyToIndex(int x, int y) const
     return y * m_size.x + x;
 }
 
+bool ChunkMap::spotsAreInSameChunk(const sf::Vector2f &position1, const sf::Vector2f &position2) const
+{
+    return computeChunkIndex(position1) == computeChunkIndex(position2);
+}
+
 ChunksPaired::ChunksPaired(Chunk<Ant> &ref_antChunk, Chunk<Pheromone> &ref_pheromoneChunk,
                            Chunk<Food> &ref_foodChunk)
         : ref_antChunk{ref_antChunk}, ref_pheromoneChunk{ref_pheromoneChunk}, ref_foodChunk{ref_foodChunk}

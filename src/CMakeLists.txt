@@ -13,5 +13,6 @@ add_library(src
         World/ChunkMap.cpp World/ChunkMap.h
         World/World.cpp World/World.h
         Utils/Utils.cpp Utils/Utils.h
-        Objects/GenericObject.h)
+        Objects/GenericObject.h
+        WorldActions/ObjectMover.h)
 #target_link_libraries(src Objects)
