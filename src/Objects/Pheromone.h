@@ -1,13 +1,13 @@
 #pragma once
-#include "../ObjectComponents/Body.h"
-#include "../ObjectComponents/WorldKnowledge.h"
+#include "GenericObject.h"
+
 class Pheromone
 {
 private:
-    Body m_body = {};
-    WorldKnowledge<Pheromone> m_worldKnowledge = {};
+    GenericObject<Pheromone> m_genericObject;
 public:
     Pheromone() = default;
+    explicit Pheromone(GenericObject<Pheromone> genericObject);
     Pheromone(Body body, WorldKnowledge<Pheromone> worldKnowledge);
 
     Body &body();
@@ -15,5 +15,8 @@ public:
 
     WorldKnowledge<Pheromone> &knowledge();
     const WorldKnowledge<Pheromone> &knowledge() const;
+
+    GenericObject<Pheromone> &genericObject();
+    const GenericObject<Pheromone> &genericObject() const;
 };
 
