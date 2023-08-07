@@ -38,7 +38,7 @@ void m_getInput(World &world, sf::RenderWindow &window)
 void m_prepareNextState(World &world, const sf::Vector2i &chunkIndex, sf::RenderWindow &window)
 {
     Chunk<Ant> &r_chunkAnt = world.map().at(chunkIndex).ref_antChunk;
-    for (int i = 0; i < r_chunkAnt.objects.size(); ++i)
+    for (int i = r_chunkAnt.objects.size() - 1; i >= 0 ; --i)
     {
         Ant &r_ant = r_chunkAnt.objects.at(i).ptrWorldObjects->at(r_chunkAnt.objects.at(i).index);
         world.moveTo(r_ant.genericObject(), r_ant.body().getPosition() / 1.5f);
