@@ -29,19 +29,35 @@ void m_drawFood(const World &world, sf::RenderWindow &window)
     for (size_t i = 0; i < world.food().size(); ++i)
         window.draw(getShape(world.food()[i].body()));
 }
-
+//TODO: Delete after debug
+sf::Vector2f direction = {0, 0};
 void m_getInput(World &world, sf::RenderWindow &window)
 {
+    const sf::Vector2f FORWARD = {0, 1};
+    const sf::Vector2f BACKWARD = -FORWARD;
+    const sf::Vector2f RIGHT = {1, 0};
+    const sf::Vector2f LEFT = -RIGHT;
 
+    sf::Vector2f result = {0, 0};
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+        result += FORWARD;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+        result += BACKWARD;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+        result += LEFT;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+        result += RIGHT;
+
+    direction = result;
 }
 
 void m_prepareNextState(World &world, const sf::Vector2i &chunkIndex, sf::RenderWindow &window)
 {
     Chunk<Ant> &r_chunkAnt = world.map().at(chunkIndex).ref_antChunk;
-    for (int i = r_chunkAnt.objects.size() - 1; i >= 0 ; --i)
+    for (size_t i = r_chunkAnt.objects.size() - 1; i < r_chunkAnt.objects.size() ; --i)
     {
         Ant &r_ant = r_chunkAnt.objects.at(i).ptrWorldObjects->at(r_chunkAnt.objects.at(i).index);
-        world.moveTo(r_ant.genericObject(), r_ant.body().getPosition() / 1.5f);
+        world.moveBy(r_ant.genericObject(), direction);
     }
 }
 void m_updateState(World &world, sf::RenderWindow &window)
@@ -86,15 +102,13 @@ void startGameLoop(World& world)
         m_closeWindowIfEvent(window);
         m_getInput(world, window);
 
-        for (int y = 0;  y < world.size().y ; y++)
+        for (unsigned y = 0; y < world.size().y; ++y)
         {
-            for (int x = 0;  x < world.size().x ; x++)
+            for (unsigned  x = 0; x < world.size().x; ++x)
             {
-                //m_prepareNextState(world, sf::Vector2i{x, y}, window);
+                m_prepareNextState(world, sf::Vector2i{ (int)x, (int)y }, window);
             }
         }
-
-        
         m_updateState(world, window);
         m_refreshScreen(world, window);
 
