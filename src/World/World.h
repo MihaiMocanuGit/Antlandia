@@ -1,6 +1,7 @@
 #pragma once
 #include "ChunkMap.h"
 #include "../Utils/Utils.h"
+#include "../WorldActions/ObjectMover.h"
 
 #include <cassert>
 
@@ -39,6 +40,8 @@ public:
     static void INIT_WORLD(T &elem, ptrdiff_t indexWorld);
 
     ChunkMap& map();
+
+
     SpecializedVector<Ant>& ants();
     const SpecializedVector<Ant>& ants() const;
 

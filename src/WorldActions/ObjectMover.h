@@ -1,11 +1,13 @@
 #pragma once
-#include "../World/World.h"
+#include "../World/ChunkMap.h"
+
+#include <cassert>
 
 template <class T>
 class ObjectMover
 {
 private:
-    World &m_ref_world;
+    ChunkMap &m_r_chunkMap;
 
     /// \brief Moves the given object from its homeChunk into another chunk.
     /// \n
@@ -17,7 +19,7 @@ private:
     ptrdiff_t m_moveIntoChunk(GenericObject<T> &object, const sf::Vector2i &newChunk);
 
 public:
-    explicit ObjectMover(World &ref_world);
+    explicit ObjectMover(ChunkMap &r_chunkMap);
 
     void moveTo(GenericObject<T> &object, const sf::Vector2f &newPosition);
     void moveBy(GenericObject<T> &object, const sf::Vector2f &newPosition);
@@ -36,9 +38,9 @@ void ObjectMover<T>::moveTo(GenericObject<T> &object, const sf::Vector2f &newPos
     //TODO: Assert that the new position is valid
     // If not, maybe clamp the position inside world borders?
 
-    if (not m_ref_world.map().spotsAreInSameChunk(oldPosition, newPosition))
+    if (not m_r_chunkMap.spotsAreInSameChunk(oldPosition, newPosition))
     {
-        sf::Vector2i newChunkIndex = m_ref_world.map().computeChunkIndex(newPosition);
+        sf::Vector2i newChunkIndex = m_r_chunkMap.computeChunkIndex(newPosition);
         m_moveIntoChunk(object, newChunkIndex);
     }
 
@@ -52,7 +54,7 @@ ptrdiff_t ObjectMover<T>::m_moveIntoChunk(GenericObject<T> &object, const sf::Ve
     //getting the needed data
     WorldKnowledge<T> &r_knowledge = object.knowledge();
     sf::Vector2i homeChunkXY = r_knowledge.oldChunkIndex();
-    size_t oldChunkIndex = xyToIndex(homeChunkXY.x, homeChunkXY.y, m_ref_world.size().x);
+    size_t oldChunkIndex = xyToIndex(homeChunkXY.x, homeChunkXY.y, m_r_chunkMap.size().x);
     Chunk<T> &r_oldChunk = r_knowledge.primitiveChunkMap().at(oldChunkIndex);
 
     //marking the object to be removed from the old chunk
@@ -63,14 +65,14 @@ ptrdiff_t ObjectMover<T>::m_moveIntoChunk(GenericObject<T> &object, const sf::Ve
 
 
     //marking the object to be added in the new chunk
-    size_t newChunkIndex = xyToIndex(newChunk.x, newChunk.y, m_ref_world.size().x);
+    size_t newChunkIndex = xyToIndex(newChunk.x, newChunk.y, m_r_chunkMap.size().x);
     Chunk<T> &r_newChunk = r_knowledge.primitiveChunkMap().at(newChunkIndex);
     SpecializedVectorIndexPair<T> pairElement = {r_knowledge.pWorldObjectVector(), r_knowledge.indexInWorld()};
     r_newChunk.objects.toBeAdded(std::move(pairElement));
 }
 
 template <class T>
-ObjectMover<T>::ObjectMover(World &ref_world) : m_ref_world{ref_world}
+ObjectMover<T>::ObjectMover(ChunkMap &r_chunkMap) : m_r_chunkMap{r_chunkMap}
 {
 
 }
