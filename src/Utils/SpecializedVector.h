@@ -28,14 +28,15 @@ private:
 public:
 
     SpecializedVector(InitFunction_t<T> init, SwapFunction_t<T> swap, DestructFunction_t<T> destruct, size_t reserve = 128);
-
-    T& toBeRemoved(std::size_t index);
-
     ptrdiff_t toBeAdded(T &&element);
+
     ptrdiff_t toBeAdded(T &element);
 
-
+    //TODO: Maybe add separate option to just remove or just add
     void finishChanges();
+
+
+    T& toBeRemoved(std::size_t index);
 
     /// \brief Gets an element only from the section of already added elements.
     /// \param index
@@ -83,7 +84,7 @@ template <typename T>
 void SpecializedVector<T>::finishChanges()
 {
 
-    int i;
+    size_t i;
     //we fill the spaces marked for deletion with elements that are marked for insertion
     for ( i = 0; i < m_addBuffer.size() and i < m_removeBuffer.size(); ++i)
     {

@@ -49,7 +49,10 @@ public:
     {}
 
     void giveWorldIndex(const ptrdiff_t& indexInWorldVector);
+    void removeWorldInfo();
+
     void giveChunkIndex(const ptrdiff_t& indexInChunkVector);
+    void removeChunkInfo();
 
     void giveHomeChunk(const sf::Vector2i &homeChunkIndexes);
 
@@ -62,6 +65,22 @@ public:
     ptrdiff_t indexInChunk() const;
     bool existsInChunk() const;
 };
+
+template <class T>
+void WorldKnowledge<T>::removeChunkInfo()
+{
+    m_chunkIndexWasGiven = false;
+    m_indexChunk = PTRDIFF_MAX;
+    m_homeChunkIndexes = {-1, -1};
+
+}
+
+template <class T>
+void WorldKnowledge<T>::removeWorldInfo()
+{
+    m_worldIndexWasGiven = false;
+    m_indexWorld = PTRDIFF_MAX;
+}
 
 template <class T>
 SpecializedVector<T> *WorldKnowledge<T>::pWorldObjectVector()

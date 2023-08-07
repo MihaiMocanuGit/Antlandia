@@ -4,7 +4,7 @@ add_library(src
         AppLogic/AppLogic.cpp AppLogic/AppLogic.cpp
         ObjectComponents/Body.cpp ObjectComponents/Body.h
         ObjectComponents/WorldKnowledge.cpp ObjectComponents/WorldKnowledge.h
-        World/Chunk.cpp World/Chunk.h
+        World/Chunk.h
         Utils/Types.h
         Utils/SpecializedVector.h
         Objects/Ant.cpp Objects/Ant.h

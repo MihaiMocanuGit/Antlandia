@@ -9,9 +9,9 @@ class World
 {
 private:
     ChunkMap m_map = {};
-    SpecializedVector<Ant> m_ants{World::INIT_WORLD, World::SWAP_WORLD};
-    SpecializedVector<Pheromone> m_pheromones{World::INIT_WORLD, World::SWAP_WORLD};
-    SpecializedVector<Food> m_food{World::INIT_WORLD, World::SWAP_WORLD};
+    SpecializedVector<Ant> m_ants{INIT_WORLD, SWAP_WORLD, DESTRUCT_WORLD};
+    SpecializedVector<Pheromone> m_pheromones{INIT_WORLD, SWAP_WORLD, DESTRUCT_WORLD};
+    SpecializedVector<Food> m_food{INIT_WORLD, SWAP_WORLD, DESTRUCT_WORLD};
 
     template <class T>
     T m_createObject(const Body& body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T>& objectMap);
@@ -38,6 +38,9 @@ public:
     static void SWAP_WORLD(T &elem1, ptrdiff_t atIndex1, T &elem2, ptrdiff_t atIndex2);
     template <typename T>
     static void INIT_WORLD(T &elem, ptrdiff_t indexWorld);
+    template <typename T>
+    static void DESTRUCT_WORLD(T &elem, ptrdiff_t indexWorld);
+
 
     ChunkMap& map();
 
@@ -115,9 +118,19 @@ void World::INIT_WORLD(T &elem, ptrdiff_t indexWorld)
 }
 
 
+template <typename T>
+void World::DESTRUCT_WORLD(T &elem, ptrdiff_t indexWorld)
+{
+    elem.knowledge().removeChunkInfo();
+    elem.knowledge().removeWorldInfo();
+}
+
+
+
 template <class T>
 void World::moveBy(GenericObject<T> &object, const sf::Vector2f &newPosition)
 {
+    assert (object.knowledge().existsInChunk());
     ObjectMover<T> mover(m_map);
     mover.moveBy(object, newPosition);
 }
@@ -125,6 +138,7 @@ void World::moveBy(GenericObject<T> &object, const sf::Vector2f &newPosition)
 template <class T>
 void World::moveTo(GenericObject<T> &object, const sf::Vector2f &newPosition)
 {
+    assert (object.knowledge().existsInChunk());
     ObjectMover<T> mover(m_map);
     mover.moveTo(object, newPosition);
 }

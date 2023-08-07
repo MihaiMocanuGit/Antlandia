@@ -99,5 +99,3 @@ Food &World::prepareFood(sf::Vector2f position, float size, float mass, const sf
 
     return refReturn;
 }
-
-

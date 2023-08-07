@@ -46,17 +46,17 @@ void m_prepareNextState(World &world, const sf::Vector2i &chunkIndex, sf::Render
 }
 void m_updateState(World &world, sf::RenderWindow &window)
 {
-    world.ants().addAll();
-    world.pheromones().addAll();
-    world.food().addAll();
+    world.ants().finishChanges();
+    world.pheromones().finishChanges();
+    world.food().finishChanges();
 
     for (int y = 0;  y < world.size().y ; y++)
     {
         for (int x = 0;  x < world.size().x ; x++)
         {
-            world.map().at(x, y).ref_antChunk.objects.addAll();
-            world.map().at(x, y).ref_pheromoneChunk.objects.addAll();
-            world.map().at(x, y).ref_foodChunk.objects.addAll();
+            world.map().at(x, y).ref_antChunk.objects.finishChanges();
+            world.map().at(x, y).ref_pheromoneChunk.objects.finishChanges();
+            world.map().at(x, y).ref_foodChunk.objects.finishChanges();
         }
     }
 }
@@ -90,7 +90,7 @@ void startGameLoop(World& world)
         {
             for (int x = 0;  x < world.size().x ; x++)
             {
-                m_prepareNextState(world, sf::Vector2i{x, y}, window);
+                //m_prepareNextState(world, sf::Vector2i{x, y}, window);
             }
         }
 

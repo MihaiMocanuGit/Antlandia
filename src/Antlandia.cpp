@@ -2,7 +2,8 @@
 
 void m_addObjects(World &world)
 {
-
+    world.prepareAnt(sf::Vector2f(30.0f, 30.0f), 10.0f);
+    /*
     for (int i = 0; i < 125; ++i)
     {
         world.prepareAnt(sf::Vector2f(i * 5.0f, i * 5.0f));
@@ -14,19 +15,20 @@ void m_addObjects(World &world)
             world.preparePheromone(sf::Vector2f(i * 5.0f, (float) world.size().y * Chunk<void>::CHUNK_SIZE_Y / 2));
     }
 
-    world.ants().addAll();
-    world.food().addAll();
-    world.pheromones().addAll();
+    world.ants().finishChanges();
+    world.food().finishChanges();
+    world.pheromones().finishChanges();
 
     for (unsigned y = 0; y < world.size().y; ++y)
     {
         for (unsigned x = 0; x < world.size().x; ++x)
         {
-            world.map().at(x, y).ref_antChunk.objects.addAll();
-            world.map().at(x, y).ref_pheromoneChunk.objects.addAll();
-            world.map().at(x, y).ref_foodChunk.objects.addAll();
+            world.map().at(x, y).ref_antChunk.objects.finishChanges();
+            world.map().at(x, y).ref_pheromoneChunk.objects.finishChanges();
+            world.map().at(x, y).ref_foodChunk.objects.finishChanges();
         }
     }
+    */
 }
 
 void startApp()

@@ -38,7 +38,7 @@ public:
     static constexpr unsigned CHUNK_SIZE_X = 64;
     static constexpr unsigned CHUNK_SIZE_Y = 64;
 
-    SpecializedVector<SpecializedVectorIndexPair<T>> objects{Chunk<T>::INIT_CHUNK, Chunk<T>::SWAP_CHUNK};
+    SpecializedVector<SpecializedVectorIndexPair<T>> objects{INIT_CHUNK, SWAP_CHUNK, DESTRUCT_CHUNK};
 
 
     Chunk() = default;
@@ -50,11 +50,11 @@ public:
                            SpecializedVectorIndexPair<T> & elem2, ptrdiff_t atIndex2);
 
     static void INIT_CHUNK(SpecializedVectorIndexPair<T> & elem, ptrdiff_t indexChunk);
+    static void DESTRUCT_CHUNK(SpecializedVectorIndexPair<T> & elem, ptrdiff_t indexChunk);
 
 
 
 };
-
 
 template <class T>
 Chunk<T>::Chunk(sf::Vector2i index, SpecializedVector<T> *ptrWorldObjects)
@@ -83,4 +83,10 @@ template <typename T>
 void Chunk<T>::INIT_CHUNK(SpecializedVectorIndexPair<T> &elem, ptrdiff_t indexChunk)
 {
     elem.ptrWorldObjects->at(elem.index).knowledge().giveChunkIndex(indexChunk);
+}
+
+template <class T>
+void Chunk<T>::DESTRUCT_CHUNK(SpecializedVectorIndexPair<T> &elem, ptrdiff_t indexChunk)
+{
+    elem.ptrWorldObjects->at(elem.index).knowledge().removeChunkInfo();
 }
