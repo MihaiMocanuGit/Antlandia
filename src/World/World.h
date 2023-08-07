@@ -41,6 +41,12 @@ public:
 
     ChunkMap& map();
 
+    template <class T>
+    void moveTo(GenericObject<T> &object, const sf::Vector2f &newPosition);
+
+    template <class T>
+    void moveBy(GenericObject<T> &object, const sf::Vector2f &newPosition);
+
 
     SpecializedVector<Ant>& ants();
     const SpecializedVector<Ant>& ants() const;
