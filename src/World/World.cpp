@@ -100,18 +100,4 @@ Food &World::prepareFood(sf::Vector2f position, float size, float mass, const sf
     return refReturn;
 }
 
-template <class T>
-void World::moveBy(GenericObject<T> &object, const sf::Vector2f &newPosition)
-{
-    ObjectMover<T> mover;
-    mover.moveBy(object, newPosition);
-}
-
-template <class T>
-void World::moveTo(GenericObject<T> &object, const sf::Vector2f &newPosition)
-{
-    ObjectMover<T> mover;
-    mover.moveTo(object, newPosition);
-}
-
 

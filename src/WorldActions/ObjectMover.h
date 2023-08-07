@@ -53,7 +53,7 @@ ptrdiff_t ObjectMover<T>::m_moveIntoChunk(GenericObject<T> &object, const sf::Ve
 {
     //getting the needed data
     WorldKnowledge<T> &r_knowledge = object.knowledge();
-    sf::Vector2i homeChunkXY = r_knowledge.oldChunkIndex();
+    sf::Vector2i homeChunkXY = r_knowledge.homeChunkIndex();
     size_t oldChunkIndex = xyToIndex(homeChunkXY.x, homeChunkXY.y, m_r_chunkMap.size().x);
     Chunk<T> &r_oldChunk = r_knowledge.primitiveChunkMap().at(oldChunkIndex);
 
@@ -68,7 +68,7 @@ ptrdiff_t ObjectMover<T>::m_moveIntoChunk(GenericObject<T> &object, const sf::Ve
     size_t newChunkIndex = xyToIndex(newChunk.x, newChunk.y, m_r_chunkMap.size().x);
     Chunk<T> &r_newChunk = r_knowledge.primitiveChunkMap().at(newChunkIndex);
     SpecializedVectorIndexPair<T> pairElement = {r_knowledge.pWorldObjectVector(), r_knowledge.indexInWorld()};
-    r_newChunk.objects.toBeAdded(std::move(pairElement));
+    return r_newChunk.objects.toBeAdded(std::move(pairElement));
 }
 
 template <class T>

@@ -115,3 +115,17 @@ void World::INIT_WORLD(T &elem, ptrdiff_t indexWorld)
 }
 
 
+template <class T>
+void World::moveBy(GenericObject<T> &object, const sf::Vector2f &newPosition)
+{
+    ObjectMover<T> mover(m_map);
+    mover.moveBy(object, newPosition);
+}
+
+template <class T>
+void World::moveTo(GenericObject<T> &object, const sf::Vector2f &newPosition)
+{
+    ObjectMover<T> mover(m_map);
+    mover.moveTo(object, newPosition);
+}
+

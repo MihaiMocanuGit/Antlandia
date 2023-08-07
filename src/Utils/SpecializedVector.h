@@ -23,8 +23,12 @@
 /// recommend doing it yet, as I'm not sure if it works correctly.
 /// \tparam T copy-constructable and copy-assignable element
 template <typename T>
+class SpecializedVectorIterator;
+
+template <typename T>
 class SpecializedVector
 {
+    friend SpecializedVectorIterator<T>;
 private:
     std::vector<T> m_data = {};
 
@@ -168,9 +172,9 @@ T SpecializedVector<T>::toBeRemoved(std::size_t index)
 
     m_eraseStart--;
 
-    m_swap(m_data[index], index, m_eraseStart, m_data[m_eraseStart]);
+    m_swap(m_data[index], index, m_data[m_eraseStart], m_eraseStart);
 
-    return *m_data[m_eraseStart];
+    return m_data[m_eraseStart];
 }
 
 
