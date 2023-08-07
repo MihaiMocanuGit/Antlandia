@@ -1,13 +1,13 @@
 #pragma once
-#include "../ObjectComponents/Body.h"
-#include "../ObjectComponents/WorldKnowledge.h"
+#include "GenericObject.h"
+
 class Food
 {
 private:
-    Body m_body = {};
-    WorldKnowledge<Food> m_worldKnowledge = {};
+    GenericObject<Food> m_genericObject;
 public:
     Food() = default;
+    explicit Food(GenericObject<Food> genericObject);
     Food(Body body, WorldKnowledge<Food> worldKnowledge);
 
     Body &body();
@@ -15,5 +15,8 @@ public:
 
     WorldKnowledge<Food> &knowledge();
     const WorldKnowledge<Food> &knowledge() const;
+
+    GenericObject<Food> &genericObject();
+    const GenericObject<Food> &genericObject() const;
 };
 
