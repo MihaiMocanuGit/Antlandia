@@ -9,9 +9,9 @@ class World
 {
 private:
     ChunkMap m_map = {};
-    SpecializedVector<Ant> m_ants{INIT_WORLD, SWAP_WORLD, DESTRUCT_WORLD};
-    SpecializedVector<Pheromone> m_pheromones{INIT_WORLD, SWAP_WORLD, DESTRUCT_WORLD};
-    SpecializedVector<Food> m_food{INIT_WORLD, SWAP_WORLD, DESTRUCT_WORLD};
+    SpecializedVector<Ant> m_ants{INIT_ADD_WORLD, INIT_REMOVE_WORLD, INIT_FINALISE_WORLD, SWAP_WORLD, DESTRUCT_WORLD};
+    SpecializedVector<Pheromone> m_pheromones{INIT_ADD_WORLD, INIT_REMOVE_WORLD, INIT_FINALISE_WORLD, SWAP_WORLD, DESTRUCT_WORLD};
+    SpecializedVector<Food> m_food{INIT_ADD_WORLD, INIT_REMOVE_WORLD, INIT_FINALISE_WORLD, SWAP_WORLD, DESTRUCT_WORLD};
 
     template <class T>
     T m_createObject(const Body& body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T>& objectMap);
@@ -22,10 +22,10 @@ private:
         WorldKnowledge<T> &knowledge = elem.knowledge();
         sf::Vector2u worldSize = knowledge.world().size();
         sf::Vector2i homeChunkXyIndexes = knowledge.homeChunkIndex();
-
         size_t homeIndex = xyToIndex(homeChunkXyIndexes.x, homeChunkXyIndexes.y, worldSize.x);
+
         Chunk<T> &homeChunk = knowledge.primitiveChunkMap().at(homeIndex);
-        ptrdiff_t indexInChunk = knowledge.indexInChunk();
+        ptrdiff_t indexInChunk = knowledge.indexInHomeChunk();
         homeChunk.objects.at(indexInChunk).index = newIndex;
 
     }
@@ -34,10 +34,15 @@ public:
     explicit World(sf::Vector2u size);
     World(unsigned sizeX, unsigned sizeY);
 
+
+    template <typename T>
+    static void INIT_ADD_WORLD(T &elem, ptrdiff_t indexWorld);
+    template <typename T>
+    static void INIT_REMOVE_WORLD(T &elem, ptrdiff_t indexWorld);
+    template <typename T>
+    static void INIT_FINALISE_WORLD(T &elem, ptrdiff_t indexWorld);
     template <typename T>
     static void SWAP_WORLD(T &elem1, ptrdiff_t atIndex1, T &elem2, ptrdiff_t atIndex2);
-    template <typename T>
-    static void INIT_WORLD(T &elem, ptrdiff_t indexWorld);
     template <typename T>
     static void DESTRUCT_WORLD(T &elem, ptrdiff_t indexWorld);
 
@@ -99,22 +104,22 @@ void World::SWAP_WORLD(T &elem1, ptrdiff_t atIndex1, T &elem2, ptrdiff_t atIndex
     //in the World vector. As such, if the position of an element in the world vector
     //is changed, we need to update the chunk vector too.
     WorldKnowledge<T> &r_knowledge1 = elem1.knowledge();
-    if (r_knowledge1.existsInChunk() or r_knowledge1.willBeAddedInChunk())
+    if (r_knowledge1.existsInHomeChunk() or r_knowledge1.willBeAddedInNextChunk())
         m_updateChunkVectorInfo(elem1, atIndex1);
     r_knowledge1.giveIndexInWorld(atIndex1);
 
     WorldKnowledge<T> &r_knowledge2 = elem2.knowledge();
-    if (r_knowledge2.existsInChunk() or r_knowledge2.willBeAddedInChunk())
+    if (r_knowledge2.existsInHomeChunk() or r_knowledge2.willBeAddedInNextChunk())
         m_updateChunkVectorInfo(elem2, atIndex2);
     r_knowledge2.giveIndexInWorld(atIndex2);
 
 
 }
 template <typename T>
-void World::INIT_WORLD(T &elem, ptrdiff_t indexWorld)
+void World::INIT_FINALISE_WORLD(T &elem, ptrdiff_t indexWorld)
 {
     WorldKnowledge<T> &r_knowledge = elem.knowledge();
-    if (r_knowledge.existsInChunk() or r_knowledge.willBeAddedInChunk())
+    if (r_knowledge.existsInHomeChunk() or r_knowledge.willBeAddedInNextChunk())
         m_updateChunkVectorInfo(elem, indexWorld);
 
     r_knowledge.giveIndexInWorld(indexWorld);
@@ -137,7 +142,7 @@ void World::DESTRUCT_WORLD(T &elem, ptrdiff_t indexWorld)
 template <class T>
 void World::moveBy(GenericObject<T> &object, const sf::Vector2f &newPosition)
 {
-    assert (object.knowledge().existsInChunk());
+    assert (object.knowledge().existsInHomeChunk());
     ObjectMover<T> mover(m_map);
     mover.moveBy(object, newPosition);
 }
@@ -145,7 +150,7 @@ void World::moveBy(GenericObject<T> &object, const sf::Vector2f &newPosition)
 template <class T>
 void World::moveTo(GenericObject<T> &object, const sf::Vector2f &newPosition)
 {
-    assert (object.knowledge().existsInChunk());
+    assert (object.knowledge().existsInHomeChunk());
     ObjectMover<T> mover(m_map);
     mover.moveTo(object, newPosition);
 }
