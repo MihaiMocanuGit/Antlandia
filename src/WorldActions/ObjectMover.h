@@ -51,6 +51,7 @@ void ObjectMover<T>::moveTo(GenericObject<T> &object, const sf::Vector2f &newPos
 template <class T>
 ptrdiff_t ObjectMover<T>::m_moveIntoChunk(GenericObject<T> &object, const sf::Vector2i &newChunk)
 {
+    //TODO: Rework this whole part, also note that knowledge() does not yet know the newChunkIndexes
     //getting the needed data
     WorldKnowledge<T> &r_knowledge = object.knowledge();
     sf::Vector2i homeChunkXY = r_knowledge.homeChunkIndexes();

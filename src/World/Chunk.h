@@ -81,7 +81,12 @@ template <class T>
 void Chunk<T>::INIT_ADD_CHUNK(SpecializedVectorIndexPair<T> &elem, ptrdiff_t indexChunk)
 {
     WorldKnowledge<T> &r_knowledge = elem.ptrWorldObjects->at(elem.index).knowledge();
-    r_knowledge.giveIndexInNextChunk(indexChunk);
+    if (not r_knowledge.existsInHomeChunk())
+        r_knowledge.giveIndexInHomeChunk(indexChunk);
+    else if (not r_knowledge.willBeAddedInNextChunk())
+        r_knowledge.giveIndexInNextChunk(indexChunk);
+    else
+        throw std::logic_error("Trying to insert elem in a new chunk but it already has the next chunk initialised");
 }
 
 template <typename T>

@@ -136,7 +136,7 @@ template <class T>
 void WorldKnowledge<T>::giveIndexInNextChunk(const ptrdiff_t &indexInNextChunkVector)
 {
     m_indexInNextChunk = indexInNextChunkVector;
-    m_indexInNextChunkWasGiven;
+    m_indexInNextChunkWasGiven = true;
 }
 
 template <class T>
