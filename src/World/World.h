@@ -98,11 +98,11 @@ void World::SWAP_WORLD(T &elem1, ptrdiff_t atIndex1, T &elem2, ptrdiff_t atIndex
     //is changed, we need to update the chunk vector too.
     if (elem1.knowledge().existsInChunk())
         m_updateChunkVectorInfo(elem1, atIndex2);
-    elem1.knowledge().giveWorldIndex(atIndex2);
+    elem1.knowledge().giveIndexInWorld(atIndex2);
 
     if (elem2.knowledge().existsInChunk())
         m_updateChunkVectorInfo(elem2, atIndex1);
-    elem2.knowledge().giveWorldIndex(atIndex1);
+    elem2.knowledge().giveIndexInWorld(atIndex1);
 
     std::swap(elem1, elem2);
 }
@@ -112,7 +112,7 @@ void World::INIT_WORLD(T &elem, ptrdiff_t indexWorld)
     if (elem.knowledge().existsInChunk())
         m_updateChunkVectorInfo(elem, indexWorld);
 
-    elem.knowledge().giveWorldIndex(indexWorld);
+    elem.knowledge().giveIndexInWorld(indexWorld);
 
 
 }
@@ -121,7 +121,7 @@ void World::INIT_WORLD(T &elem, ptrdiff_t indexWorld)
 template <typename T>
 void World::DESTRUCT_WORLD(T &elem, ptrdiff_t indexWorld)
 {
-    elem.knowledge().removeChunkInfo();
+    elem.knowledge().removeHomeChunkInfo();
     elem.knowledge().removeWorldInfo();
 }
 

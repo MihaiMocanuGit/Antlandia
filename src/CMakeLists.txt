@@ -3,7 +3,7 @@ add_library(src
         Antlandia.h Antlandia.cpp
         AppLogic/AppLogic.cpp AppLogic/AppLogic.cpp
         ObjectComponents/Body.cpp ObjectComponents/Body.h
-        ObjectComponents/WorldKnowledge.cpp ObjectComponents/WorldKnowledge.h
+        ObjectComponents/WorldKnowledge.h
         World/Chunk.h
         Utils/Types.h
         Utils/SpecializedVector.h

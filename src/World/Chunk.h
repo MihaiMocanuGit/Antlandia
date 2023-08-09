@@ -76,17 +76,17 @@ void Chunk<T>::SWAP_CHUNK(SpecializedVectorIndexPair<T> &elem1, ptrdiff_t atInde
     //swapping only the index as the reference to the world objects will be the same
     std::swap(elem1, elem2);
 
-    elem1.ptrWorldObjects->at(elem1.index).knowledge().giveChunkIndex(atIndex1);
-    elem2.ptrWorldObjects->at(elem2.index).knowledge().giveChunkIndex(atIndex2);
+    elem1.ptrWorldObjects->at(elem1.index).knowledge().giveIndexInHomeChunk(atIndex1);
+    elem2.ptrWorldObjects->at(elem2.index).knowledge().giveIndexInHomeChunk(atIndex2);
 }
 template <typename T>
 void Chunk<T>::INIT_CHUNK(SpecializedVectorIndexPair<T> &elem, ptrdiff_t indexChunk)
 {
-    elem.ptrWorldObjects->at(elem.index).knowledge().giveChunkIndex(indexChunk);
+    elem.ptrWorldObjects->at(elem.index).knowledge().giveIndexInHomeChunk(indexChunk);
 }
 
 template <class T>
 void Chunk<T>::DESTRUCT_CHUNK(SpecializedVectorIndexPair<T> &elem, ptrdiff_t indexChunk)
 {
-    elem.ptrWorldObjects->at(elem.index).knowledge().removeChunkInfo();
+    elem.ptrWorldObjects->at(elem.index).knowledge().removeHomeChunkInfo();
 }

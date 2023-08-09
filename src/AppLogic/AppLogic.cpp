@@ -66,9 +66,9 @@ void m_updateState(World &world, sf::RenderWindow &window)
     world.pheromones().finishChanges();
     world.food().finishChanges();
 
-    for (int y = 0;  y < world.size().y ; y++)
+    for (unsigned y = 0;  y < world.size().y ; y++)
     {
-        for (int x = 0;  x < world.size().x ; x++)
+        for (unsigned x = 0;  x < world.size().x ; x++)
         {
             world.map().at(x, y).ref_antChunk.objects.finishChanges();
             world.map().at(x, y).ref_pheromoneChunk.objects.finishChanges();

@@ -3,6 +3,18 @@
 void m_addObjects(World &world)
 {
     world.prepareAnt(sf::Vector2f(30.0f, 30.0f), 10.0f);
+    world.ants().finishChanges();
+
+    for (unsigned y = 0; y < world.size().y; ++y)
+    {
+        for (unsigned x = 0; x < world.size().x; ++x)
+        {
+            world.map().at(x, y).ref_antChunk.objects.finishChanges();
+            world.map().at(x, y).ref_pheromoneChunk.objects.finishChanges();
+            world.map().at(x, y).ref_foodChunk.objects.finishChanges();
+        }
+    }
+
     /*
     for (int i = 0; i < 125; ++i)
     {
