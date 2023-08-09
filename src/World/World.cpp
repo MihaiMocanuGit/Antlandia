@@ -60,7 +60,7 @@ Ant &World::prepareAnt(sf::Vector2f position, float size, float mass, const sf::
     ptrdiff_t index = m_ants.toBeAdded(ant);
 
     Ant &refReturn = m_ants.atAddBuffer(index);
-    refReturn.knowledge().giveIndexInWorld(index);
+    //refReturn.knowledge().giveIndexInWorld(index);
 
     sf::Vector2i homeIndex = refReturn.knowledge().homeChunkIndexes();
     auto & chunkObjects = m_map.at(homeIndex).ref_antChunk.objects;
@@ -102,3 +102,4 @@ Food &World::prepareFood(sf::Vector2f position, float size, float mass, const sf
 
     return refReturn;
 }
+

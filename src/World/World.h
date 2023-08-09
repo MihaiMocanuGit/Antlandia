@@ -17,7 +17,7 @@ private:
     T m_createObject(const Body& body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T>& objectMap);
 
     template <class T>
-    static void m_updateChunkVectorInfo(T& elem, size_t newIndex)
+    static void m_syncWorldWithHomeChunkVectorInfo(T& elem, size_t newIndex)
     {
         WorldKnowledge<T> &knowledge = elem.knowledge();
         sf::Vector2u worldSize = knowledge.world().size();
@@ -27,7 +27,19 @@ private:
         Chunk<T> &homeChunk = knowledge.primitiveChunkMap().at(homeIndex);
         ptrdiff_t indexInChunk = knowledge.indexInHomeChunk();
         homeChunk.objects.at(indexInChunk).index = newIndex;
+    }
 
+    template <class T>
+    static void m_syncWorldWithNextChunkVectorInfo(T& elem, size_t newIndex)
+    {
+        WorldKnowledge<T> &knowledge = elem.knowledge();
+        sf::Vector2u worldSize = knowledge.world().size();
+        sf::Vector2i nextChunkXyIndexes = knowledge.nextChunkIndexes();
+        size_t nextChunkIndex = xyToIndex(nextChunkXyIndexes.x, nextChunkXyIndexes.y, worldSize.x);
+
+        Chunk<T> &r_nextChunk = knowledge.primitiveChunkMap().at(nextChunkIndex);
+        ptrdiff_t indexInChunk = knowledge.indexInNextChunk();
+        r_nextChunk.objects.at(indexInChunk).index = newIndex;
     }
 public:
     World() = default;
@@ -94,6 +106,31 @@ T World::m_createObject(const Body &body, SpecializedVector<T> &worldObjectVecto
 }
 
 
+template <typename T>
+void World::INIT_ADD_WORLD(T &elem, ptrdiff_t indexWorld)
+{
+    WorldKnowledge<T> &r_knowledge = elem.knowledge();
+    r_knowledge.giveIndexInWorld(indexWorld);
+}
+
+template <typename T>
+void World::INIT_REMOVE_WORLD(T &elem, ptrdiff_t indexWorld)
+{
+
+}
+
+template <typename T>
+void World::INIT_FINALISE_WORLD(T &elem, ptrdiff_t indexWorld)
+{
+    WorldKnowledge<T> &r_knowledge = elem.knowledge();
+    if (r_knowledge.existsInHomeChunk())
+        m_syncWorldWithHomeChunkVectorInfo(elem, indexWorld);
+    if (r_knowledge.willBeAddedInNextChunk())
+        m_syncWorldWithNextChunkVectorInfo(elem, indexWorld);
+
+    r_knowledge.giveIndexInWorld(indexWorld);
+}
+
 
 template <typename T>
 void World::SWAP_WORLD(T &elem1, ptrdiff_t atIndex1, T &elem2, ptrdiff_t atIndex2)
@@ -104,29 +141,21 @@ void World::SWAP_WORLD(T &elem1, ptrdiff_t atIndex1, T &elem2, ptrdiff_t atIndex
     //in the World vector. As such, if the position of an element in the world vector
     //is changed, we need to update the chunk vector too.
     WorldKnowledge<T> &r_knowledge1 = elem1.knowledge();
-    if (r_knowledge1.existsInHomeChunk() or r_knowledge1.willBeAddedInNextChunk())
-        m_updateChunkVectorInfo(elem1, atIndex1);
+    if (r_knowledge1.existsInHomeChunk())
+        m_syncWorldWithHomeChunkVectorInfo(elem1, atIndex1);
+    if (r_knowledge1.willBeAddedInNextChunk())
+        m_syncWorldWithNextChunkVectorInfo(elem1, atIndex1);
     r_knowledge1.giveIndexInWorld(atIndex1);
 
     WorldKnowledge<T> &r_knowledge2 = elem2.knowledge();
-    if (r_knowledge2.existsInHomeChunk() or r_knowledge2.willBeAddedInNextChunk())
-        m_updateChunkVectorInfo(elem2, atIndex2);
+    if (r_knowledge2.existsInHomeChunk())
+        m_syncWorldWithHomeChunkVectorInfo(elem2, atIndex2);
+    if (r_knowledge2.willBeAddedInNextChunk())
+        m_syncWorldWithNextChunkVectorInfo(elem2, atIndex2);
     r_knowledge2.giveIndexInWorld(atIndex2);
 
 
 }
-template <typename T>
-void World::INIT_FINALISE_WORLD(T &elem, ptrdiff_t indexWorld)
-{
-    WorldKnowledge<T> &r_knowledge = elem.knowledge();
-    if (r_knowledge.existsInHomeChunk() or r_knowledge.willBeAddedInNextChunk())
-        m_updateChunkVectorInfo(elem, indexWorld);
-
-    r_knowledge.giveIndexInWorld(indexWorld);
-
-
-}
-
 
 template <typename T>
 void World::DESTRUCT_WORLD(T &elem, ptrdiff_t indexWorld)
