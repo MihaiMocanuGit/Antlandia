@@ -101,7 +101,7 @@ void Chunk<T>::SWAP_CHUNK(SpecializedVectorIndexPair<T> &elem1, ptrdiff_t atInde
     WorldKnowledge<T> &r_knowledge1 = elem1.ptrWorldObjects->at(elem1.index).knowledge();
     WorldKnowledge<T> &r_knowledge2 = elem2.ptrWorldObjects->at(elem2.index).knowledge();
 
-    assert(r_knowledge1.homeChunkIndex() == r_knowledge2.homeChunkIndex());
+    assert(r_knowledge1.homeChunkIndexes() == r_knowledge2.homeChunkIndexes());
     r_knowledge1.giveIndexInHomeChunk(atIndex1);
     r_knowledge2.giveIndexInHomeChunk(atIndex2);
 }

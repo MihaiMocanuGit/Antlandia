@@ -53,13 +53,13 @@ ptrdiff_t ObjectMover<T>::m_moveIntoChunk(GenericObject<T> &object, const sf::Ve
 {
     //getting the needed data
     WorldKnowledge<T> &r_knowledge = object.knowledge();
-    sf::Vector2i homeChunkXY = r_knowledge.homeChunkIndex();
+    sf::Vector2i homeChunkXY = r_knowledge.homeChunkIndexes();
     size_t oldChunkIndex = xyToIndex(homeChunkXY.x, homeChunkXY.y, m_r_chunkMap.size().x);
     Chunk<T> &r_oldChunk = r_knowledge.primitiveChunkMap().at(oldChunkIndex);
 
     //marking the object to be removed from the old chunk
     //we also make a debug assert that the object does physically exist in its home chunk
-    ptrdiff_t indexInOldChunk = r_knowledge.indexInChunk();
+    ptrdiff_t indexInOldChunk = r_knowledge.indexInHomeChunk();
     assert(indexInOldChunk >= 0);
     r_oldChunk.objects.toBeRemoved((size_t)indexInOldChunk);
 

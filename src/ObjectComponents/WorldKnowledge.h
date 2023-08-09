@@ -72,12 +72,26 @@ public:
     ptrdiff_t indexInWorld() const;
 
     PrimitiveChunkMap_t<T> & primitiveChunkMap();
-    sf::Vector2i homeChunkIndex() const;
-    ptrdiff_t indexInChunk() const;
-    bool existsInChunk() const;
+    sf::Vector2i homeChunkIndexes() const;
+    ptrdiff_t indexInHomeChunk() const;
+    bool existsInHomeChunk() const;
 
-    bool willBeAddedInChunk() const;
+    sf::Vector2i nextChunkIndexes() const;
+    ptrdiff_t indexInNextChunk() const;
+    bool willBeAddedInNextChunk() const;
 };
+
+template <class T>
+ptrdiff_t WorldKnowledge<T>::indexInNextChunk() const
+{
+    return m_indexInNextChunk;
+}
+
+template <class T>
+sf::Vector2i WorldKnowledge<T>::nextChunkIndexes() const
+{
+    return m_nextChunkIndexes;
+}
 
 template <class T>
 void WorldKnowledge<T>::removeIndexInNextChunk()
@@ -94,7 +108,7 @@ void WorldKnowledge<T>::removeIndexInHomeChunk()
 }
 
 template <class T>
-bool WorldKnowledge<T>::willBeAddedInChunk() const
+bool WorldKnowledge<T>::willBeAddedInNextChunk() const
 {
     return m_nextChunkWasGiven;
 }
@@ -157,13 +171,13 @@ SpecializedVector<T> *WorldKnowledge<T>::pWorldObjectVector()
 }
 
 template <class T>
-bool WorldKnowledge<T>::existsInChunk() const
+bool WorldKnowledge<T>::existsInHomeChunk() const
 {
     return m_indexInHomeChunkWasGiven;
 }
 
 template <class T>
-ptrdiff_t WorldKnowledge<T>::indexInChunk() const
+ptrdiff_t WorldKnowledge<T>::indexInHomeChunk() const
 {
     return m_indexInHomeChunk;
 }
@@ -181,7 +195,7 @@ PrimitiveChunkMap_t<T> &WorldKnowledge<T>::primitiveChunkMap()
 }
 
 template <class T>
-sf::Vector2i WorldKnowledge<T>::homeChunkIndex() const
+sf::Vector2i WorldKnowledge<T>::homeChunkIndexes() const
 {
     return m_homeChunkIndexes;
 }

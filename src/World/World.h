@@ -21,7 +21,7 @@ private:
     {
         WorldKnowledge<T> &knowledge = elem.knowledge();
         sf::Vector2u worldSize = knowledge.world().size();
-        sf::Vector2i homeChunkXyIndexes = knowledge.homeChunkIndex();
+        sf::Vector2i homeChunkXyIndexes = knowledge.homeChunkIndexes();
         size_t homeIndex = xyToIndex(homeChunkXyIndexes.x, homeChunkXyIndexes.y, worldSize.x);
 
         Chunk<T> &homeChunk = knowledge.primitiveChunkMap().at(homeIndex);

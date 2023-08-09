@@ -62,7 +62,7 @@ Ant &World::prepareAnt(sf::Vector2f position, float size, float mass, const sf::
     Ant &refReturn = m_ants.atAddBuffer(index);
     refReturn.knowledge().giveIndexInWorld(index);
 
-    sf::Vector2i homeIndex = refReturn.knowledge().homeChunkIndex();
+    sf::Vector2i homeIndex = refReturn.knowledge().homeChunkIndexes();
     auto & chunkObjects = m_map.at(homeIndex).ref_antChunk.objects;
     chunkObjects.toBeAdded(SpecializedVectorIndexPair<Ant>{&m_ants, index});
 
@@ -79,7 +79,7 @@ Pheromone &World::preparePheromone(sf::Vector2f position, float size, float mass
     Pheromone &refReturn = m_pheromones.atAddBuffer(index);
     refReturn.knowledge().giveIndexInWorld(index);
 
-    sf::Vector2i homeIndex = refReturn.knowledge().homeChunkIndex();
+    sf::Vector2i homeIndex = refReturn.knowledge().homeChunkIndexes();
     auto & objects = m_map.at(homeIndex).ref_pheromoneChunk.objects;
     objects.toBeAdded(SpecializedVectorIndexPair<Pheromone>{&m_pheromones, index});
 
@@ -96,7 +96,7 @@ Food &World::prepareFood(sf::Vector2f position, float size, float mass, const sf
     Food &refReturn = m_food.atAddBuffer(index);
     refReturn.knowledge().giveIndexInWorld(index);
 
-    sf::Vector2i homeIndex = refReturn.knowledge().homeChunkIndex();
+    sf::Vector2i homeIndex = refReturn.knowledge().homeChunkIndexes();
     auto & objects = m_map.at(homeIndex).ref_foodChunk.objects;
     objects.toBeAdded(SpecializedVectorIndexPair<Food>{&m_food, index});
 
