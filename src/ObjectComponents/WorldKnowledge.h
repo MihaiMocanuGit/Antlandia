@@ -73,7 +73,15 @@ public:
     sf::Vector2i homeChunkIndex() const;
     ptrdiff_t indexInChunk() const;
     bool existsInChunk() const;
+
+    bool willBeAddedInChunk() const;
 };
+
+template <class T>
+bool WorldKnowledge<T>::willBeAddedInChunk() const
+{
+    return m_nextChunkWasGiven;
+}
 
 template <class T>
 void WorldKnowledge<T>::updateHomeChunkWithNext()

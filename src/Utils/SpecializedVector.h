@@ -20,14 +20,20 @@ private:
     /// \brief additional vector where we temporally store the indexes of elements that will later be removed
     std::vector<size_t > m_removeBuffer = {};
 
-    InitFunction_t<T> m_init;
-    SwapFunction_t<T> m_swap;
-    DestructFunction_t<T> m_destruct;
+
+    InitToBeAddedFct_t<T> m_initAdd;
+    InitToBeRemovedFct_t<T> m_initRemove; //TODO: Perhaps we do not need to know the index
+
+    InitForFinaliseFct_t<T> m_initFinal;
+    SwapFct_t<T> m_swap;
+    DestructFct_t<T> m_destruct; //TODO: Perhaps we do not need to know the index
 
 
 public:
 
-    SpecializedVector(InitFunction_t<T> init, SwapFunction_t<T> swap, DestructFunction_t<T> destruct, size_t reserve = 128);
+    SpecializedVector(InitToBeAddedFct_t<T> initAdd, InitToBeRemovedFct_t<T> initRemove,
+                      InitForFinaliseFct_t<T> initFinal, SwapFct_t<T> swap, DestructFct_t<T> destruct,
+                      size_t reserve = 128);
     ptrdiff_t toBeAdded(T &&element);
 
     ptrdiff_t toBeAdded(T &element);
@@ -72,13 +78,17 @@ public:
 };
 
 template <typename T>
-SpecializedVector<T>::SpecializedVector(InitFunction_t<T> init, SwapFunction_t<T> swap, DestructFunction_t<T> destruct, size_t reserve)
-        : m_init{init}, m_swap{swap}, m_destruct{destruct}
+SpecializedVector<T>::SpecializedVector(InitToBeAddedFct_t<T> initAdd, InitToBeRemovedFct_t<T> initRemove,
+                                        InitForFinaliseFct_t<T> initFinal, SwapFct_t<T> swap, DestructFct_t<T> destruct,
+                                        size_t reserve)
+        : m_initAdd{initAdd}, m_initRemove{initFinal}, m_initFinal{initFinal}, m_swap{swap}, m_destruct{destruct}
 {
     m_data.reserve(reserve);
     m_addBuffer.reserve(reserve/2);
     m_removeBuffer.reserve(reserve/2);
 }
+
+
 
 template <typename T>
 void SpecializedVector<T>::finishChanges()
@@ -91,7 +101,7 @@ void SpecializedVector<T>::finishChanges()
         int index = m_removeBuffer[i];
         m_destruct(m_data[index], index);
         m_data[index] = m_addBuffer[i];
-        m_init(m_data[index], index);
+        m_initFinal(m_data[index], index);
     }
 
     //TODO: Check if the result is correct (off by one errors)
@@ -102,7 +112,7 @@ void SpecializedVector<T>::finishChanges()
     for (; i < m_addBuffer.size(); ++i)
     {
            m_data.push_back(m_addBuffer[i]);
-           m_init(m_data.back(), m_data.size() - 1);
+           m_initFinal(m_data.back(), m_data.size() - 1);
     }
 
     //else, if we need to remove more elements than we have to add, move the remaining elements that must be deleted
@@ -194,7 +204,7 @@ ptrdiff_t SpecializedVector<T>::toBeAdded(T &element)
     m_addBuffer.push_back(element);
 
     ptrdiff_t index = -1 * m_addBuffer.size();
-    m_init(m_addBuffer.back(), index);
+    m_initAdd(m_addBuffer.back(), index);
     return index;
 }
 
@@ -211,6 +221,7 @@ T &SpecializedVector<T>::toBeRemoved(std::size_t index)
         throw std::out_of_range("Invalid index, check bounds!");
 
     m_removeBuffer.push_back(index);
+    m_initRemove(m_data[index], index);
     return m_data[index];
 }
 

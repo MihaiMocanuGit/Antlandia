@@ -93,26 +93,31 @@ T World::m_createObject(const Body &body, SpecializedVector<T> &worldObjectVecto
 template <typename T>
 void World::SWAP_WORLD(T &elem1, ptrdiff_t atIndex1, T &elem2, ptrdiff_t atIndex2)
 {
+    std::swap(elem1, elem2);
+
     //in a chunk we have a vector of indexes pointing to the index of said element
     //in the World vector. As such, if the position of an element in the world vector
     //is changed, we need to update the chunk vector too.
-    if (elem1.knowledge().existsInChunk())
-        m_updateChunkVectorInfo(elem1, atIndex2);
-    elem1.knowledge().giveIndexInWorld(atIndex2);
+    WorldKnowledge<T> &r_knowledge1 = elem1.knowledge();
+    if (r_knowledge1.existsInChunk() or r_knowledge1.willBeAddedInChunk())
+        m_updateChunkVectorInfo(elem1, atIndex1);
+    r_knowledge1.giveIndexInWorld(atIndex1);
 
-    if (elem2.knowledge().existsInChunk())
-        m_updateChunkVectorInfo(elem2, atIndex1);
-    elem2.knowledge().giveIndexInWorld(atIndex1);
+    WorldKnowledge<T> &r_knowledge2 = elem2.knowledge();
+    if (r_knowledge2.existsInChunk() or r_knowledge2.willBeAddedInChunk())
+        m_updateChunkVectorInfo(elem2, atIndex2);
+    r_knowledge2.giveIndexInWorld(atIndex2);
 
-    std::swap(elem1, elem2);
+
 }
 template <typename T>
 void World::INIT_WORLD(T &elem, ptrdiff_t indexWorld)
 {
-    if (elem.knowledge().existsInChunk())
+    WorldKnowledge<T> &r_knowledge = elem.knowledge();
+    if (r_knowledge.existsInChunk() or r_knowledge.willBeAddedInChunk())
         m_updateChunkVectorInfo(elem, indexWorld);
 
-    elem.knowledge().giveIndexInWorld(indexWorld);
+    r_knowledge.giveIndexInWorld(indexWorld);
 
 
 }
@@ -121,8 +126,10 @@ void World::INIT_WORLD(T &elem, ptrdiff_t indexWorld)
 template <typename T>
 void World::DESTRUCT_WORLD(T &elem, ptrdiff_t indexWorld)
 {
-    elem.knowledge().removeHomeChunkInfo();
-    elem.knowledge().removeWorldInfo();
+    WorldKnowledge<T> &r_knowledge = elem.knowledge();
+    r_knowledge.removeHomeChunkInfo();
+    r_knowledge.removeNextChunkInfo();
+    r_knowledge.removeWorldInfo();
 }
 
 
