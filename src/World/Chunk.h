@@ -1,5 +1,5 @@
 #pragma once
-
+#include <cassert>
 #include <vector>
 #include <functional>
 #include <type_traits>
@@ -75,18 +75,23 @@ void Chunk<T>::SWAP_CHUNK(SpecializedVectorIndexPair<T> &elem1, ptrdiff_t atInde
 {
     //swapping only the index as the reference to the world objects will be the same
     std::swap(elem1, elem2);
+    WorldKnowledge<T> &r_knowledge1 = elem1.ptrWorldObjects->at(elem1.index).knowledge();
+    WorldKnowledge<T> &r_knowledge2 = elem2.ptrWorldObjects->at(elem2.index).knowledge();
 
-    elem1.ptrWorldObjects->at(elem1.index).knowledge().giveIndexInHomeChunk(atIndex1);
-    elem2.ptrWorldObjects->at(elem2.index).knowledge().giveIndexInHomeChunk(atIndex2);
+    assert(r_knowledge1.homeChunkIndex() == r_knowledge2.homeChunkIndex());
+    r_knowledge1.giveIndexInHomeChunk(atIndex1);
+    r_knowledge2.giveIndexInHomeChunk(atIndex2);
 }
 template <typename T>
 void Chunk<T>::INIT_CHUNK(SpecializedVectorIndexPair<T> &elem, ptrdiff_t indexChunk)
 {
-    elem.ptrWorldObjects->at(elem.index).knowledge().giveIndexInHomeChunk(indexChunk);
+    WorldKnowledge<T> &r_knowledge = elem.ptrWorldObjects->at(elem.index).knowledge();
+    r_knowledge.giveIndexInHomeChunk(indexChunk);
 }
 
 template <class T>
 void Chunk<T>::DESTRUCT_CHUNK(SpecializedVectorIndexPair<T> &elem, ptrdiff_t indexChunk)
 {
-    elem.ptrWorldObjects->at(elem.index).knowledge().removeHomeChunkInfo();
+    WorldKnowledge<T> &r_knowledge = elem.ptrWorldObjects->at(elem.index).knowledge();
+    r_knowledge.removeHomeChunkInfo();
 }
