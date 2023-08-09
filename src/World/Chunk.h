@@ -38,23 +38,26 @@ public:
     static constexpr unsigned CHUNK_SIZE_X = 64;
     static constexpr unsigned CHUNK_SIZE_Y = 64;
 
-    SpecializedVector<SpecializedVectorIndexPair<T>> objects{INIT_CHUNK, SWAP_CHUNK, DESTRUCT_CHUNK};
+    SpecializedVector<SpecializedVectorIndexPair<T>> objects{INIT_ADD_CHUNK, INIT_REMOVE_CHUNK, INIT_FINALISE_CHUNK, SWAP_CHUNK, DESTRUCT_CHUNK};
 
 
     Chunk() = default;
     Chunk(sf::Vector2i index, SpecializedVector<T> *ptrWorldObjects);
     Chunk(int x, int y, SpecializedVector<T> *ptrWorldObjects);
 
-    ///TODO: make them only SpecializedVectorIndexPair instead of template
+
+    static void INIT_ADD_CHUNK(SpecializedVectorIndexPair<T> & elem, ptrdiff_t indexChunk);
+    static void INIT_REMOVE_CHUNK(SpecializedVectorIndexPair<T> & elem, ptrdiff_t indexChunk);
+    static void INIT_FINALISE_CHUNK(SpecializedVectorIndexPair<T> & elem, ptrdiff_t indexChunk);
     static void SWAP_CHUNK(SpecializedVectorIndexPair<T> & elem1, ptrdiff_t atIndex1,
                            SpecializedVectorIndexPair<T> & elem2, ptrdiff_t atIndex2);
 
-    static void INIT_CHUNK(SpecializedVectorIndexPair<T> & elem, ptrdiff_t indexChunk);
     static void DESTRUCT_CHUNK(SpecializedVectorIndexPair<T> & elem, ptrdiff_t indexChunk);
 
 
 
 };
+
 
 template <class T>
 Chunk<T>::Chunk(sf::Vector2i index, SpecializedVector<T> *ptrWorldObjects)
@@ -67,6 +70,26 @@ template <class T>
 Chunk<T>::Chunk(int x, int y, SpecializedVector<T> *ptrWorldObjects) : Chunk(sf::Vector2i(x, y), ptrWorldObjects)
 {
 
+}
+template <class T>
+void Chunk<T>::INIT_REMOVE_CHUNK(SpecializedVectorIndexPair<T> &elem, ptrdiff_t indexChunk)
+{
+
+}
+
+template <class T>
+void Chunk<T>::INIT_ADD_CHUNK(SpecializedVectorIndexPair<T> &elem, ptrdiff_t indexChunk)
+{
+    WorldKnowledge<T> &r_knowledge = elem.ptrWorldObjects->at(elem.index).knowledge();
+    r_knowledge.giveIndexInNextChunk(indexChunk);
+}
+
+template <typename T>
+void Chunk<T>::INIT_FINALISE_CHUNK(SpecializedVectorIndexPair<T> &elem, ptrdiff_t indexChunk)
+{
+    WorldKnowledge<T> &r_knowledge = elem.ptrWorldObjects->at(elem.index).knowledge();
+    r_knowledge.removeNextChunkInfo();
+    r_knowledge.giveIndexInHomeChunk(indexChunk);
 }
 
 template <typename T>
@@ -81,12 +104,6 @@ void Chunk<T>::SWAP_CHUNK(SpecializedVectorIndexPair<T> &elem1, ptrdiff_t atInde
     assert(r_knowledge1.homeChunkIndex() == r_knowledge2.homeChunkIndex());
     r_knowledge1.giveIndexInHomeChunk(atIndex1);
     r_knowledge2.giveIndexInHomeChunk(atIndex2);
-}
-template <typename T>
-void Chunk<T>::INIT_CHUNK(SpecializedVectorIndexPair<T> &elem, ptrdiff_t indexChunk)
-{
-    WorldKnowledge<T> &r_knowledge = elem.ptrWorldObjects->at(elem.index).knowledge();
-    r_knowledge.giveIndexInHomeChunk(indexChunk);
 }
 
 template <class T>

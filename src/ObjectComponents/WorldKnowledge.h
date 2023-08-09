@@ -57,10 +57,12 @@ public:
 
     void giveHomeChunk(const sf::Vector2i &homeChunkIndexes);
     void giveIndexInHomeChunk(const ptrdiff_t& indexInChunkVector);
+    void removeIndexInHomeChunk();
     void removeHomeChunkInfo();
 
     void giveNextChunk(const sf::Vector2i &nextChunkIndexes);
     void giveIndexInNextChunk(const ptrdiff_t& indexInNextChunkVector);
+    void removeIndexInNextChunk();
     void removeNextChunkInfo();
 
     void updateHomeChunkWithNext();
@@ -76,6 +78,20 @@ public:
 
     bool willBeAddedInChunk() const;
 };
+
+template <class T>
+void WorldKnowledge<T>::removeIndexInNextChunk()
+{
+    m_indexInHomeChunkWasGiven = false;
+    m_indexInHomeChunk = PTRDIFF_MAX;
+}
+
+template <class T>
+void WorldKnowledge<T>::removeIndexInHomeChunk()
+{
+    m_indexInHomeChunkWasGiven = false;
+    m_indexInHomeChunk = PTRDIFF_MAX;
+}
 
 template <class T>
 bool WorldKnowledge<T>::willBeAddedInChunk() const
@@ -96,8 +112,7 @@ void WorldKnowledge<T>::updateHomeChunkWithNext()
 template <class T>
 void WorldKnowledge<T>::removeNextChunkInfo()
 {
-    m_indexInHomeChunkWasGiven = false;
-    m_indexInHomeChunk = PTRDIFF_MAX;
+    removeIndexInNextChunk();
 
     m_nextChunkWasGiven = false;
     m_nextChunkIndexes = {-1, -1};
@@ -122,12 +137,10 @@ void WorldKnowledge<T>::giveNextChunk(const sf::Vector2i &nextChunkIndexes)
 template <class T>
 void WorldKnowledge<T>::removeHomeChunkInfo()
 {
-    m_indexInHomeChunkWasGiven = false;
-    m_indexInHomeChunk = PTRDIFF_MAX;
+    removeIndexInHomeChunk();
 
     m_homeChunkWasGiven = false;
     m_homeChunkIndexes = {-1, -1};
-
 }
 
 template <class T>
