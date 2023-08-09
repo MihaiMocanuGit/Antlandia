@@ -89,6 +89,32 @@ SpecializedVector<T>::SpecializedVector(InitToBeAddedFct_t<T> initAdd, InitToBeR
 }
 
 
+template <typename T>
+ptrdiff_t SpecializedVector<T>::toBeAdded(T &element)
+{
+    m_addBuffer.push_back(element);
+
+    ptrdiff_t index = -1 * m_addBuffer.size();
+    m_initAdd(m_addBuffer.back(), index);
+    return index;
+}
+
+template <typename T>
+ptrdiff_t SpecializedVector<T>::toBeAdded(T &&element)
+{
+    return toBeAdded(element);
+}
+
+template <typename T>
+T &SpecializedVector<T>::toBeRemoved(std::size_t index)
+{
+    if (index >= m_data.size())
+        throw std::out_of_range("Invalid index, check bounds!");
+
+    m_removeBuffer.push_back(index);
+    m_initRemove(m_data[index], index);
+    return m_data[index];
+}
 
 template <typename T>
 void SpecializedVector<T>::finishChanges()
@@ -197,33 +223,6 @@ size_t SpecializedVector<T>::sizeRemoveBuffer() const
     return m_removeBuffer.size();
 }
 
-
-template <typename T>
-ptrdiff_t SpecializedVector<T>::toBeAdded(T &element)
-{
-    m_addBuffer.push_back(element);
-
-    ptrdiff_t index = -1 * m_addBuffer.size();
-    m_initAdd(m_addBuffer.back(), index);
-    return index;
-}
-
-template <typename T>
-ptrdiff_t SpecializedVector<T>::toBeAdded(T &&element)
-{
-    return toBeAdded(element);
-}
-
-template <typename T>
-T &SpecializedVector<T>::toBeRemoved(std::size_t index)
-{
-    if (index >= m_data.size())
-        throw std::out_of_range("Invalid index, check bounds!");
-
-    m_removeBuffer.push_back(index);
-    m_initRemove(m_data[index], index);
-    return m_data[index];
-}
 
 template <typename T>
 size_t SpecializedVector<T>::size() const
