@@ -90,7 +90,7 @@ void SpecializedVector<T>::finishChanges()
     {
         int index = m_removeBuffer[i];
         m_destruct(m_data[index], index);
-        m_data[index] = m_addBuffer[index];
+        m_data[index] = m_addBuffer[i];
         m_init(m_data[index], index);
     }
 
