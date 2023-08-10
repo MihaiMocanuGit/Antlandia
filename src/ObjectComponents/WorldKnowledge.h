@@ -74,11 +74,11 @@ public:
     PrimitiveChunkMap_t<T> & primitiveChunkMap();
     sf::Vector2i homeChunkIndexes() const;
     ptrdiff_t indexInHomeChunk() const;
-    bool existsInHomeChunk() const;
+    bool willApearInHomeChunk() const;
 
     sf::Vector2i nextChunkIndexes() const;
     ptrdiff_t indexInNextChunk() const;
-    bool existsInNewChunk() const;
+    bool willAppearInNewChunk() const;
 };
 
 template <class T>
@@ -96,8 +96,8 @@ sf::Vector2i WorldKnowledge<T>::nextChunkIndexes() const
 template <class T>
 void WorldKnowledge<T>::removeIndexInNextChunk()
 {
-    m_indexInHomeChunkWasGiven = false;
-    m_indexInHomeChunk = PTRDIFF_MAX;
+    m_indexInNextChunkWasGiven = false;
+    m_indexInNextChunk = PTRDIFF_MAX;
 }
 
 template <class T>
@@ -108,9 +108,9 @@ void WorldKnowledge<T>::removeIndexInHomeChunk()
 }
 
 template <class T>
-bool WorldKnowledge<T>::existsInNewChunk() const
+bool WorldKnowledge<T>::willAppearInNewChunk() const
 {
-    return m_nextChunkWasGiven;
+    return m_indexInNextChunkWasGiven;
 }
 
 template <class T>
@@ -171,7 +171,7 @@ SpecializedVector<T> *WorldKnowledge<T>::pWorldObjectVector()
 }
 
 template <class T>
-bool WorldKnowledge<T>::existsInHomeChunk() const
+bool WorldKnowledge<T>::willApearInHomeChunk() const
 {
     return m_indexInHomeChunkWasGiven;
 }

@@ -54,7 +54,7 @@ ptrdiff_t ObjectMover<T>::m_moveIntoChunk(GenericObject<T> &object, const sf::Ve
     WorldKnowledge<T> &r_knowledge = object.knowledge();
     r_knowledge.giveNextChunk(newChunk);
 
-    assert(r_knowledge.existsInHomeChunk());
+    assert(r_knowledge.willApearInHomeChunk());
     //Getting the homeChunk
     const sf::Vector2i &homeChunkIndexes = r_knowledge.homeChunkIndexes();
     size_t linearHomeChunkIndex = xyToIndex(homeChunkIndexes.x, homeChunkIndexes.y, r_knowledge.world().size().x);
@@ -63,7 +63,7 @@ ptrdiff_t ObjectMover<T>::m_moveIntoChunk(GenericObject<T> &object, const sf::Ve
     //marking the object for removal in the home chunk
     r_home.objects.toBeRemoved(r_knowledge.indexInHomeChunk());
 
-    assert(not r_knowledge.existsInNewChunk());
+    assert(not r_knowledge.willAppearInNewChunk());
     //Getting the next Chunk
     const sf::Vector2i &nextChunkIndexes = r_knowledge.nextChunkIndexes();
     size_t linearNextChunkIndex = xyToIndex(nextChunkIndexes.x, nextChunkIndexes.y, r_knowledge.world().size().x);

@@ -2,7 +2,7 @@
 
 void m_addObjects(World &world)
 {
-    world.prepareAnt(sf::Vector2f(30.0f, 30.0f), 10.0f);
+    world.prepareAnt(sf::Vector2f(300.0f, 300.0f), 10.0f);
     world.ants().finishChanges();
 
     for (unsigned y = 0; y < world.size().y; ++y)

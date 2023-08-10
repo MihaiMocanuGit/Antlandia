@@ -77,7 +77,7 @@ template <class T>
 void Chunk<T>::INIT_ADD_CHUNK(SpecializedVectorIndexPair<T> &elem, ptrdiff_t indexChunk)
 {
     WorldKnowledge<T> &r_knowledge = elem.ptrWorldObjects->at(elem.index).knowledge();
-    assert(not r_knowledge.existsInNewChunk());
+    assert(not r_knowledge.willAppearInNewChunk());
     r_knowledge.giveIndexInNextChunk(indexChunk);
 }
 template <class T>
@@ -91,6 +91,7 @@ void Chunk<T>::INIT_FINALISE_CHUNK(SpecializedVectorIndexPair<T> &elem, ptrdiff_
     WorldKnowledge<T> &r_knowledge = elem.ptrWorldObjects->at(elem.index).knowledge();
     r_knowledge.updateHomeChunkWithNext();
     r_knowledge.giveIndexInHomeChunk(indexChunk);
+    r_knowledge.removeNextChunkInfo();
 }
 
 template <typename T>
