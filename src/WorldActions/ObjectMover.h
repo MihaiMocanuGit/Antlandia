@@ -51,7 +51,29 @@ void ObjectMover<T>::moveTo(GenericObject<T> &object, const sf::Vector2f &newPos
 template <class T>
 ptrdiff_t ObjectMover<T>::m_moveIntoChunk(GenericObject<T> &object, const sf::Vector2i &newChunk)
 {
-    return -1;
+    WorldKnowledge<T> &r_knowledge = object.knowledge();
+    r_knowledge.giveNextChunk(newChunk);
+
+    assert(r_knowledge.existsInHomeChunk());
+    //Getting the homeChunk
+    const sf::Vector2i &homeChunkIndexes = r_knowledge.homeChunkIndexes();
+    size_t linearHomeChunkIndex = xyToIndex(homeChunkIndexes.x, homeChunkIndexes.y, r_knowledge.world().size().x);
+    Chunk<T> &r_home = r_knowledge.primitiveChunkMap().at(linearHomeChunkIndex);
+
+    //marking the object for removal in the home chunk
+    r_home.objects.toBeRemoved(r_knowledge.indexInHomeChunk());
+
+    assert(not r_knowledge.existsInNewChunk());
+    //Getting the next Chunk
+    const sf::Vector2i &nextChunkIndexes = r_knowledge.nextChunkIndexes();
+    size_t linearNextChunkIndex = xyToIndex(nextChunkIndexes.x, nextChunkIndexes.y, r_knowledge.world().size().x);
+    Chunk<T> &r_next = r_knowledge.primitiveChunkMap().at(linearNextChunkIndex);
+
+    //create a copy of the element from the old chunk and add it in the new chunk
+    const auto &chunkElement = r_home.objects.at(r_knowledge.indexInHomeChunk());
+    ptrdiff_t indexInNew = r_next.objects.toBeAdded(chunkElement);
+
+    return indexInNew;
 }
 
 template <class T>

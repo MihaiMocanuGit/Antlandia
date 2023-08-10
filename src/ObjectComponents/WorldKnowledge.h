@@ -78,7 +78,7 @@ public:
 
     sf::Vector2i nextChunkIndexes() const;
     ptrdiff_t indexInNextChunk() const;
-    bool willBeAddedInNextChunk() const;
+    bool existsInNewChunk() const;
 };
 
 template <class T>
@@ -108,7 +108,7 @@ void WorldKnowledge<T>::removeIndexInHomeChunk()
 }
 
 template <class T>
-bool WorldKnowledge<T>::willBeAddedInNextChunk() const
+bool WorldKnowledge<T>::existsInNewChunk() const
 {
     return m_nextChunkWasGiven;
 }
