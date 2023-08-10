@@ -71,26 +71,26 @@ Chunk<T>::Chunk(int x, int y, SpecializedVector<T> *ptrWorldObjects) : Chunk(sf:
 {
 
 }
-template <class T>
-void Chunk<T>::INIT_REMOVE_CHUNK(SpecializedVectorIndexPair<T> &elem, ptrdiff_t indexChunk)
-{
 
-}
 
 template <class T>
 void Chunk<T>::INIT_ADD_CHUNK(SpecializedVectorIndexPair<T> &elem, ptrdiff_t indexChunk)
 {
     WorldKnowledge<T> &r_knowledge = elem.ptrWorldObjects->at(elem.index).knowledge();
-    if (not r_knowledge.existsInNewChunk())
-        r_knowledge.giveIndexInNextChunk(indexChunk);
-    else
-        throw std::logic_error("Trying to insert elem in a new chunk but it already has the next chunk initialised");
+    assert(not r_knowledge.existsInNewChunk());
+    r_knowledge.giveIndexInNextChunk(indexChunk);
 }
+template <class T>
+void Chunk<T>::INIT_REMOVE_CHUNK(SpecializedVectorIndexPair<T> &elem, ptrdiff_t indexChunk)
+{
 
+}
 template <typename T>
 void Chunk<T>::INIT_FINALISE_CHUNK(SpecializedVectorIndexPair<T> &elem, ptrdiff_t indexChunk)
 {
     WorldKnowledge<T> &r_knowledge = elem.ptrWorldObjects->at(elem.index).knowledge();
+    r_knowledge.updateHomeChunkWithNext();
+    r_knowledge.giveIndexInHomeChunk(indexChunk);
 }
 
 template <typename T>
@@ -111,5 +111,5 @@ template <class T>
 void Chunk<T>::DESTRUCT_CHUNK(SpecializedVectorIndexPair<T> &elem, ptrdiff_t indexChunk)
 {
     WorldKnowledge<T> &r_knowledge = elem.ptrWorldObjects->at(elem.index).knowledge();
-
+    r_knowledge.removeHomeChunkInfo();
 }
