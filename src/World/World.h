@@ -95,11 +95,10 @@ public:
 template <class T>
 T World::m_createObject(const Body &body, SpecializedVector<T> &worldObjectVector, std::vector<Chunk<T>>& objectMap)
 {
-    WorldKnowledge<T> knowledge(this, &worldObjectVector, &objectMap);
-
     sf::Vector2i chunkIndex = m_map.computeChunkIndex(body.getPosition());
     assert(m_map.isValidIndex(chunkIndex.x, chunkIndex.y));
-    knowledge.giveHomeChunk(chunkIndex);
+
+    WorldKnowledge<T> knowledge(this, &worldObjectVector, &objectMap);
 
     return T{body, knowledge};
 }

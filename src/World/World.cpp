@@ -54,12 +54,28 @@ sf::Vector2u World::size() const
 
 Ant &World::prepareAnt(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)
 {
+    //create object
     Body body(position, size, mass, color);
     Ant ant = m_createObject<Ant>(body, m_ants, m_map.primitiveChunkMaps().antMap);
 
+    //insert into World Vector
+    ptrdiff_t indexInWorld = m_ants.toBeAdded(ant);
+    Ant &r_addedAnt = m_ants.at(indexInWorld);
+    assert(r_addedAnt.knowledge().indexInWorld() == indexInWorld);
 
+    //Give the chunk into which it will be inserted (as it cannot be done with the custom specialized vector functions)
+    sf::Vector2i nextChunkIndexes = m_map.computeChunkIndex(body.getPosition());
+    r_addedAnt.knowledge().giveNextChunk(nextChunkIndexes);
 
-    return ant;
+    //Mark for insert the object into the chunk;
+    WorldKnowledge<Ant> &r_knowledge = r_addedAnt.knowledge();
+    size_t linearNextChunkIndex = xyToIndex(nextChunkIndexes.x, nextChunkIndexes.y, r_knowledge.world().size().x);
+
+    Chunk<Ant> &r_nextChunk = r_knowledge.primitiveChunkMap().at(linearNextChunkIndex);
+    SpecializedVectorIndexPair<Ant> chunkElem{r_knowledge.pWorldObjectVector(), indexInWorld};
+    r_nextChunk.objects.toBeAdded(chunkElem);
+
+    return r_addedAnt;
 }
 
 Pheromone &World::preparePheromone(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)
