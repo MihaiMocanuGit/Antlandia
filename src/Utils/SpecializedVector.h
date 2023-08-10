@@ -52,7 +52,7 @@ public:
     const T& operator[](size_t index) const;
 
     /// \brief Gets an element from the vector. If the given index is negative, then it will access the elements that
-    /// were marked for insertion. The indexing for these elements start at -1
+    /// were marked for insertion. The indexing for these elements starts at -1
     /// \param index The index of the element you want to access, can be negative
     /// \return Reference to the given object
     /// \note Bounds are checked
@@ -60,14 +60,15 @@ public:
     T& at(ptrdiff_t index);
     const T& at(ptrdiff_t index) const;
 
-    /// \brief Gets the size of the section of already added elements.
+    /// \brief Gets the size of the section of already current elements. The ones marked for removal are counted but
+    /// the ones that will be inserted are not
     /// \return The no of elements.
     inline size_t size() const;
 
     /// \brief Gets an element from the temporal buffer used for adding elements
     /// \param index The index of the element in the add buffer, it must be negative and indexing starts at -1
     /// \return Reference to the element
-    /// \note All references will be invalidated after a call to addAll();
+    /// \note All references will be invalidated after a call to finishChanges();
     /// \note Bounds are checked.
     /// \throws std::out_of_range if out of bounds
     T& atAddBuffer(ptrdiff_t index);
@@ -81,7 +82,7 @@ template <typename T>
 SpecializedVector<T>::SpecializedVector(InitToBeAddedFct_t<T> initAdd, InitToBeRemovedFct_t<T> initRemove,
                                         InitForFinaliseFct_t<T> initFinal, SwapFct_t<T> swap, DestructFct_t<T> destruct,
                                         size_t reserve)
-        : m_initAdd{initAdd}, m_initRemove{initFinal}, m_initFinal{initFinal}, m_swap{swap}, m_destruct{destruct}
+        : m_initAdd{initAdd}, m_initRemove{initRemove}, m_initFinal{initFinal}, m_swap{swap}, m_destruct{destruct}
 {
     m_data.reserve(reserve);
     m_addBuffer.reserve(reserve/2);
