@@ -22,13 +22,13 @@ public:
     explicit ObjectMover(ChunkMap &r_chunkMap);
 
     void moveTo(GenericObject<T> &object, const sf::Vector2f &newPosition);
-    void moveBy(GenericObject<T> &object, const sf::Vector2f &newPosition);
+    void moveBy(GenericObject<T> &object, const sf::Vector2f &moveByOffset);
 };
 
 template <class T>
-void ObjectMover<T>::moveBy(GenericObject<T> &object, const sf::Vector2f &newPosition)
+void ObjectMover<T>::moveBy(GenericObject<T> &object, const sf::Vector2f &moveByOffset)
 {
-    moveTo(object, object.body().getPosition() + newPosition);
+    moveTo(object, object.body().getPosition() + moveByOffset);
 }
 
 template <class T>
@@ -54,7 +54,7 @@ ptrdiff_t ObjectMover<T>::m_moveIntoChunk(GenericObject<T> &object, const sf::Ve
     WorldKnowledge<T> &r_knowledge = object.knowledge();
     r_knowledge.giveNextChunk(newChunk);
 
-    assert(r_knowledge.willApearInHomeChunk());
+    assert(r_knowledge.willAppearInHomeChunk());
     //Getting the homeChunk
     const sf::Vector2i &homeChunkIndexes = r_knowledge.homeChunkIndexes();
     size_t linearHomeChunkIndex = xyToIndex(homeChunkIndexes.x, homeChunkIndexes.y, r_knowledge.world().size().x);

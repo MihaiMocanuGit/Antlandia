@@ -22,7 +22,7 @@ private:
     World *m_pWorld = nullptr;
     SpecializedVector<T> *m_pWorldObjectVector = nullptr;
 
-    bool m_worldIndexWasGiven = false;
+    bool m_indexInWorldWasGiven = false;
     ptrdiff_t m_indexInWorld = PTRDIFF_MAX;
 
     PrimitiveChunkMap_t<T> *m_pPrimitiveChunkMap = nullptr;
@@ -74,7 +74,7 @@ public:
     PrimitiveChunkMap_t<T> & primitiveChunkMap();
     sf::Vector2i homeChunkIndexes() const;
     ptrdiff_t indexInHomeChunk() const;
-    bool willApearInHomeChunk() const;
+    bool willAppearInHomeChunk() const;
 
     sf::Vector2i nextChunkIndexes() const;
     ptrdiff_t indexInNextChunk() const;
@@ -160,7 +160,7 @@ void WorldKnowledge<T>::removeHomeChunkInfo()
 template <class T>
 void WorldKnowledge<T>::removeWorldInfo()
 {
-    m_worldIndexWasGiven = false;
+    m_indexInWorldWasGiven = false;
     m_indexInWorld = PTRDIFF_MAX;
 }
 
@@ -171,7 +171,7 @@ SpecializedVector<T> *WorldKnowledge<T>::pWorldObjectVector()
 }
 
 template <class T>
-bool WorldKnowledge<T>::willApearInHomeChunk() const
+bool WorldKnowledge<T>::willAppearInHomeChunk() const
 {
     return m_indexInHomeChunkWasGiven;
 }
@@ -222,7 +222,7 @@ void WorldKnowledge<T>::giveIndexInWorld(const ptrdiff_t &indexInWorldVector)
     //TODO: assert index validity
     m_indexInWorld = indexInWorldVector;
 
-    m_worldIndexWasGiven = true;
+    m_indexInWorldWasGiven = true;
 }
 
 template <class T>

@@ -65,7 +65,7 @@ public:
     void moveTo(GenericObject<T> &object, const sf::Vector2f &newPosition);
 
     template <class T>
-    void moveBy(GenericObject<T> &object, const sf::Vector2f &newPosition);
+    void moveBy(GenericObject<T> &object, const sf::Vector2f &moveByOffset);
 
 
     SpecializedVector<Ant>& ants();
@@ -111,7 +111,7 @@ void World::INIT_ADD_WORLD(T &elem, ptrdiff_t indexWorld)
     r_knowledge.giveIndexInWorld(indexWorld);
 
     //at this point the element should not exist in a chunk
-    assert(not r_knowledge.willApearInHomeChunk());
+    assert(not r_knowledge.willAppearInHomeChunk());
     assert(not r_knowledge.willAppearInNewChunk());
 }
 
@@ -127,7 +127,7 @@ void World::INIT_FINALISE_WORLD(T &elem, ptrdiff_t indexWorld)
     WorldKnowledge<T> &r_knowledge = elem.knowledge();
     r_knowledge.giveIndexInWorld(indexWorld);
 
-    if (r_knowledge.willApearInHomeChunk())
+    if (r_knowledge.willAppearInHomeChunk())
         m_syncHomeChunkVectorInfoWithWorld(elem, indexWorld);
     if (r_knowledge.willAppearInNewChunk())
         m_syncNextChunkVectorInfoWithWorld(elem, indexWorld);
@@ -144,14 +144,14 @@ void World::SWAP_WORLD(T &elem1, ptrdiff_t atIndex1, T &elem2, ptrdiff_t atIndex
     //is changed, we need to update the chunk vector too.
     WorldKnowledge<T> &r_knowledge1 = elem1.knowledge();
     r_knowledge1.giveIndexInWorld(atIndex1);
-    if (r_knowledge1.willApearInHomeChunk())
+    if (r_knowledge1.willAppearInHomeChunk())
         m_syncHomeChunkVectorInfoWithWorld(elem1, atIndex1);
     if (r_knowledge1.willAppearInNewChunk())
         m_syncNextChunkVectorInfoWithWorld(elem1, atIndex1);
 
     WorldKnowledge<T> &r_knowledge2 = elem2.knowledge();
     r_knowledge2.giveIndexInWorld(atIndex2);
-    if (r_knowledge2.willApearInHomeChunk())
+    if (r_knowledge2.willAppearInHomeChunk())
         m_syncHomeChunkVectorInfoWithWorld(elem2, atIndex2);
     if (r_knowledge2.willAppearInNewChunk())
         m_syncNextChunkVectorInfoWithWorld(elem2, atIndex2);
@@ -169,17 +169,17 @@ void World::DESTRUCT_WORLD(T &elem, ptrdiff_t indexWorld)
 
 
 template <class T>
-void World::moveBy(GenericObject<T> &object, const sf::Vector2f &newPosition)
+void World::moveBy(GenericObject<T> &object, const sf::Vector2f &moveByOffset)
 {
-    assert (object.knowledge().willApearInHomeChunk());
+    assert (object.knowledge().willAppearInHomeChunk());
     ObjectMover<T> mover(m_map);
-    mover.moveBy(object, newPosition);
+    mover.moveBy(object, moveByOffset);
 }
 
 template <class T>
 void World::moveTo(GenericObject<T> &object, const sf::Vector2f &newPosition)
 {
-    assert (object.knowledge().willApearInHomeChunk());
+    assert (object.knowledge().willAppearInHomeChunk());
     ObjectMover<T> mover(m_map);
     mover.moveTo(object, newPosition);
 }
