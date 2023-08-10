@@ -57,16 +57,9 @@ Ant &World::prepareAnt(sf::Vector2f position, float size, float mass, const sf::
     Body body(position, size, mass, color);
     Ant ant = m_createObject<Ant>(body, m_ants, m_map.primitiveChunkMaps().antMap);
 
-    ptrdiff_t index = m_ants.toBeAdded(ant);
 
-    Ant &refReturn = m_ants.atAddBuffer(index);
-    //refReturn.knowledge().giveIndexInWorld(index);
 
-    sf::Vector2i homeIndex = refReturn.knowledge().homeChunkIndexes();
-    auto & chunkObjects = m_map.at(homeIndex).ref_antChunk.objects;
-    chunkObjects.toBeAdded(SpecializedVectorIndexPair<Ant>{&m_ants, index});
-
-    return refReturn;
+    return ant;
 }
 
 Pheromone &World::preparePheromone(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)

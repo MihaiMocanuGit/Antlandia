@@ -110,7 +110,7 @@ template <typename T>
 void World::INIT_ADD_WORLD(T &elem, ptrdiff_t indexWorld)
 {
     WorldKnowledge<T> &r_knowledge = elem.knowledge();
-    r_knowledge.giveIndexInWorld(indexWorld);
+
 }
 
 template <typename T>
@@ -123,10 +123,7 @@ template <typename T>
 void World::INIT_FINALISE_WORLD(T &elem, ptrdiff_t indexWorld)
 {
     WorldKnowledge<T> &r_knowledge = elem.knowledge();
-    if (r_knowledge.existsInHomeChunk())
-        m_syncWorldWithHomeChunkVectorInfo(elem, indexWorld);
-    if (r_knowledge.willBeAddedInNextChunk())
-        m_syncWorldWithNextChunkVectorInfo(elem, indexWorld);
+
 
     r_knowledge.giveIndexInWorld(indexWorld);
 }
@@ -141,17 +138,11 @@ void World::SWAP_WORLD(T &elem1, ptrdiff_t atIndex1, T &elem2, ptrdiff_t atIndex
     //in the World vector. As such, if the position of an element in the world vector
     //is changed, we need to update the chunk vector too.
     WorldKnowledge<T> &r_knowledge1 = elem1.knowledge();
-    if (r_knowledge1.existsInHomeChunk())
-        m_syncWorldWithHomeChunkVectorInfo(elem1, atIndex1);
-    if (r_knowledge1.willBeAddedInNextChunk())
-        m_syncWorldWithNextChunkVectorInfo(elem1, atIndex1);
+    //TODO: Sync with chunk
     r_knowledge1.giveIndexInWorld(atIndex1);
 
     WorldKnowledge<T> &r_knowledge2 = elem2.knowledge();
-    if (r_knowledge2.existsInHomeChunk())
-        m_syncWorldWithHomeChunkVectorInfo(elem2, atIndex2);
-    if (r_knowledge2.willBeAddedInNextChunk())
-        m_syncWorldWithNextChunkVectorInfo(elem2, atIndex2);
+
     r_knowledge2.giveIndexInWorld(atIndex2);
 
 
@@ -161,9 +152,7 @@ template <typename T>
 void World::DESTRUCT_WORLD(T &elem, ptrdiff_t indexWorld)
 {
     WorldKnowledge<T> &r_knowledge = elem.knowledge();
-    r_knowledge.removeHomeChunkInfo();
-    r_knowledge.removeNextChunkInfo();
-    r_knowledge.removeWorldInfo();
+
 }
 
 

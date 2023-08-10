@@ -51,25 +51,7 @@ void ObjectMover<T>::moveTo(GenericObject<T> &object, const sf::Vector2f &newPos
 template <class T>
 ptrdiff_t ObjectMover<T>::m_moveIntoChunk(GenericObject<T> &object, const sf::Vector2i &newChunk)
 {
-    //TODO: Rework this whole part, also note that knowledge() does not yet know the newChunkIndexes
-    //getting the needed data
-    WorldKnowledge<T> &r_knowledge = object.knowledge();
-    sf::Vector2i homeChunkXY = r_knowledge.homeChunkIndexes();
-    size_t oldChunkIndex = xyToIndex(homeChunkXY.x, homeChunkXY.y, m_r_chunkMap.size().x);
-    Chunk<T> &r_oldChunk = r_knowledge.primitiveChunkMap().at(oldChunkIndex);
-
-    //marking the object to be removed from the old chunk
-    //we also make a debug assert that the object does physically exist in its home chunk
-    ptrdiff_t indexInOldChunk = r_knowledge.indexInHomeChunk();
-    assert(indexInOldChunk >= 0);
-    r_oldChunk.objects.toBeRemoved((size_t)indexInOldChunk);
-
-
-    //marking the object to be added in the new chunk
-    size_t newChunkIndex = xyToIndex(newChunk.x, newChunk.y, m_r_chunkMap.size().x);
-    Chunk<T> &r_newChunk = r_knowledge.primitiveChunkMap().at(newChunkIndex);
-    SpecializedVectorIndexPair<T> pairElement = {r_knowledge.pWorldObjectVector(), r_knowledge.indexInWorld()};
-    return r_newChunk.objects.toBeAdded(std::move(pairElement));
+    return -1;
 }
 
 template <class T>
