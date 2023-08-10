@@ -36,7 +36,7 @@ public:
                       size_t reserve = 128);
     ptrdiff_t toBeAdded(T &&element);
 
-    ptrdiff_t toBeAdded(T &element);
+    ptrdiff_t toBeAdded(const T &element);
 
     //TODO: Maybe add separate option to just remove or just add
     void finishChanges();
@@ -91,7 +91,7 @@ SpecializedVector<T>::SpecializedVector(InitToBeAddedFct_t<T> initAdd, InitToBeR
 
 
 template <typename T>
-ptrdiff_t SpecializedVector<T>::toBeAdded(T &element)
+ptrdiff_t SpecializedVector<T>::toBeAdded(const T &element)
 {
     m_addBuffer.push_back(element);
 
