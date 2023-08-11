@@ -58,6 +58,7 @@ void m_prepareNextState(World &world, const sf::Vector2i &chunkIndex, sf::Render
     {
         Ant &r_ant = r_chunkAnt.objects.at(i).ptrWorldObjects->at(r_chunkAnt.objects.at(i).index);
         world.moveBy(r_ant.genericObject(), direction);
+        assert((r_ant.knowledge().homeChunkIndexes() != sf::Vector2i{-1, -1}));
     }
 }
 void m_updateState(World &world, sf::RenderWindow &window)

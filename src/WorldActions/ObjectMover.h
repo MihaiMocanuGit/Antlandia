@@ -34,6 +34,10 @@ void ObjectMover<T>::moveBy(GenericObject<T> &object, const sf::Vector2f &moveBy
 template <class T>
 void ObjectMover<T>::moveTo(GenericObject<T> &object, const sf::Vector2f &newPosition)
 {
+    //if we would go outside the bounds, do not move the objectdddddddd
+    if (m_r_chunkMap.isPositionOutsideBounds(newPosition))
+        return;
+
     sf::Vector2f oldPosition = object.body().getPosition();
     //TODO: Assert that the new position is valid
     // If not, maybe clamp the position inside world borders?

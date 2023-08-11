@@ -19,7 +19,8 @@ private:
 
     /// \brief additional vector where we temporally store the indexes of elements that will later be removed
     std::vector<size_t > m_removeBuffer = {};
-
+    //TODO: !!!!!!!!When swapping elements in m_data, if one element was marked for deletion we do not update the index
+    // of the element to be deleted
 
     InitToBeAddedFct_t<T> m_initAdd;
     InitToBeRemovedFct_t<T> m_initRemove; //TODO: Perhaps we do not need to know the index

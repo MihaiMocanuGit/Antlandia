@@ -70,6 +70,7 @@ public:
 
     sf::Vector2i computeChunkIndex(const sf::Vector2f &position) const;
     bool spotsAreInSameChunk(const sf::Vector2f &position1, const sf::Vector2f &position2) const;
+    bool isPositionOutsideBounds(const sf::Vector2f &position) const;
     [[nodiscard]] sf::Vector2u size() const;
 };
 

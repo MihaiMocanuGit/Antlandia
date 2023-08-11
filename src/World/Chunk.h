@@ -103,7 +103,14 @@ void Chunk<T>::SWAP_CHUNK(SpecializedVectorIndexPair<T> &elem1, ptrdiff_t atInde
     WorldKnowledge<T> &r_knowledge1 = elem1.ptrWorldObjects->at(elem1.index).knowledge();
     WorldKnowledge<T> &r_knowledge2 = elem2.ptrWorldObjects->at(elem2.index).knowledge();
 
-    assert(r_knowledge1.homeChunkIndexes() == r_knowledge2.homeChunkIndexes());
+    // unfortunately this assert is not a valid one, consider the same exact case as described in DESTRUCT_CHUNk below:
+    // Copied from DESTRUCT_CHUNK:
+    //On the current design, we cannot remove the chunk info because it will break the logic:
+    // Consider that we moved an object from chunk no 4 to chunk no 3. This entails that we marked the object
+    //for removal in chunk no 4 and inserted it in the add buffer of chunk no. 3
+    //If we update the state of chunk no 3 first, when we update chunk 4 too it will erase the information needed later
+    //in chunk 3
+    //assert(r_knowledge1.homeChunkIndexes() == r_knowledge2.homeChunkIndexes());
     r_knowledge1.giveIndexInHomeChunk(atIndex1);
     r_knowledge2.giveIndexInHomeChunk(atIndex2);
 }
@@ -116,8 +123,8 @@ void Chunk<T>::DESTRUCT_CHUNK(SpecializedVectorIndexPair<T> &elem, ptrdiff_t ind
     //On the current design, we cannot remove the chunk info because it will break the logic:
     // Consider that we moved an object from chunk no 4 to chunk no 3. This entails that we marked the object
     //for removal in chunk no 4 and inserted it in the add buffer of chunk no. 3
-    //If we update the state of chunk no 3 first, when we update chunk 4 too it will erase the information needed in
-    //chunk 3
+    //If we update the state of chunk no 3 first, when we update chunk 4 too it will erase the information needed later
+    //in chunk 3
     //r_knowledge.removeHomeChunkInfo();
 
 }
