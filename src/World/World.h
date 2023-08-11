@@ -17,6 +17,9 @@ private:
     T m_createObject(const Body& body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T>& objectMap);
 
     template <class T>
+    T& m_prepareObject(const Body& body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T>& objectMap);
+
+    template <class T>
     static void m_syncHomeChunkVectorInfoWithWorld(T& elem, size_t newIndex)
     {
         WorldKnowledge<T> &r_knowledge = elem.knowledge();
@@ -101,6 +104,30 @@ T World::m_createObject(const Body &body, SpecializedVector<T> &worldObjectVecto
     WorldKnowledge<T> knowledge(this, &worldObjectVector, &objectMap);
 
     return T{body, knowledge};
+}
+template <class T>
+T& World::m_prepareObject(const Body &body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T> &objectMap)
+{
+    T object = m_createObject<T>(body, worldObjectVector, objectMap);
+
+    //insert into World Vector
+    ptrdiff_t indexInWorld = worldObjectVector.toBeAdded(object);
+    T &r_addedObject = worldObjectVector.at(indexInWorld);
+    assert(r_addedObject.knowledge().indexInWorld() == indexInWorld);
+
+    //Give the chunk into which it will be inserted (as it cannot be done within the custom specialized vector functions)
+    sf::Vector2i nextChunkIndexes = m_map.computeChunkIndex(body.getPosition());
+    r_addedObject.knowledge().giveNextChunk(nextChunkIndexes);
+
+    //Mark for insertion the object into the chunk;
+    WorldKnowledge<T> &r_knowledge = r_addedObject.knowledge();
+    size_t linearNextChunkIndex = xyToIndex(nextChunkIndexes.x, nextChunkIndexes.y, r_knowledge.world().size().x);
+
+    Chunk<T> &r_nextChunk = objectMap.at(linearNextChunkIndex);
+    SpecializedVectorIndexPair<T> chunkElem{&worldObjectVector, indexInWorld};
+    r_nextChunk.objects.toBeAdded(chunkElem);
+
+    return r_addedObject;
 }
 
 
