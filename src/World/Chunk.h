@@ -112,5 +112,12 @@ template <class T>
 void Chunk<T>::DESTRUCT_CHUNK(SpecializedVectorIndexPair<T> &elem, ptrdiff_t indexChunk)
 {
     WorldKnowledge<T> &r_knowledge = elem.ptrWorldObjects->at(elem.index).knowledge();
-    r_knowledge.removeHomeChunkInfo();
+
+    //On the current design, we cannot remove the chunk info because it will break the logic:
+    // Consider that we moved an object from chunk no 4 to chunk no 3. This entails that we marked the object
+    //for removal in chunk no 4 and inserted it in the add buffer of chunk no. 3
+    //If we update the state of chunk no 3 first, when we update chunk 4 too it will erase the information needed in
+    //chunk 3
+    //r_knowledge.removeHomeChunkInfo();
+
 }
