@@ -69,8 +69,8 @@ bool ChunkMap::spotsAreInSameChunk(const sf::Vector2f &position1, const sf::Vect
 
 bool ChunkMap::isPositionOutsideBounds(const sf::Vector2f &position) const
 {
-    return position.x < 0 or position.x > (float)(m_size.x * Chunk<void>::CHUNK_SIZE_X)
-            or position.y < 0 or position.y > (float)(m_size.y * Chunk<void>::CHUNK_SIZE_Y);
+    return position.x < 0 or position.x >= (float)(m_size.x * Chunk<void>::CHUNK_SIZE_X)
+            or position.y < 0 or position.y >= (float)(m_size.y * Chunk<void>::CHUNK_SIZE_Y);
 }
 
 ChunksPaired::ChunksPaired(Chunk<Ant> &ref_antChunk, Chunk<Pheromone> &ref_pheromoneChunk,

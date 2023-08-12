@@ -33,16 +33,16 @@ void m_drawFood(const World &world, sf::RenderWindow &window)
 sf::Vector2f direction = {0, 0};
 void m_getInput(World &world, sf::RenderWindow &window)
 {
-    const sf::Vector2f FORWARD = {0, 1};
-    const sf::Vector2f BACKWARD = -FORWARD;
+    const sf::Vector2f UPWARDS = {0, -1};
+    const sf::Vector2f DOWNWARDS = -UPWARDS;
     const sf::Vector2f RIGHT = {1, 0};
     const sf::Vector2f LEFT = -RIGHT;
 
     sf::Vector2f result = {0, 0};
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-        result += FORWARD;
+        result += UPWARDS;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-        result += BACKWARD;
+        result += DOWNWARDS;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
         result += LEFT;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))

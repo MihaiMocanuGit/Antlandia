@@ -34,7 +34,7 @@ void ObjectMover<T>::moveBy(GenericObject<T> &object, const sf::Vector2f &moveBy
 template <class T>
 void ObjectMover<T>::moveTo(GenericObject<T> &object, const sf::Vector2f &newPosition)
 {
-    //if we would go outside the bounds, do not move the objectdddddddd
+    //if we would go outside the bounds, do not move the object
     if (m_r_chunkMap.isPositionOutsideBounds(newPosition))
         return;
 
