@@ -5,12 +5,8 @@
 
 /// \tparam T copy-constructable and copy-assignable element
 template <typename T>
-class SpecializedVectorIterator;
-
-template <typename T>
 class SpecializedVector
 {
-    friend SpecializedVectorIterator<T>;
 private:
     std::vector<T> m_data = {};
 
@@ -18,7 +14,7 @@ private:
     std::vector<T> m_addBuffer = {};
 
     /// \brief additional vector where we temporally store the indexes of elements that will later be removed
-    std::vector<size_t > m_removeBuffer = {};
+    ptrdiff_t m_startOfRemoveBuffer = 0;
     //TODO: !!!!!!!!When swapping elements in m_data, if one element was marked for deletion we do not update the index
     // of the element to be deleted
 
@@ -87,7 +83,6 @@ SpecializedVector<T>::SpecializedVector(InitToBeAddedFct_t<T> initAdd, InitToBeR
 {
     m_data.reserve(reserve);
     m_addBuffer.reserve(reserve/2);
-    m_removeBuffer.reserve(reserve/2);
 }
 
 
@@ -112,9 +107,16 @@ T &SpecializedVector<T>::toBeRemoved(std::size_t index)
 {
     if (index >= m_data.size())
         throw std::out_of_range("Invalid index, check bounds!");
+    //if the given element was not already marked for removal
+    if (index < m_startOfRemoveBuffer)
+    {
+        //we move the element to the back of the vector, right before the first element that needs to be removed;
+        m_startOfRemoveBuffer--;
+        m_swap(m_data[index], index, m_data[m_startOfRemoveBuffer], m_startOfRemoveBuffer);
 
-    m_removeBuffer.push_back(index);
-    m_initRemove(m_data[index], index);
+        m_initRemove(m_data[index], index);
+    }
+
     return m_data[index];
 }
 
@@ -123,13 +125,18 @@ void SpecializedVector<T>::finishChanges()
 {
 
     size_t i;
+
+    //TODO: can size be negative?
+    ptrdiff_t sizeRemoveBuffer = m_data.size() - m_startOfRemoveBuffer;
     //we fill the spaces marked for deletion with elements that are marked for insertion
-    for ( i = 0; i < m_addBuffer.size() and i < m_removeBuffer.size(); ++i)
+    for ( i = 0; i < m_addBuffer.size() and i < sizeRemoveBuffer; ++i)
     {
-        int index = m_removeBuffer[i];
-        m_destruct(m_data[index], index);
-        m_data[index] = m_addBuffer[i];
-        m_initFinal(m_data[index], index);
+        int indexRemove = m_startOfRemoveBuffer;
+        m_destruct(m_data[indexRemove], indexRemove);
+        m_startOfRemoveBuffer++;
+
+        m_data[indexRemove] = m_addBuffer[i];
+        m_initFinal(m_data[indexRemove], indexRemove);
     }
 
     //TODO: Check if the result is correct (off by one errors)
@@ -139,25 +146,24 @@ void SpecializedVector<T>::finishChanges()
     //if we have more elements that need to be added than removed, add them to the back of the data vector
     for (; i < m_addBuffer.size(); ++i)
     {
-           m_data.push_back(m_addBuffer[i]);
-           m_initFinal(m_data.back(), m_data.size() - 1);
+        //we know that there are no more elements in the remove region situated at the back of the data
+        m_data.push_back(m_addBuffer[i]);
+        m_startOfRemoveBuffer++;
+        m_initFinal(m_data.back(), m_data.size() - 1);
     }
 
-    //else, if we need to remove more elements than we have to add, move the remaining elements that must be deleted
-    // to the back of the vector and pop them out
-    for (; i < m_removeBuffer.size(); ++i)
+    //else, if we need to remove more elements than we have to add, pop all of them out as they are already
+    //at the back of the vector
+    for (; i < sizeRemoveBuffer; ++i)
     {
-        int index = m_removeBuffer[i];
-        m_swap(m_data[index], index, m_data.back(), m_data.size() - 1);
         m_destruct(m_data.back(), m_data.size() - 1);
 
         m_data.pop_back();
     }
 
-    //TODO: we could shrink the buffers as we take elements from them in the previous steps, although it would be a bit
+    //TODO: we could shrink the add buffer as we take elements from them in the previous steps, although it would be a bit
     // more tedious to write the conditional branches
     m_addBuffer.clear();
-    m_removeBuffer.clear();
 }
 
 
@@ -222,7 +228,7 @@ size_t SpecializedVector<T>::sizeAddBuffer() const
 template <typename T>
 size_t SpecializedVector<T>::sizeRemoveBuffer() const
 {
-    return m_removeBuffer.size();
+    return m_data.size() - m_startOfRemoveBuffer + 1;
 }
 
 
