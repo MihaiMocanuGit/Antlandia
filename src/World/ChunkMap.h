@@ -31,8 +31,12 @@ struct PrimitiveChunkMaps
 struct SpecializedVectorAllTypes
 {
     SpecializedVector<Ant> &ref_worldAnts;
-    SpecializedVector<Food> &ref_worldFoods;
+    SpecializedVector<Food> &ref_worldFood;
     SpecializedVector<Pheromone> &ref_worldPheromones;
+
+    SpecializedVectorAllTypes(SpecializedVector<Ant> &r_worldAnts, SpecializedVector<Food> & r_worldFood, SpecializedVector<Pheromone> & r_worldPheromones)
+        : ref_worldAnts{r_worldAnts}, ref_worldFood{r_worldFood}, ref_worldPheromones{r_worldPheromones}
+    {}
 };
 
 class ChunkMap
