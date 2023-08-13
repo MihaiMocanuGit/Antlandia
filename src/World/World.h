@@ -199,7 +199,7 @@ template <class T>
 void World::moveBy(GenericObject<T> &object, const sf::Vector2f &moveByOffset)
 {
     assert (object.knowledge().willAppearInHomeChunk());
-    ObjectMover<T> mover(m_map);
+    static ObjectMover<T> mover(m_map);
     mover.moveBy(object, moveByOffset);
 }
 
@@ -207,7 +207,7 @@ template <class T>
 void World::moveTo(GenericObject<T> &object, const sf::Vector2f &newPosition)
 {
     assert (object.knowledge().willAppearInHomeChunk());
-    ObjectMover<T> mover(m_map);
+    static ObjectMover<T> mover(m_map);
     mover.moveTo(object, newPosition);
 }
 
