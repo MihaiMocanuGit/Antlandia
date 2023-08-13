@@ -42,9 +42,9 @@ sf::Vector2i ChunkMap::computeChunkIndex(const sf::Vector2f &position) const
 
 void ChunkMap::m_initMaps(SpecializedVectorAllTypes &allWorldObjects)
 {
-    m_initChunks(m_primitiveMaps.antMap, allWorldObjects.ref_worldAnts);
-    m_initChunks(m_primitiveMaps.pheromoneMap,  allWorldObjects.ref_worldPheromones);
-    m_initChunks(m_primitiveMaps.foodMap,  allWorldObjects.ref_worldFood);
+    m_initChunks(m_primitiveMaps.antMap, allWorldObjects.r_worldAnts);
+    m_initChunks(m_primitiveMaps.pheromoneMap,  allWorldObjects.r_worldPheromones);
+    m_initChunks(m_primitiveMaps.foodMap,  allWorldObjects.r_worldFood);
 }
 
 PrimitiveChunkMaps &ChunkMap::primitiveChunkMaps()
