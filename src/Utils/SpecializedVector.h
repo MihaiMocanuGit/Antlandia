@@ -13,17 +13,14 @@ private:
     /// \brief additional vector where we temporally store the elements that will later be added
     std::vector<T> m_addBuffer = {};
 
-    /// \brief additional vector where we temporally store the indexes of elements that will later be removed
-    ptrdiff_t m_startOfRemoveBuffer = 0;
-    //TODO: !!!!!!!!When swapping elements in m_data, if one element was marked for deletion we do not update the index
-    // of the element to be deleted
+    size_t m_startOfRemoveBuffer = 0;
 
     InitToBeAddedFct_t<T> m_initAdd;
-    InitToBeRemovedFct_t<T> m_initRemove; //TODO: Perhaps we do not need to know the index
+    InitToBeRemovedFct_t<T> m_initRemove;
 
     InitForFinaliseFct_t<T> m_initFinal;
     SwapFct_t<T> m_swap;
-    DestructFct_t<T> m_destruct; //TODO: Perhaps we do not need to know the index
+    DestructFct_t<T> m_destruct;
 
 
 public:
@@ -127,7 +124,7 @@ void SpecializedVector<T>::finishChanges()
     size_t i;
 
     //TODO: can size be negative?
-    ptrdiff_t sizeRemoveBuffer = m_data.size() - m_startOfRemoveBuffer;
+    size_t sizeRemoveBuffer = m_data.size() - m_startOfRemoveBuffer;
     //we fill the spaces marked for deletion with elements that are marked for insertion
     for ( i = 0; i < m_addBuffer.size() and i < sizeRemoveBuffer; ++i)
     {
@@ -139,7 +136,6 @@ void SpecializedVector<T>::finishChanges()
         m_initFinal(m_data[indexRemove], indexRemove);
     }
 
-    //TODO: Check if the result is correct (off by one errors)
     int noNewElements = m_addBuffer.size() - i;
     m_data.reserve(m_data.size() + noNewElements);
 
@@ -161,7 +157,7 @@ void SpecializedVector<T>::finishChanges()
         m_data.pop_back();
     }
 
-    //TODO: we could shrink the add buffer as we take elements from them in the previous steps, although it would be a bit
+    // we could shrink the add buffer as we move the elements in the previous steps, although it would be a bit
     // more tedious to write the conditional branches
     m_addBuffer.clear();
 }
@@ -188,10 +184,10 @@ T &SpecializedVector<T>::at(ptrdiff_t index)
     //positive index starting from 0 with correct bound
     if (0 <= index and (size_t)index < m_data.size())
         return m_data[index];
-        //negative index starting from 1 with correct bound
+    //negative index starting from 1 with correct bound
     else if (-1 * (ptrdiff_t)m_addBuffer.size() <= index and index < 0)
         return  m_addBuffer[-1 * index - 1];
-        // we got an invalid index
+    // we got an invalid index
     else
         throw std::out_of_range("Invalid index, check bounds!");
 }
@@ -228,7 +224,7 @@ size_t SpecializedVector<T>::sizeAddBuffer() const
 template <typename T>
 size_t SpecializedVector<T>::sizeRemoveBuffer() const
 {
-    return m_data.size() - m_startOfRemoveBuffer + 1;
+    return m_data.size() - m_startOfRemoveBuffer;
 }
 
 
