@@ -17,7 +17,7 @@ private:
     T m_createObject(const Body& body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T>& objectMap);
 
     template <class T>
-    T& m_prepareObject(const Body& body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T>& objectMap);
+    T& m_prepareObjectIntoWorld(const T& object, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T> &objectMap);
 
     template <class T>
     static void m_syncHomeChunkVectorInfoWithWorld(T& elem, size_t newIndex)
@@ -82,6 +82,12 @@ public:
 
     [[nodiscard]] sf::Vector2u size() const;
 
+    template <class T>
+    T& prepareObject(const Body& body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T>& objectMap);
+
+    template <class T>
+    T& prepareObject(const T& body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T>& objectMap);
+
     Ant& prepareAnt(sf::Vector2f position, float size = 2, float mass = 1,
                     const sf::Vector3<unsigned char> &color = {0, 0, 0});
     Pheromone& preparePheromone(sf::Vector2f position, float size = 1, float mass = 1,
@@ -106,10 +112,9 @@ T World::m_createObject(const Body &body, SpecializedVector<T> &worldObjectVecto
     return T{body, knowledge};
 }
 template <class T>
-T& World::m_prepareObject(const Body &body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T> &objectMap)
+T &World::m_prepareObjectIntoWorld(const T &object, SpecializedVector<T> &worldObjectVector,
+                                   PrimitiveChunkMap_t<T> &objectMap)
 {
-    T object = m_createObject<T>(body, worldObjectVector, objectMap);
-
     //insert into World Vector
     ptrdiff_t indexInWorld = worldObjectVector.toBeAdded(object);
     T &r_addedObject = worldObjectVector.at(indexInWorld);
@@ -128,6 +133,21 @@ T& World::m_prepareObject(const Body &body, SpecializedVector<T> &worldObjectVec
     r_nextChunk.objects.toBeAdded(chunkElem);
 
     return r_addedObject;
+}
+
+
+template <class T>
+T& World::prepareObject(const Body &body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T> &objectMap)
+{
+    T object = m_createObject<T>(body, worldObjectVector, objectMap);
+
+    return m_prepareObjectIntoWorld(object, worldObjectVector, objectMap);
+}
+
+template <class T>
+T &World::prepareObject(const T &body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T> &objectMap)
+{
+    return m_prepareObjectIntoWorld(body, worldObjectVector, objectMap);
 }
 
 

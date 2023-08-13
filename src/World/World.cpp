@@ -55,19 +55,18 @@ sf::Vector2u World::size() const
 Ant &World::prepareAnt(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)
 {
     Body body(position, size, mass, color);
-    return m_prepareObject(body, m_ants, m_map.primitiveChunkMaps().antMap);
+    return prepareObject(body, m_ants, m_map.primitiveChunkMaps().antMap);
 }
 
 Pheromone &World::preparePheromone(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)
 {
     Body body(position, size, mass, color);
-    return m_prepareObject(body, m_pheromones, m_map.primitiveChunkMaps().pheromoneMap);
+    return prepareObject(body, m_pheromones, m_map.primitiveChunkMaps().pheromoneMap);
 }
 
 Food &World::prepareFood(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)
 {
     Body body(position, size, mass, color);
-    return m_prepareObject(body, m_food, m_map.primitiveChunkMaps().foodMap);
+    return prepareObject(body, m_food, m_map.primitiveChunkMaps().foodMap);
 }
-
 
