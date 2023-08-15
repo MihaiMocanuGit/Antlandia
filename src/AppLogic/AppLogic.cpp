@@ -2,6 +2,8 @@
 
 #include "../Utils/Utils.h"
 
+static constexpr unsigned MOD = 15;
+static unsigned frameMod = 0;
 void m_closeWindowIfEvent(sf::RenderWindow &window)
 {
     sf::Event event;
@@ -57,6 +59,8 @@ void m_prepareNextState(World &world, const sf::Vector2i &chunkIndex, sf::Render
     for (size_t i = r_chunkAnt.objects.size() - 1; i < r_chunkAnt.objects.size() ; --i)
     {
         Ant &r_ant = r_chunkAnt.objects.at(i).ptrWorldObjects->at(r_chunkAnt.objects.at(i).index);
+        if (frameMod == 0)
+            world.makeAntLeavePheromone(r_ant, Pheromone::DEFAULT_PHEROMONE_BODY);
         world.moveBy(r_ant.genericObject(), direction);
         assert((r_ant.knowledge().homeChunkIndexes() != sf::Vector2i{-1, -1}));
     }
@@ -113,7 +117,9 @@ void startGameLoop(World& world)
         m_updateState(world, window);
         m_refreshScreen(world, window);
 
-
+        frameMod++;
+        if (frameMod >= MOD)
+            frameMod = 0;
     }
     window.close();
 }

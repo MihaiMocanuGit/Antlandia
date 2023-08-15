@@ -112,3 +112,10 @@ Pheromone &World::makeAntLeavePheromone(const Ant &ant, const Pheromone &pheromo
     return preparePheromone(pheromoneMovedIntoAnt);
 }
 
+Pheromone &World::makeAntLeavePheromone(const Ant &ant, const Body &pheromoneBody)
+{
+    Body pheromoneBodyMovedIntoAnt = pheromoneBody;
+    pheromoneBodyMovedIntoAnt.setPosition(ant.body().getPosition());
+    return preparePheromone(pheromoneBodyMovedIntoAnt);
+}
+

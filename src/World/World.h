@@ -78,6 +78,7 @@ public:
     ///Ant Behavior
 
     Pheromone& makeAntLeavePheromone(const Ant &ant, const Pheromone &pheromone);
+    Pheromone& makeAntLeavePheromone(const Ant &ant, const Body &pheromoneBody);
 
 };
 
