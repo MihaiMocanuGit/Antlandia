@@ -38,21 +38,39 @@ void ObjectMover::moveBy(GenericObject<T> &object, const sf::Vector2f &moveByOff
 template <class T>
 void ObjectMover::moveTo(GenericObject<T> &object, const sf::Vector2f &newPosition)
 {
-    //if we would go outside the bounds, do not move the object
+    sf::Vector2f newProjectedPosition = newPosition;
+    //if we would go outside the bounds, we see on which direction we are bounded.
+    //So we will not move the object towards the bounded direction, but let the object move
+    //in the unbounded direction
+    //TODO: We might need to generalize it to arbitrary bounds, we might have different types of shapes, inside
+    // the play area too. In that case either do nothing or calculate the intersection point somehow
     if (m_r_chunkMap.isPositionOutsideBounds(newPosition))
-        return;
+    {
+        const sf::Vector2f direction = newPosition - object.body().getPosition();
+        const sf::Vector2f componentOX = {direction.x, 0.0f};
+        const sf::Vector2f componentOY = {0.0f , direction.y};
+
+        sf::Vector2f projectedPositionOX = object.body().getPosition() + componentOX;
+        sf::Vector2f projectedPositionOY = object.body().getPosition() + componentOY;
+        if (not m_r_chunkMap.isPositionOutsideBounds(projectedPositionOX))
+            newProjectedPosition = projectedPositionOX;
+        else if(not m_r_chunkMap.isPositionOutsideBounds(projectedPositionOY))
+            newProjectedPosition = projectedPositionOY;
+        else
+            return;
+    }
 
     sf::Vector2f oldPosition = object.body().getPosition();
     //TODO: Assert that the new position is valid
     // If not, maybe clamp the position inside world borders?
 
-    if (not m_r_chunkMap.spotsAreInSameChunk(oldPosition, newPosition))
+    if (not m_r_chunkMap.spotsAreInSameChunk(oldPosition, newProjectedPosition))
     {
-        sf::Vector2i newChunkIndex = m_r_chunkMap.computeChunkIndex(newPosition);
+        sf::Vector2i newChunkIndex = m_r_chunkMap.computeChunkIndex(newProjectedPosition);
         m_moveIntoChunk(object, newChunkIndex);
     }
 
-    object.body().setPosition(newPosition);
+    object.body().setPosition(newProjectedPosition);
 }
 
 
