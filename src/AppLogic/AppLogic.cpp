@@ -52,8 +52,7 @@ void m_getInput(World &world, sf::RenderWindow &window)
 
     direction = result;
 }
-
-void m_prepareNextState(World &world, const sf::Vector2i &chunkIndex, sf::RenderWindow &window)
+void m_prepareNextAntState(World &world, const sf::Vector2i &chunkIndex)
 {
     Chunk<Ant> &r_chunkAnt = world.map().at(chunkIndex).ref_antChunk;
     for (size_t i = r_chunkAnt.objects.size() - 1; i < r_chunkAnt.objects.size() ; --i)
@@ -64,6 +63,25 @@ void m_prepareNextState(World &world, const sf::Vector2i &chunkIndex, sf::Render
         world.moveBy(r_ant.genericObject(), direction);
         assert((r_ant.knowledge().homeChunkIndexes() != sf::Vector2i{-1, -1}));
     }
+}
+void m_prepareNextPheromoneState(World &world, const sf::Vector2i &chunkIndex)
+{
+    Chunk<Pheromone> &r_chunkPhero = world.map().at(chunkIndex).ref_pheromoneChunk;
+    for (size_t i = r_chunkPhero.objects.size() - 1; i < r_chunkPhero.objects.size(); --i)
+    {
+        Pheromone &r_phero = r_chunkPhero.objects.at(i).ptrWorldObjects->at(r_chunkPhero.objects.at(i).index);
+        if (not r_phero.decreasePotency())
+        {
+            r_chunkPhero.objects.toBeRemoved(r_phero.knowledge().indexInHomeChunk());
+            world.pheromones().toBeRemoved(r_phero.knowledge().indexInWorld());
+        }
+
+    }
+}
+void m_prepareNextState(World &world, const sf::Vector2i &chunkIndex)
+{
+    m_prepareNextAntState(world, chunkIndex);
+    m_prepareNextPheromoneState(world, chunkIndex);
 }
 void m_updateState(World &world, sf::RenderWindow &window)
 {
@@ -111,7 +129,7 @@ void startGameLoop(World& world)
         {
             for (unsigned  x = 0; x < world.size().x; ++x)
             {
-                m_prepareNextState(world, sf::Vector2i{ (int)x, (int)y }, window);
+                m_prepareNextState(world, sf::Vector2i{ (int)x, (int)y });
             }
         }
         m_updateState(world, window);

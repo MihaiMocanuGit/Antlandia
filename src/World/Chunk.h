@@ -118,7 +118,7 @@ void Chunk<T>::SWAP_CHUNK(SpecializedVectorIndexPair<T> &elem1, ptrdiff_t atInde
 template <class T>
 void Chunk<T>::DESTRUCT_CHUNK(SpecializedVectorIndexPair<T> &elem, ptrdiff_t indexChunk)
 {
-    WorldKnowledge<T> &r_knowledge = elem.ptrWorldObjects->at(elem.index).knowledge();
+    //WorldKnowledge<T> &r_knowledge = elem.ptrWorldObjects->at(elem.index).knowledge();
 
     //On the current design, we cannot remove the chunk info because it will break the logic:
     // Consider that we moved an object from chunk no 4 to chunk no 3. This entails that we marked the object

@@ -41,3 +41,16 @@ const GenericObject<Pheromone> &Pheromone::genericObject() const
 {
     return m_genericObject;
 }
+
+bool Pheromone::decreasePotency(unsigned int noFramesPassed, float almostZero)
+{
+    //In massHalfLife frames    ----> mass / 2
+    //In noFramesPassed         ----> x mass
+    // => x = (mass / 2 * noFramesPassed) / massHalfLife
+
+    const float oldMass = m_genericObject.body().getMass();
+    const float newMass = oldMass - ((oldMass / 2.0f) * (float)noFramesPassed) / m_massHalfLife;
+    m_genericObject.body().setMass(newMass);
+
+    return newMass > almostZero;
+}
