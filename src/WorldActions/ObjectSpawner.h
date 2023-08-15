@@ -1,10 +1,12 @@
 #pragma once
-#include "../World/World.h"
+#include "../World/ChunkMap.h"
 #include "../Utils/Utils.h"
 class ObjectSpawner
 {
 private:
+    World* const m_pWorld;
     ChunkMap &m_r_map;
+
     /// \brief
     /// \tparam T must be constructable from a GenericObject, T{GenericObject} must be valid.
     /// \param body
@@ -16,13 +18,10 @@ private:
     template <class T>
     T& m_prepareObjectIntoWorld(const T& object, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T> &objectMap);
 
-    template <class T>
-    static void m_syncHomeChunkVectorInfoWithWorld(T& elem, size_t newIndex);
-    template <class T>
-    static void m_syncNextChunkVectorInfoWithWorld(T& elem, size_t newIndex);
+
 
 public:
-    explicit ObjectSpawner(ChunkMap &r_map);
+    explicit ObjectSpawner(World* pWorld, ChunkMap &r_map);
 
     template <class T>
     T& prepareObject(const Body& body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T>& objectMap);
@@ -30,31 +29,6 @@ public:
     T& prepareObject(const T& object, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T>& objectMap);
 };
 
-template <class T>
-void ObjectSpawner::m_syncHomeChunkVectorInfoWithWorld(T &elem, size_t newIndex)
-{
-    WorldKnowledge<T> &r_knowledge = elem.knowledge();
-    sf::Vector2i homeChunkIndexes = r_knowledge.homeChunkIndexes();
-    size_t linearHomeChunkIndex = xyToIndex(homeChunkIndexes.x, homeChunkIndexes.y, r_knowledge.world().size().x);
-
-    Chunk<T> &r_home = r_knowledge.primitiveChunkMap().at(linearHomeChunkIndex);
-    ptrdiff_t indexInChunk = r_knowledge.indexInHomeChunk();
-    auto &r_chunkElement = r_home.objects.at(indexInChunk);
-    r_chunkElement.index = newIndex;
-}
-
-template <class T>
-void ObjectSpawner::m_syncNextChunkVectorInfoWithWorld(T &elem, size_t newIndex)
-{
-    WorldKnowledge<T> &r_knowledge = elem.knowledge();
-    sf::Vector2i nextChunkIndexes = r_knowledge.nextChunkIndexes();
-    size_t linearNextChunkIndex = xyToIndex(nextChunkIndexes.x, nextChunkIndexes.y, r_knowledge.world().size().x);
-
-    Chunk<T> &r_next = r_knowledge.primitiveChunkMap().at(linearNextChunkIndex);
-    ptrdiff_t indexInChunk = r_knowledge.indexInNextChunk();
-    auto &r_chunkElement = r_next.objects.at(indexInChunk);
-    r_chunkElement.index = newIndex;
-}
 
 template <class T>
 T ObjectSpawner::m_createObject(const Body &body, SpecializedVector<T> &worldObjectVector, std::vector<Chunk<T>>& objectMap)
@@ -62,7 +36,7 @@ T ObjectSpawner::m_createObject(const Body &body, SpecializedVector<T> &worldObj
     sf::Vector2i chunkIndex = m_r_map.computeChunkIndex(body.getPosition());
     assert(m_r_map.isValidIndex(chunkIndex.x, chunkIndex.y));
 
-    WorldKnowledge<T> knowledge(this, &worldObjectVector, &objectMap);
+    WorldKnowledge<T> knowledge(m_pWorld, &worldObjectVector, &objectMap);
 
     return T{body, knowledge};
 }

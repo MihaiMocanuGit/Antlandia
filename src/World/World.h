@@ -2,6 +2,7 @@
 #include "ChunkMap.h"
 #include "../Utils/Utils.h"
 #include "../WorldActions/ObjectMover.h"
+#include "../WorldActions/ObjectSpawner.h"
 
 #include <cassert>
 
@@ -13,39 +14,14 @@ private:
     SpecializedVector<Pheromone> m_pheromones{INIT_ADD_WORLD, INIT_REMOVE_WORLD, INIT_FINALISE_WORLD, SWAP_WORLD, DESTRUCT_WORLD};
     SpecializedVector<Food> m_food{INIT_ADD_WORLD, INIT_REMOVE_WORLD, INIT_FINALISE_WORLD, SWAP_WORLD, DESTRUCT_WORLD};
 
-    template <class T>
-    T m_createObject(const Body& body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T>& objectMap);
+    ObjectSpawner m_spawner;
 
     template <class T>
-    T& m_prepareObjectIntoWorld(const T& object, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T> &objectMap);
-
+    static void m_syncHomeChunkVectorInfoWithWorld(T& elem, size_t newIndex);
     template <class T>
-    static void m_syncHomeChunkVectorInfoWithWorld(T& elem, size_t newIndex)
-    {
-        WorldKnowledge<T> &r_knowledge = elem.knowledge();
-        sf::Vector2i homeChunkIndexes = r_knowledge.homeChunkIndexes();
-        size_t linearHomeChunkIndex = xyToIndex(homeChunkIndexes.x, homeChunkIndexes.y, r_knowledge.world().size().x);
-
-        Chunk<T> &r_home = r_knowledge.primitiveChunkMap().at(linearHomeChunkIndex);
-        ptrdiff_t indexInChunk = r_knowledge.indexInHomeChunk();
-        auto &r_chunkElement = r_home.objects.at(indexInChunk);
-        r_chunkElement.index = newIndex;
-    }
-
-    template <class T>
-    static void m_syncNextChunkVectorInfoWithWorld(T& elem, size_t newIndex)
-    {
-        WorldKnowledge<T> &r_knowledge = elem.knowledge();
-        sf::Vector2i nextChunkIndexes = r_knowledge.nextChunkIndexes();
-        size_t linearNextChunkIndex = xyToIndex(nextChunkIndexes.x, nextChunkIndexes.y, r_knowledge.world().size().x);
-
-        Chunk<T> &r_next = r_knowledge.primitiveChunkMap().at(linearNextChunkIndex);
-        ptrdiff_t indexInChunk = r_knowledge.indexInNextChunk();
-        auto &r_chunkElement = r_next.objects.at(indexInChunk);
-        r_chunkElement.index = newIndex;
-    }
+    static void m_syncNextChunkVectorInfoWithWorld(T& elem, size_t newIndex);
 public:
-    World() = default;
+    World();
     explicit World(sf::Vector2u size);
     World(unsigned sizeX, unsigned sizeY);
 
@@ -82,12 +58,6 @@ public:
 
     [[nodiscard]] sf::Vector2u size() const;
 
-    template <class T>
-    T& prepareObject(const Body& body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T>& objectMap);
-
-    template <class T>
-    T& prepareObject(const T& object, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T>& objectMap);
-
     Ant& prepareAnt(sf::Vector2f position, float size = 2, float mass = 1,
                     const sf::Vector3<unsigned char> &color = {0, 0, 0});
     Pheromone& preparePheromone(sf::Vector2f position, float size = 1, float mass = 1,
@@ -95,61 +65,34 @@ public:
     Food& prepareFood(sf::Vector2f position, float size = 1.5, float mass = 1,
                       const sf::Vector3<unsigned char> &color = {255, 0, 0});
 
-
-
-
-
 };
 
+
 template <class T>
-T World::m_createObject(const Body &body, SpecializedVector<T> &worldObjectVector, std::vector<Chunk<T>>& objectMap)
+void World::m_syncHomeChunkVectorInfoWithWorld(T &elem, size_t newIndex)
 {
-    sf::Vector2i chunkIndex = m_map.computeChunkIndex(body.getPosition());
-    assert(m_map.isValidIndex(chunkIndex.x, chunkIndex.y));
+    WorldKnowledge<T> &r_knowledge = elem.knowledge();
+    sf::Vector2i homeChunkIndexes = r_knowledge.homeChunkIndexes();
+    size_t linearHomeChunkIndex = xyToIndex(homeChunkIndexes.x, homeChunkIndexes.y, r_knowledge.world().size().x);
 
-    WorldKnowledge<T> knowledge(this, &worldObjectVector, &objectMap);
-
-    return T{body, knowledge};
+    Chunk<T> &r_home = r_knowledge.primitiveChunkMap().at(linearHomeChunkIndex);
+    ptrdiff_t indexInChunk = r_knowledge.indexInHomeChunk();
+    auto &r_chunkElement = r_home.objects.at(indexInChunk);
+    r_chunkElement.index = newIndex;
 }
+
 template <class T>
-T &World::m_prepareObjectIntoWorld(const T &object, SpecializedVector<T> &worldObjectVector,
-                                   PrimitiveChunkMap_t<T> &objectMap)
+void World::m_syncNextChunkVectorInfoWithWorld(T &elem, size_t newIndex)
 {
-    //insert into World Vector
-    ptrdiff_t indexInWorld = worldObjectVector.toBeAdded(object);
-    T &r_addedObject = worldObjectVector.at(indexInWorld);
-    assert(r_addedObject.knowledge().indexInWorld() == indexInWorld);
-
-    //Give the chunk into which it will be inserted (as it cannot be done within the custom specialized vector functions)
-    sf::Vector2i nextChunkIndexes = m_map.computeChunkIndex(object.body().getPosition());
-    r_addedObject.knowledge().giveNextChunk(nextChunkIndexes);
-
-    //Mark for insertion the object into the chunk;
-    WorldKnowledge<T> &r_knowledge = r_addedObject.knowledge();
+    WorldKnowledge<T> &r_knowledge = elem.knowledge();
+    sf::Vector2i nextChunkIndexes = r_knowledge.nextChunkIndexes();
     size_t linearNextChunkIndex = xyToIndex(nextChunkIndexes.x, nextChunkIndexes.y, r_knowledge.world().size().x);
 
-    Chunk<T> &r_nextChunk = objectMap.at(linearNextChunkIndex);
-    SpecializedVectorIndexPair<T> chunkElem{&worldObjectVector, indexInWorld};
-    r_nextChunk.objects.toBeAdded(chunkElem);
-
-    return r_addedObject;
+    Chunk<T> &r_next = r_knowledge.primitiveChunkMap().at(linearNextChunkIndex);
+    ptrdiff_t indexInChunk = r_knowledge.indexInNextChunk();
+    auto &r_chunkElement = r_next.objects.at(indexInChunk);
+    r_chunkElement.index = newIndex;
 }
-
-
-template <class T>
-T& World::prepareObject(const Body &body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T> &objectMap)
-{
-    T object = m_createObject<T>(body, worldObjectVector, objectMap);
-
-    return m_prepareObjectIntoWorld(object, worldObjectVector, objectMap);
-}
-
-template <class T>
-T &World::prepareObject(const T &object, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T> &objectMap)
-{
-    return m_prepareObjectIntoWorld(object, worldObjectVector, objectMap);
-}
-
 
 template <typename T>
 void World::INIT_ADD_WORLD(T &elem, ptrdiff_t indexWorld)
