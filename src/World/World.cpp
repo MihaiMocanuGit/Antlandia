@@ -59,20 +59,56 @@ sf::Vector2u World::size() const
 Ant &World::prepareAnt(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)
 {
     Body body(position, size, mass, color);
-    return m_spawner.prepareObject(body, m_ants, m_map.primitiveChunkMaps().antMap);
+    return prepareAnt(body);
 }
+Ant &World::prepareAnt(const Body &antBody)
+{
+    return m_spawner.prepareObject(antBody, m_ants, m_map.primitiveChunkMaps().antMap);
+}
+Ant &World::prepareAnt(const Ant &ant)
+{
+    return m_spawner.prepareObject(ant, m_ants, m_map.primitiveChunkMaps().antMap);
+}
+
+
 
 Pheromone &World::preparePheromone(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)
 {
     Body body(position, size, mass, color);
-    return m_spawner.prepareObject(body, m_pheromones, m_map.primitiveChunkMaps().pheromoneMap);
+    return preparePheromone(body);
 }
+
+Pheromone &World::preparePheromone(const Body &pheromoneBody)
+{
+    return m_spawner.prepareObject(pheromoneBody, m_pheromones, m_map.primitiveChunkMaps().pheromoneMap);;
+}
+Pheromone &World::preparePheromone(const Pheromone &pheromone)
+{
+    return m_spawner.prepareObject(pheromone, m_pheromones, m_map.primitiveChunkMaps().pheromoneMap);
+}
+
+
 
 Food &World::prepareFood(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)
 {
     Body body(position, size, mass, color);
-    return m_spawner.prepareObject(body, m_food, m_map.primitiveChunkMaps().foodMap);
+    return prepareFood(body);
+}
+Food &World::prepareFood(const Body &foodBody)
+{
+    return m_spawner.prepareObject(foodBody, m_food, m_map.primitiveChunkMaps().foodMap);
+}
+Food &World::prepareFood(const Food &food)
+{
+    return m_spawner.prepareObject(food, m_food, m_map.primitiveChunkMaps().foodMap);
 }
 
 
+
+Pheromone &World::makeAntLeavePheromone(const Ant &ant, const Pheromone &pheromone)
+{
+    Pheromone pheromoneMovedIntoAnt = pheromone;
+    pheromoneMovedIntoAnt.body().setPosition(ant.body().getPosition());
+    return preparePheromone(pheromoneMovedIntoAnt);
+}
 
