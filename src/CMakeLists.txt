@@ -18,5 +18,6 @@ add_library(src
         WorldActions/ObjectSpawner.cpp
         WorldActions/ObjectSpawner.h
         Objects/TemplateForObject.cpp
-        Objects/TemplateForObject.h)
+        Objects/TemplateForObject.h
+        WorldActions/ObjectMover.cpp)
 #target_link_libraries(src Objects)

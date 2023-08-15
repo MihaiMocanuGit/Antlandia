@@ -3,7 +3,7 @@
 
 #include <cassert>
 
-template <class T>
+
 class ObjectMover
 {
 private:
@@ -16,23 +16,27 @@ private:
     /// \param object The object whose home chunk we want to be changed
     /// \param newChunk The indexes of the new chunk in the ChunkMap
     /// \return the index of the GenericObject in the new chunk vector
+    template <class T>
     ptrdiff_t m_moveIntoChunk(GenericObject<T> &object, const sf::Vector2i &newChunk);
 
 public:
     explicit ObjectMover(ChunkMap &r_chunkMap);
 
+    template <class T>
     void moveTo(GenericObject<T> &object, const sf::Vector2f &newPosition);
+
+    template <class T>
     void moveBy(GenericObject<T> &object, const sf::Vector2f &moveByOffset);
 };
 
 template <class T>
-void ObjectMover<T>::moveBy(GenericObject<T> &object, const sf::Vector2f &moveByOffset)
+void ObjectMover::moveBy(GenericObject<T> &object, const sf::Vector2f &moveByOffset)
 {
     moveTo(object, object.body().getPosition() + moveByOffset);
 }
 
 template <class T>
-void ObjectMover<T>::moveTo(GenericObject<T> &object, const sf::Vector2f &newPosition)
+void ObjectMover::moveTo(GenericObject<T> &object, const sf::Vector2f &newPosition)
 {
     //if we would go outside the bounds, do not move the object
     if (m_r_chunkMap.isPositionOutsideBounds(newPosition))
@@ -53,7 +57,7 @@ void ObjectMover<T>::moveTo(GenericObject<T> &object, const sf::Vector2f &newPos
 
 
 template <class T>
-ptrdiff_t ObjectMover<T>::m_moveIntoChunk(GenericObject<T> &object, const sf::Vector2i &newChunk)
+ptrdiff_t ObjectMover::m_moveIntoChunk(GenericObject<T> &object, const sf::Vector2i &newChunk)
 {
     WorldKnowledge<T> &r_knowledge = object.knowledge();
     r_knowledge.giveNextChunk(newChunk);
@@ -80,8 +84,3 @@ ptrdiff_t ObjectMover<T>::m_moveIntoChunk(GenericObject<T> &object, const sf::Ve
     return indexInNew;
 }
 
-template <class T>
-ObjectMover<T>::ObjectMover(ChunkMap &r_chunkMap) : m_r_chunkMap{r_chunkMap}
-{
-
-}

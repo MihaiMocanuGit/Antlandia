@@ -15,6 +15,7 @@ private:
     SpecializedVector<Food> m_food{INIT_ADD_WORLD, INIT_REMOVE_WORLD, INIT_FINALISE_WORLD, SWAP_WORLD, DESTRUCT_WORLD};
 
     ObjectSpawner m_spawner;
+    ObjectMover m_mover;
 
     template <class T>
     static void m_syncHomeChunkVectorInfoWithWorld(T& elem, size_t newIndex);
@@ -162,15 +163,13 @@ template <class T>
 void World::moveBy(GenericObject<T> &object, const sf::Vector2f &moveByOffset)
 {
     assert (object.knowledge().willAppearInHomeChunk());
-    static ObjectMover<T> mover(m_map);
-    mover.moveBy(object, moveByOffset);
+    m_mover.moveBy(object, moveByOffset);
 }
 
 template <class T>
 void World::moveTo(GenericObject<T> &object, const sf::Vector2f &newPosition)
 {
     assert (object.knowledge().willAppearInHomeChunk());
-    static ObjectMover<T> mover(m_map);
-    mover.moveTo(object, newPosition);
+    m_mover.moveTo(object, newPosition);
 }
 

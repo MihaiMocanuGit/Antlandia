@@ -1,10 +1,11 @@
 #include "World.h"
 
-World::World() : m_spawner(this, m_map)
+World::World() : m_spawner(this, m_map), m_mover(m_map)
 {
 
 }
-World::World(sf::Vector2u size) : m_map(size,SpecializedVectorAllTypes(m_ants, m_food, m_pheromones)), m_spawner(this, m_map)
+World::World(sf::Vector2u size) : m_map(size,SpecializedVectorAllTypes(m_ants, m_food, m_pheromones)),\
+                                    m_spawner(this, m_map), m_mover(m_map)
 {
 
 }
