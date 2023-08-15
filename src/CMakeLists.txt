@@ -14,5 +14,9 @@ add_library(src
         World/World.cpp World/World.h
         Utils/Utils.cpp Utils/Utils.h
         Objects/GenericObject.h
-        WorldActions/ObjectMover.h)
+        WorldActions/ObjectMover.h
+        WorldActions/ObjectSpawner.cpp
+        WorldActions/ObjectSpawner.h
+        Objects/TemplateForObject.cpp
+        Objects/TemplateForObject.h)
 #target_link_libraries(src Objects)

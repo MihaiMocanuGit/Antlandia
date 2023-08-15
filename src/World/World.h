@@ -86,7 +86,7 @@ public:
     T& prepareObject(const Body& body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T>& objectMap);
 
     template <class T>
-    T& prepareObject(const T& body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T>& objectMap);
+    T& prepareObject(const T& object, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T>& objectMap);
 
     Ant& prepareAnt(sf::Vector2f position, float size = 2, float mass = 1,
                     const sf::Vector3<unsigned char> &color = {0, 0, 0});
@@ -121,7 +121,7 @@ T &World::m_prepareObjectIntoWorld(const T &object, SpecializedVector<T> &worldO
     assert(r_addedObject.knowledge().indexInWorld() == indexInWorld);
 
     //Give the chunk into which it will be inserted (as it cannot be done within the custom specialized vector functions)
-    sf::Vector2i nextChunkIndexes = m_map.computeChunkIndex(body.getPosition());
+    sf::Vector2i nextChunkIndexes = m_map.computeChunkIndex(object.body().getPosition());
     r_addedObject.knowledge().giveNextChunk(nextChunkIndexes);
 
     //Mark for insertion the object into the chunk;
@@ -145,9 +145,9 @@ T& World::prepareObject(const Body &body, SpecializedVector<T> &worldObjectVecto
 }
 
 template <class T>
-T &World::prepareObject(const T &body, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T> &objectMap)
+T &World::prepareObject(const T &object, SpecializedVector<T> &worldObjectVector, PrimitiveChunkMap_t<T> &objectMap)
 {
-    return m_prepareObjectIntoWorld(body, worldObjectVector, objectMap);
+    return m_prepareObjectIntoWorld(object, worldObjectVector, objectMap);
 }
 
 
