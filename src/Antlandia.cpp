@@ -14,11 +14,23 @@ void m_addObjects(World &world)
     constexpr float radius = 50;
     std::uniform_real_distribution<float> dist(-radius, radius);
 
-    // add ants in the home spot
+
+    //add a queen in the home spot
     Ant queen = world.antTypes.QUEEN_ANT;
     queen.body().setPosition(homeSpot);
     world.prepareAnt(queen);
+
+    //add a few males at home
     for (int i = 0; i < 10; ++i)
+    {
+        const sf::Vector2f position = {homeSpot.x + dist(gen), homeSpot.y + dist(gen)};
+        Ant ant = world.antTypes.MALE_ANT;
+        ant.body().setPosition(position);
+        world.prepareAnt(ant);
+    }
+
+    // add worker ants in the home spot
+    for (int i = 0; i < 20; ++i)
     {
         const sf::Vector2f position = {homeSpot.x + dist(gen), homeSpot.y + dist(gen)};
         Ant ant = world.antTypes.WORKER_ANT;
