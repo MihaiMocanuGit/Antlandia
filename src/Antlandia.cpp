@@ -1,18 +1,43 @@
+#include <random>
 #include "Antlandia.h"
 
 void m_addObjects(World &world)
 {
-    for (int i = 0; i < 125; ++i)
-    {
-        world.prepareAnt(sf::Vector2f(i * 5.0f, i * 5.0f));
-        world.prepareFood(sf::Vector2f(world.size().x * Chunk<void>::CHUNK_SIZE_X - i * 5.0f, i * 5.0f));
+    const sf::Vector2f middle = {(float)world.size().x * Chunk<int>::CHUNK_SIZE_X / 2,
+                                 (float)world.size().y * Chunk<int>::CHUNK_SIZE_Y / 2};
 
-        if (i % 2 == 0)
-            world.preparePheromone(sf::Vector2f((float) world.size().x * Chunk<void>::CHUNK_SIZE_X / 2, i * 5.0f));
-        else
-            world.preparePheromone(sf::Vector2f(i * 5.0f, (float) world.size().y * Chunk<void>::CHUNK_SIZE_Y / 2));
+    const sf::Vector2f homeSpot = {( 2.0f * 0.0f + middle.x) / 3,
+                                   ( 2.0f * 0.0f + middle.y) / 3};
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    constexpr float radius = 50;
+    std::uniform_real_distribution<float> dist(-radius, radius);
+
+    // add ants in the home spot
+    for (int i = 0; i < 10; ++i)
+    {
+        const sf::Vector2f position = {homeSpot.x + dist(gen), homeSpot.y + dist(gen)};
+        world.prepareAnt(position);
     }
 
+    //mark the home spot with home pheromones
+    for (int i = 0; i < 400; ++i)
+    {
+        const sf::Vector2f position = {homeSpot.x + dist(gen), homeSpot.y + dist(gen)};
+        Body pheromoneBody = world.pheromoneTypes.HOME_PHEROMONE_BODY;
+        pheromoneBody.setPosition(position);
+        world.preparePheromone(pheromoneBody);
+    }
+
+    const sf::Vector2f foodSpot = {( 2.0f * (float)world.size().x * Chunk<int>::CHUNK_SIZE_X + middle.x) / 3,
+                                   ( 2.0f * (float)world.size().y * Chunk<int>::CHUNK_SIZE_Y + middle.y) / 3};
+    //fill the food spot with food
+    for (int i = 0; i < 400; ++i)
+    {
+        const sf::Vector2f position = {foodSpot.x + dist(gen), foodSpot.y + dist(gen)};
+        world.prepareFood(position);
+    }
     world.ants().finishChanges();
     world.food().finishChanges();
     world.pheromones().finishChanges();
@@ -30,7 +55,7 @@ void m_addObjects(World &world)
 
 void startApp()
 {
-    World world(10, 10);
+    World world(12, 12);
     m_addObjects(world);
 
     startGameLoop(world);
