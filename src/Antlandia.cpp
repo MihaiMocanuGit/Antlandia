@@ -15,19 +15,24 @@ void m_addObjects(World &world)
     std::uniform_real_distribution<float> dist(-radius, radius);
 
     // add ants in the home spot
+    Ant queen = world.antTypes.QUEEN_ANT;
+    queen.body().setPosition(homeSpot);
+    world.prepareAnt(queen);
     for (int i = 0; i < 10; ++i)
     {
         const sf::Vector2f position = {homeSpot.x + dist(gen), homeSpot.y + dist(gen)};
-        world.prepareAnt(position);
+        Ant ant = world.antTypes.WORKER_ANT;
+        ant.body().setPosition(position);
+        world.prepareAnt(ant);
     }
 
     //mark the home spot with home pheromones
     for (int i = 0; i < 400; ++i)
     {
         const sf::Vector2f position = {homeSpot.x + dist(gen), homeSpot.y + dist(gen)};
-        Body pheromoneBody = world.pheromoneTypes.HOME_PHEROMONE_BODY;
-        pheromoneBody.setPosition(position);
-        world.preparePheromone(pheromoneBody);
+        Pheromone pheromone = world.pheromoneTypes.HOME_PHEROMONE;
+        pheromone.body().setPosition(position);
+        world.preparePheromone(pheromone);
     }
 
     const sf::Vector2f foodSpot = {( 2.0f * (float)world.size().x * Chunk<int>::CHUNK_SIZE_X + middle.x) / 3,

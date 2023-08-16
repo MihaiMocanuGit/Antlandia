@@ -1,6 +1,12 @@
 #include "Ant.h"
 
-Ant::Ant(Body body, WorldKnowledge<Ant> worldKnowledge) : Ant(GenericObject<Ant>{std::move(body), std::move(worldKnowledge)})
+Ant::Ant(GenericObject<Ant> genericObject, Type_e type) : m_genericObject{std::move(genericObject)}, m_type{type}
+{
+
+}
+
+Ant::Ant(Body body, WorldKnowledge<Ant> worldKnowledge, Type_e type)
+: Ant(GenericObject<Ant>{std::move(body), std::move(worldKnowledge)}, type)
 {
 
 }
@@ -25,10 +31,7 @@ const WorldKnowledge<Ant> &Ant::knowledge() const
     return genericObject().knowledge();
 }
 
-Ant::Ant(GenericObject<Ant> genericObject) : m_genericObject{std::move(genericObject)}
-{
 
-}
 
 GenericObject<Ant> &Ant::genericObject()
 {

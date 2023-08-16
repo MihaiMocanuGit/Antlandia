@@ -20,8 +20,8 @@ public:
     };
 
     Ant() = default;
-    explicit Ant(GenericObject<Ant> genericObject);
-    Ant(Body body, WorldKnowledge<Ant> worldKnowledge);
+    explicit Ant(GenericObject<Ant> genericObject, Type_e type = Type_e::Unknown);
+    Ant(Body body, WorldKnowledge<Ant> worldKnowledge, Type_e type = Type_e::Unknown);
 
     Body &body();
     const Body &body() const;

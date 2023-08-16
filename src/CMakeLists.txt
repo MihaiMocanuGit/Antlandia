@@ -21,5 +21,7 @@ add_library(src
         Objects/TemplateForObject.h
         WorldActions/ObjectMover.cpp
         ObjectTypes/PheromoneTypes.cpp
-        ObjectTypes/PheromoneTypes.h)
+        ObjectTypes/PheromoneTypes.h
+        ObjectTypes/AntTypes.cpp
+        ObjectTypes/AntTypes.h)
 #target_link_libraries(src Objects)
