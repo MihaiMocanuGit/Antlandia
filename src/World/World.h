@@ -66,18 +66,18 @@ public:
     [[nodiscard]] sf::Vector2u size() const;
 
     Ant& prepareAnt(sf::Vector2f position, float size = 2, float mass = 1,
-                    const sf::Vector3<unsigned char> &color = {0, 0, 0});
+                    const sf::Color &color = {0, 0, 0});
     Ant& prepareAnt(const  Body& antBody);
     Ant& prepareAnt(const Ant& ant);
 
     Pheromone& preparePheromone(sf::Vector2f position, float size = 1, float mass = 1,
-                                const sf::Vector3<unsigned char> &color = {0, 255, 0});
+                                const sf::Color &color = {0, 255, 0});
     Pheromone& preparePheromone(const Body& pheromoneBody);
     Pheromone& preparePheromone(const Pheromone& pheromone);
 
 
     Food& prepareFood(sf::Vector2f position, float size = 1.5, float mass = 1,
-                      const sf::Vector3<unsigned char> &color = {255, 0, 0});
+                      const sf::Color &color = {255, 0, 0});
     Food& prepareFood(const Body& foodBody);
     Food& prepareFood(const Food& food);
 

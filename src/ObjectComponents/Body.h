@@ -1,16 +1,16 @@
 #pragma once
 #include <SFML/System/Vector2.hpp>
-#include <SFML/System/Vector3.hpp>
+#include <SFML/Graphics/Color.hpp>
 class Body
 {
 private:
     sf::Vector2f m_position {-1.0f, -1.0f};
     float m_size = -1;
     float m_mass = -1;
-    sf::Vector3<unsigned char> m_color = {0, 0, 0};
+    sf::Color m_color = {0, 0, 0, 255};
 public:
     Body() = default;
-    Body(const sf::Vector2f &pos, float size, float mass, const sf::Vector3<unsigned char> &color);
+    Body(const sf::Vector2f &pos, float size, float mass, const sf::Color &color);
 
     [[nodiscard]] const sf::Vector2f &getPosition() const;
 
@@ -24,9 +24,9 @@ public:
 
     void setMass(float mass);
 
-    [[nodiscard]] const sf::Vector3<unsigned char> &getColor() const;
+    [[nodiscard]] const sf::Color &getColor() const;
 
-    void setColor(const sf::Vector3<unsigned char> &color);
+    void setColor(const sf::Color &color);
 
 };
 

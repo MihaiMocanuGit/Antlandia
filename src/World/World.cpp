@@ -56,7 +56,7 @@ sf::Vector2u World::size() const
     return m_map.size();
 }
 
-Ant &World::prepareAnt(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)
+Ant &World::prepareAnt(sf::Vector2f position, float size, float mass, const sf::Color &color)
 {
     Body body(position, size, mass, color);
     return prepareAnt(body);
@@ -72,7 +72,7 @@ Ant &World::prepareAnt(const Ant &ant)
 
 
 
-Pheromone &World::preparePheromone(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)
+Pheromone &World::preparePheromone(sf::Vector2f position, float size, float mass, const sf::Color &color)
 {
     Body body(position, size, mass, color);
     return preparePheromone(body);
@@ -89,7 +89,7 @@ Pheromone &World::preparePheromone(const Pheromone &pheromone)
 
 
 
-Food &World::prepareFood(sf::Vector2f position, float size, float mass, const sf::Vector3<unsigned char> &color)
+Food &World::prepareFood(sf::Vector2f position, float size, float mass, const sf::Color &color)
 {
     Body body(position, size, mass, color);
     return prepareFood(body);

@@ -5,9 +5,8 @@ sf::CircleShape getShape(const Body &body)
     float size = body.getSize();
     sf::CircleShape shape(size);
 
-    const sf::Vector3<unsigned char> &color = body.getColor();
-    sf::Color colorSf(color.x, color.y, color.z);
-    shape.setFillColor(colorSf);
+    const sf::Color &color = body.getColor();
+    shape.setFillColor(color);
 
     sf::Vector2f position(body.getPosition());
     shape.setPosition(position);

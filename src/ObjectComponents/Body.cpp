@@ -2,7 +2,7 @@
 #include <stdexcept>
 
 
-Body::Body(const sf::Vector2f &pos, float size, float mass, const sf::Vector3<unsigned char> &color)
+Body::Body(const sf::Vector2f &pos, float size, float mass, const sf::Color &color)
     : m_position{pos}, m_size{size}, m_mass{mass}, m_color{color}
 {
 
@@ -45,12 +45,12 @@ void Body::setMass(float mass)
         throw std::invalid_argument("Mass must be non-negative");
 }
 
-const sf::Vector3<unsigned char> &Body::getColor() const
+const sf::Color &Body::getColor() const
 {
     return m_color;
 }
 
-void Body::setColor(const sf::Vector3<unsigned char> &color)
+void Body::setColor(const sf::Color &color)
 {
     m_color = color;
 }
