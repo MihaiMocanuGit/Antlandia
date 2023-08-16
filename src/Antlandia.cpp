@@ -3,6 +3,7 @@
 
 void m_addObjects(World &world)
 {
+
     const sf::Vector2f middle = {(float)world.size().x * Chunk<int>::CHUNK_SIZE_X / 2,
                                  (float)world.size().y * Chunk<int>::CHUNK_SIZE_Y / 2};
 

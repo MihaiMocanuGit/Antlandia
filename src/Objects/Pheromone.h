@@ -10,6 +10,9 @@ private:
 
     /// \brief How many frames it takes for the mass of the pheromone to half
     float m_massHalfLife = DEFAULT_HALF_LIFE;
+
+    float m_initialMass;
+    unsigned char m_initialAlpha;
 public:
     static constexpr float DEFAULT_HALF_LIFE = 90;
     enum class Type_e {

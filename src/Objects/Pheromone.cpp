@@ -1,7 +1,9 @@
 #include "Pheromone.h"
+#include <algorithm>
 
 Pheromone::Pheromone(GenericObject<Pheromone> genericObject, Type_e type, float halfLife)
-        : m_genericObject{std::move(genericObject)}, m_type{std::move(type)}, m_massHalfLife{halfLife}
+        : m_genericObject{std::move(genericObject)}, m_type{std::move(type)}, m_massHalfLife{halfLife},
+        m_initialMass{m_genericObject.body().getMass()}, m_initialAlpha{m_genericObject.body().getColor().a}
 {
 }
 
@@ -49,6 +51,14 @@ bool Pheromone::decreasePotency(unsigned int noFramesPassed, float almostZero)
     const float oldMass = m_genericObject.body().getMass();
     const float newMass = oldMass - ((oldMass / 2.0f) * (float)noFramesPassed) / m_massHalfLife;
     m_genericObject.body().setMass(newMass);
+
+    const float minimumValue = 100;
+    const float newAlpha = newMass / m_initialMass * (m_initialAlpha+minimumValue) + minimumValue;
+
+    sf::Color newColor = m_genericObject.body().getColor();
+    newColor.a = std::clamp(newAlpha, 0.0f, 255.0f);
+
+    m_genericObject.body().setColor(newColor);
 
     return newMass > almostZero;
 }
