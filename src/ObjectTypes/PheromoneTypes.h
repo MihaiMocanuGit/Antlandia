@@ -19,7 +19,8 @@ public:
     const Pheromone FOOD_PHEROMONE = {FOOD_PHEROMONE_BODY, KNOWLEDGE, Pheromone::Type_e::Food};
 
 
-    const Body HOME_PHEROMONE_BODY = {sf::Vector2f{-1.0f, -1.0f}, 1.0f, 10.0f,
+    const Body HOME_PHEROMONE_BODY = {sf::Vector2f{-1.0f, -1.0f}, 1.0f, 15.0f,
                                       sf::Color{0, 255, 255, 255}};
-    const Pheromone HOME_PHEROMONE = {HOME_PHEROMONE_BODY, KNOWLEDGE, Pheromone::Type_e::Home};
+    const Pheromone HOME_PHEROMONE = {HOME_PHEROMONE_BODY, KNOWLEDGE, Pheromone::Type_e::Home,
+                                      Pheromone::DEFAULT_HALF_LIFE * 4};
 };
