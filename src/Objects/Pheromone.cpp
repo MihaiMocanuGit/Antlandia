@@ -1,10 +1,13 @@
 #include "Pheromone.h"
 
-
-Pheromone::Pheromone(Body body, WorldKnowledge<Pheromone> worldKnowledge)
-        : Pheromone(GenericObject<Pheromone>{std::move(body),std::move(worldKnowledge)})
+Pheromone::Pheromone(GenericObject<Pheromone> genericObject, Type_e type, float halfLife)
+        : m_genericObject{std::move(genericObject)}, m_type{std::move(type)}, m_massHalfLife{halfLife}
 {
+}
 
+Pheromone::Pheromone(Body body, WorldKnowledge<Pheromone> worldKnowledge, Type_e type, float halfLife)
+: Pheromone(GenericObject<Pheromone>{std::move(body),std::move(worldKnowledge)}, std::move(type), halfLife)
+{
 }
 
 Body &Pheromone::body()
@@ -25,11 +28,6 @@ WorldKnowledge<Pheromone> &Pheromone::knowledge()
 const WorldKnowledge<Pheromone> &Pheromone::knowledge() const
 {
     return m_genericObject.knowledge();
-}
-
-Pheromone::Pheromone(GenericObject<Pheromone> genericObject) : m_genericObject{std::move(genericObject)}
-{
-
 }
 
 GenericObject<Pheromone> &Pheromone::genericObject()

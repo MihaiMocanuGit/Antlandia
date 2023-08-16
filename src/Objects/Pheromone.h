@@ -3,17 +3,27 @@
 
 class Pheromone
 {
+public: enum class Type_e; //forward declaration
 private:
     GenericObject<Pheromone> m_genericObject;
+    Type_e m_type = Type_e::Unknown;
 
     /// \brief How many frames it takes for the mass of the pheromone to half
-    float m_massHalfLife = 90;
+    float m_massHalfLife = DEFAULT_HALF_LIFE;
 public:
-    inline const static Body DEFAULT_PHEROMONE_BODY = {sf::Vector2f{-1.0f, -1.0f}, 1.0f, 1.0f,
+    static constexpr float DEFAULT_HALF_LIFE = 90;
+    inline const static Body TRAIL_PHEROMONE_BODY = {sf::Vector2f{-1.0f, -1.0f}, 1.0f, 1.0f,
                                                        sf::Vector3<unsigned char>{0, 255, 0}};
+    enum class Type_e {
+        Unknown,
+        Trail,
+        Food,
+        Home,
+        COUNT
+    };
     Pheromone() = default;
-    explicit Pheromone(GenericObject<Pheromone> genericObject);
-    Pheromone(Body body, WorldKnowledge<Pheromone> worldKnowledge);
+    explicit Pheromone(GenericObject<Pheromone> genericObject, Type_e type = Type_e::Unknown, float halfLife = DEFAULT_HALF_LIFE);
+    Pheromone(Body body, WorldKnowledge<Pheromone> worldKnowledge, Type_e type = Type_e::Unknown, float halfLife = DEFAULT_HALF_LIFE);
 
     /// \brief Lowers the mass of the pheromone relative to its half life, taking into account
     /// the number of frames that have passed. A lower pheromone mass implies a weaker potency

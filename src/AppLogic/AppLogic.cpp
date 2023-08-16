@@ -59,7 +59,7 @@ void m_prepareNextAntState(World &world, const sf::Vector2i &chunkIndex)
     {
         Ant &r_ant = r_chunkAnt.objects.at(i).ptrWorldObjects->at(r_chunkAnt.objects.at(i).index);
         if (frameMod == 0)
-            world.makeAntLeavePheromone(r_ant, Pheromone::DEFAULT_PHEROMONE_BODY);
+            world.makeAntLeavePheromone(r_ant, Pheromone::TRAIL_PHEROMONE_BODY);
         world.moveBy(r_ant.genericObject(), direction);
         assert((r_ant.knowledge().homeChunkIndexes() != sf::Vector2i{-1, -1}));
     }
