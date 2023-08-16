@@ -19,5 +19,7 @@ add_library(src
         WorldActions/ObjectSpawner.h
         Objects/TemplateForObject.cpp
         Objects/TemplateForObject.h
-        WorldActions/ObjectMover.cpp)
+        WorldActions/ObjectMover.cpp
+        ObjectTypes/PheromoneTypes.cpp
+        ObjectTypes/PheromoneTypes.h)
 #target_link_libraries(src Objects)

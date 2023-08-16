@@ -3,6 +3,9 @@
 #include "../Utils/Utils.h"
 #include "../WorldActions/ObjectMover.h"
 #include "../WorldActions/ObjectSpawner.h"
+#include "../ObjectTypes/PheromoneTypes.h"
+
+
 
 #include <cassert>
 
@@ -22,6 +25,8 @@ private:
     template <class T>
     static void m_syncNextChunkVectorInfoWithWorld(T& elem, size_t newIndex);
 public:
+    PheromoneTypes pheromoneTypes = {this, &m_pheromones, &map().primitiveChunkMaps().pheromoneMap};
+
     World();
     explicit World(sf::Vector2u size);
     World(unsigned sizeX, unsigned sizeY);

@@ -12,8 +12,6 @@ private:
     float m_massHalfLife = DEFAULT_HALF_LIFE;
 public:
     static constexpr float DEFAULT_HALF_LIFE = 90;
-    inline const static Body TRAIL_PHEROMONE_BODY = {sf::Vector2f{-1.0f, -1.0f}, 1.0f, 1.0f,
-                                                       sf::Vector3<unsigned char>{0, 255, 0}};
     enum class Type_e {
         Unknown,
         Trail,
