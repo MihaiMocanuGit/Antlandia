@@ -66,12 +66,12 @@ public:
     const Food &grabbedOrFoundFood() const;
 
     bool &hasFood();
-    bool &hasFood() const;
+    const bool &hasFood() const;
 
     bool &foundFood();
-    bool &foundFood() const;
+    const bool &foundFood() const;
 
     sf::Vector2f &foundFoodPosition();
-    sf::Vector2f &foundFoodPosition() const;
+    const sf::Vector2f &foundFoodPosition() const;
 };
 

@@ -41,3 +41,13 @@ const GenericObject<Food> &Food::genericObject() const
 {
     return m_genericObject;
 }
+
+bool &Food::isLocked()
+{
+    return m_isLocked;
+}
+
+const bool &Food::isLocked() const
+{
+    return m_isLocked;
+}

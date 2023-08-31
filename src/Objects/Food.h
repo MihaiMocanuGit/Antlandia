@@ -24,7 +24,7 @@ public:
     const GenericObject<Food> &genericObject() const;
 
     bool &isLocked();
-    bool &isLocked() const;
+    const bool &isLocked() const;
 
 };
 
