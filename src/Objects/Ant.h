@@ -12,8 +12,8 @@ private:
     sf::Vector2f m_velocity = {0.0f, 0.0f};
     float m_maxVelocity = 1.0f;
 
-    float m_viewRadius = 10.0f;
-    float m_interactRadius = 1.0f;
+    float m_viewRadius = 64.0f;
+    float m_interactRadius = 16.0f;
 
 
     Action_e m_action = Action_e::Unknown;

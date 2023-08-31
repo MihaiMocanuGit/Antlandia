@@ -134,6 +134,9 @@ void m_findClosestFood(Ant &r_ant, World &r_world)
 
 void searchFood(Ant &r_ant, World &r_world, unsigned currentFrame)
 {
+    ///TODO: Make an ant seek food pheromone trails
+    ///TODO: Maybe count how many different types of pheromones are in any chunk. This way an ant would be prefer to move
+    /// towards a chunk with more food pheromones or less simple trail pheromones
     m_changeVelocity(r_ant);
     m_findClosestFood(r_ant, r_world);
     r_world.moveBy(r_ant.genericObject(), r_ant.velocity());

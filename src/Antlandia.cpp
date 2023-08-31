@@ -31,7 +31,7 @@ void m_addObjects(World &world)
     }
 
     // add worker ants in the home spot
-    for (int i = 0; i < 20; ++i)
+    for (int i = 0; i < 100; ++i)
     {
         const sf::Vector2f position = {homeSpot.x + dist(gen), homeSpot.y + dist(gen)};
         Ant ant = world.antTypes.WORKER_ANT;
