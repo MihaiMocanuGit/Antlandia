@@ -23,5 +23,8 @@ add_library(src
         ObjectTypes/PheromoneTypes.cpp
         ObjectTypes/PheromoneTypes.h
         ObjectTypes/AntTypes.cpp
-        ObjectTypes/AntTypes.h)
+        ObjectTypes/AntTypes.h
+        AntActions/AntActions.h
+        AntActions/AntActions.cpp
+)
 #target_link_libraries(src Objects)
