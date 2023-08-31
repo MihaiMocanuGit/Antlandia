@@ -57,7 +57,7 @@ void m_prepareNextAntState(World &world, const sf::Vector2i &chunkIndex)
     Chunk<Ant> &r_chunkAnt = world.map().at(chunkIndex).ref_antChunk;
     for (size_t i = r_chunkAnt.objects.size() - 1; i < r_chunkAnt.objects.size() ; --i)
     {
-        Ant &r_ant = r_chunkAnt.objects.at(i).ptrWorldObjects->at(r_chunkAnt.objects.at(i).index);
+        Ant &r_ant = world.ants()[r_chunkAnt.objects[i].index];
         if (frameMod == 0)
             world.makeAntLeavePheromone(r_ant, world.pheromoneTypes.TRAIL_PHEROMONE);
         world.moveBy(r_ant.genericObject(), direction);
@@ -69,7 +69,7 @@ void m_prepareNextPheromoneState(World &world, const sf::Vector2i &chunkIndex)
     Chunk<Pheromone> &r_chunkPhero = world.map().at(chunkIndex).ref_pheromoneChunk;
     for (size_t i = r_chunkPhero.objects.size() - 1; i < r_chunkPhero.objects.size(); --i)
     {
-        Pheromone &r_phero = r_chunkPhero.objects.at(i).ptrWorldObjects->at(r_chunkPhero.objects.at(i).index);
+        Pheromone &r_phero = world.pheromones()[r_chunkPhero.objects[i].index];
         if (not r_phero.decreasePotency())
         {
             r_chunkPhero.objects.toBeRemoved(r_phero.knowledge().indexInHomeChunk());
