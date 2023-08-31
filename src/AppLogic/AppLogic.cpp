@@ -1,5 +1,5 @@
 #include "AppLogic.h"
-
+#include "../AntActions/AntActions.h"
 #include "../Utils/Utils.h"
 
 static constexpr unsigned MOD = 15;
@@ -60,7 +60,16 @@ void m_prepareNextAntState(World &world, const sf::Vector2i &chunkIndex)
         Ant &r_ant = world.ants()[r_chunkAnt.objects[i].index];
         if (frameMod == 0)
             world.makeAntLeavePheromone(r_ant, world.pheromoneTypes.TRAIL_PHEROMONE);
-        world.moveBy(r_ant.genericObject(), direction);
+        //world.moveBy(r_ant.genericObject(), direction);
+        switch (r_ant.action())
+        {
+            case Ant::Action_e::SearchingFood:
+                AntActions::searchFood(r_ant, world, frameMod);
+                break;
+            default:
+                break;
+        }
+
         assert((r_ant.knowledge().homeChunkIndexes() != sf::Vector2i{-1, -1}));
     }
 }
