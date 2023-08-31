@@ -24,7 +24,10 @@ void m_clampVectorByNorm(sf::Vector2f &r_vector, float clampNorm)
 {
     r_vector = clampNorm / m_norm(r_vector) * r_vector;
 }
-
+float m_dotProduct(const sf::Vector2f &vector1, const sf::Vector2f &vector2)
+{
+    return vector1.x * vector2.x + vector1.y * vector2.y;
+}
 void m_changeVelocity(Ant &r_ant)
 {
     //add to the current velocity a random change
@@ -36,6 +39,12 @@ void m_changeVelocity(Ant &r_ant)
 
     if (m_norm(newVelocity) > r_ant.maxVelocity())
         m_clampVectorByNorm(newVelocity, r_ant.maxVelocity());
+
+    //if the dot product is negative, it means that the new direction would go backwards, therefore, so as to not
+    //get in the situation of going back and forward between the same two spots, we don't allow the ant to make turns
+    //greater than +- 90 degrees
+    if (m_dotProduct(newVelocity, oldVelocity) < 0)
+        newVelocity *= -1.0f;
 
     r_ant.velocity() = newVelocity;
 }
