@@ -126,6 +126,7 @@ void m_findClosestFood(Ant &r_ant, World &r_world)
 void searchFood(Ant &r_ant, World &r_world, unsigned currentFrame)
 {
     m_changeVelocity(r_ant);
+    r_world.moveBy(r_ant.genericObject(), r_ant.velocity());
     m_findClosestFood(r_ant, r_world);
 }
 void foundFood(Ant &r_ant, World &r_world, unsigned currentFrame)
