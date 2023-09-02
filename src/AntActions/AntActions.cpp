@@ -12,9 +12,13 @@ float m_getRandomUniformly(float min, float max)
     return distrib(gen);
 }
 
+float m_dotProduct(const sf::Vector2f &vector1, const sf::Vector2f &vector2)
+{
+    return vector1.x * vector2.x + vector1.y * vector2.y;
+}
 float m_norm(const sf::Vector2f &vector)
 {
-    return sqrtf(vector.x * vector.x + vector.y * vector.y);
+    return sqrtf(m_dotProduct(vector, vector));
 }
 
 /// \brief
@@ -24,10 +28,7 @@ void m_clampVectorByNorm(sf::Vector2f &r_vector, float clampNorm)
 {
     r_vector = clampNorm / m_norm(r_vector) * r_vector;
 }
-float m_dotProduct(const sf::Vector2f &vector1, const sf::Vector2f &vector2)
-{
-    return vector1.x * vector2.x + vector1.y * vector2.y;
-}
+
 void m_changeVelocity(Ant &r_ant)
 {
     //add to the current velocity a random change
@@ -79,8 +80,9 @@ void m_findClosestFood(Ant &r_ant, World &r_world)
                 {
                     if (distanceToFood < closestFoodDistance and not food.isLocked())
                     {
+                        closestFoodDistance = distanceToFood;
                         closestFoodChunk = {x, y};
-                        closestFoodIndexInWorld = i;
+                        closestFoodIndexInWorld = chunkFood[i].index;
 
                         r_ant.action() = Ant::Action_e::GrabbingFood;
                     }
@@ -99,22 +101,22 @@ void m_findClosestFood(Ant &r_ant, World &r_world)
         //lock into the found food
         Food &r_food = r_world.food()[closestFoodIndexInWorld];
         r_food.isLocked() = true;
-        r_ant.foundFood() = true;
+        r_ant.hasFoundFood() = true;
         r_ant.foundFoodPosition() = r_food.body().getPosition();
-        r_ant.grabbedOrFoundFood() = r_food;
-
-        //go full speed towards that food
-        sf::Vector2f newVelocity = r_ant.body().getPosition() - r_ant.foundFoodPosition();
-        m_clampVectorByNorm(newVelocity, r_ant.maxVelocity());
-        r_ant.velocity() = newVelocity;
     }
 
 
 
 }
-
+/// \brief SeachFood is the first action done for getting food. An ant is made to go in
+/// random directions until it sees food. At that moment, we move on to the next action
+/// step: GrabbingFood
+/// \param r_ant
+/// \param r_world
+/// \param currentFrame
 void searchFood(Ant &r_ant, World &r_world, unsigned currentFrame)
 {
+    assert(r_ant.action() == Ant::Action_e::SearchingFood);
     ///TODO: Make an ant seek food pheromone trails
     ///TODO: Maybe count how many different types of pheromones are in any chunk. This way an ant would be prefer to move
     /// towards a chunk with more food pheromones or less simple trail pheromones
@@ -122,8 +124,71 @@ void searchFood(Ant &r_ant, World &r_world, unsigned currentFrame)
     m_findClosestFood(r_ant, r_world);
     r_world.moveBy(r_ant.genericObject(), r_ant.velocity());
 }
-void foundFood(Ant &r_ant, World &r_world, unsigned currentFrame)
+
+/// \brief GrabFood happens right after SearchingFood action. The ant has seen the food and
+/// and is going towards it
+/// \param r_ant
+/// \param r_world
+/// \param currentFrame
+void grabFood(Ant &r_ant, World &r_world, unsigned currentFrame)
 {
+    assert(r_ant.action() == Ant::Action_e::GrabbingFood);
+    sf::Vector2f displacementVector = r_ant.foundFoodPosition() - r_ant.body().getPosition();
+    //if we are close enough to interact with the food
+    if (m_norm(displacementVector) <= r_ant.interactRadius())
+    {
+        //due to the way we constructed the world, we unfortunately have to find the food
+        //particle again.
+
+        //we already know the position of the food, so we only search in a very small area;
+        CornerBounds region = r_world.map().computeBoundarySubRegion(r_ant.foundFoodPosition(), 0.001f);
+        for (int y = region.upperLeft.y; y <= region.lowerRight.y; ++y)
+        {
+            for (int x = region.upperLeft.x; x <= region.lowerRight.x; ++x)
+            {
+                auto &chunkFood = r_world.map().at(x, y).ref_foodChunk.objects;
+
+                for (size_t i = 0; i < chunkFood.size(); ++i)
+                {
+                    Food &r_food = r_world.food()[chunkFood[i].index];
+                    //if we found a r_food particle at the same position that was marked as locked, we can assume that
+                    //it's the right particle (2 particles might live at exactly the same spot)
+                    if (r_food.body().getPosition() == r_ant.foundFoodPosition() and r_food.isLocked())
+                    {
+                        //copy the r_food into the ant.
+                        //so we actually move the r_food on the ant, implying that the ant grabbed such r_food
+                        r_ant.grabbedFood() = r_food;
+
+                        //reset the status
+                        r_ant.hasFoundFood() = false;
+                        r_ant.hasGrabbedFood() = true;
+
+                        //unlock the food so that it can be removed
+                        r_food.isLocked() = false;
+                        chunkFood.toBeRemoved(r_food.knowledge().indexInHomeChunk());
+                        r_world.food().toBeRemoved(r_food.knowledge().indexInWorld());
+
+                        //stop the ant, and move to the next step
+                        r_ant.velocity() = {0.0f, 0.0f};
+                        r_ant.action() = Ant::Action_e::BringingFood;
+                        return;
+                    }
+                }
+            }
+        }
+    }
+    else //we are too far to interact with it, so we just walk toward it
+    {
+        m_clampVectorByNorm(displacementVector, r_ant.maxVelocity());
+        r_ant.velocity() = displacementVector;
+
+        r_world.moveBy(r_ant.genericObject(), r_ant.velocity());
+    }
+
+}
+void bringFood(Ant &r_ant, World &r_world, unsigned currentFrame)
+{
+
 
 }
 

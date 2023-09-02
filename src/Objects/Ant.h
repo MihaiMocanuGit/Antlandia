@@ -18,16 +18,16 @@ private:
 
     Action_e m_action = Action_e::Unknown;
 
-    Food m_grabbedOrFoundFood;
-    bool m_hasFood = false;
-    bool m_foundFood = false;
+    Food m_grabbedFood;
     sf::Vector2f m_foundFoodPosition = {-1.0f, -1.0f};
+    bool m_hasFoundFood = false;
+    bool m_hasGrabbedFood = false;
 public:
     enum class Action_e {
         Unknown, //does nothing for now
         SearchingFood, //walks randomly in the world to search for food, stops when it founds one in viewable distance
         GrabbingFood, //after such food was found, go towards it and grab it
-        BringFood, //goes back home after grabbing some food, it marks the way back with pheromones and also takes food home
+        BringingFood, //goes back home after grabbing some food, it marks the way back with pheromones and also takes food home
         Male, // stays home, near queen, maybe they should leave home pheromones?
         Queen, //stays home, makes eggs, maybe should leave home pheromones?
         Egg, // don't know yet
@@ -62,14 +62,14 @@ public:
     float &maxVelocity();
     const float &maxVelocity() const;
 
-    Food &grabbedOrFoundFood();
-    const Food &grabbedOrFoundFood() const;
+    Food &grabbedFood();
+    const Food &grabbedFood() const;
 
-    bool &hasFood();
-    const bool &hasFood() const;
+    bool &hasFoundFood();
+    const bool &hasFoundFood() const;
 
-    bool &foundFood();
-    const bool &foundFood() const;
+    bool &hasGrabbedFood();
+    const bool &hasGrabbedFood() const;
 
     sf::Vector2f &foundFoodPosition();
     const sf::Vector2f &foundFoodPosition() const;

@@ -66,6 +66,8 @@ void m_prepareNextAntState(World &world, const sf::Vector2i &chunkIndex)
             case Ant::Action_e::SearchingFood:
                 AntActions::searchFood(r_ant, world, frameMod);
                 break;
+            case Ant::Action_e::GrabbingFood:
+                AntActions::grabFood(r_ant, world, frameMod);
             default:
                 break;
         }

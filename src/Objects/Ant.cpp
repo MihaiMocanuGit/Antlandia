@@ -93,34 +93,33 @@ const float &Ant::maxVelocity() const
     return m_maxVelocity;
 }
 
-Food &Ant::grabbedOrFoundFood()
+Food &Ant::grabbedFood()
 {
-    return m_grabbedOrFoundFood;
+    return m_grabbedFood;
 }
 
-const Food &Ant::grabbedOrFoundFood() const
+const Food &Ant::grabbedFood() const
 {
-    return m_grabbedOrFoundFood;
+    return m_grabbedFood;
+}
+bool &Ant::hasGrabbedFood()
+{
+    return m_hasGrabbedFood;
 }
 
-bool &Ant::hasFood()
+const bool &Ant::hasGrabbedFood() const
 {
-    return m_hasFood;
+    return m_hasGrabbedFood;
 }
 
-const bool &Ant::hasFood() const
+bool &Ant::hasFoundFood()
 {
-    return m_hasFood;
+    return m_hasFoundFood;
 }
 
-bool &Ant::foundFood()
+const bool &Ant::hasFoundFood() const
 {
-    return m_foundFood;
-}
-
-const bool &Ant::foundFood() const
-{
-    return m_foundFood;
+    return m_hasFoundFood;
 }
 
 sf::Vector2f &Ant::foundFoodPosition()
@@ -132,3 +131,4 @@ const sf::Vector2f &Ant::foundFoodPosition() const
 {
     return m_foundFoodPosition;
 }
+
