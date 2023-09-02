@@ -125,7 +125,7 @@ void m_refreshScreen(const World &world, sf::RenderWindow &window)
 void startGameLoop(World& world)
 {
 
-    sf::RenderWindow window(sf::VideoMode(world.size().x * Chunk<void>::CHUNK_SIZE_X, world.size().y * Chunk<void>::CHUNK_SIZE_Y), "Antlandia");
+    sf::RenderWindow window(sf::VideoMode(world.size().x * Chunk<void>::CHUNK_SIZE_X + 1, world.size().y * Chunk<void>::CHUNK_SIZE_Y + 1), "Antlandia");
     window.setFramerateLimit(60);
 
 

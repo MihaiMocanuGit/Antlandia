@@ -35,8 +35,8 @@ private:
     SpecializedVector<T> *m_ptrWorldObjects;
 
 public:
-    static constexpr unsigned CHUNK_SIZE_X = 64;
-    static constexpr unsigned CHUNK_SIZE_Y = 64;
+    static constexpr unsigned CHUNK_SIZE_X = 16;
+    static constexpr unsigned CHUNK_SIZE_Y = 16;
 
     SpecializedVector<SpecializedVectorIndexPair<T>> objects{INIT_ADD_CHUNK, INIT_REMOVE_CHUNK, INIT_FINALISE_CHUNK, SWAP_CHUNK, DESTRUCT_CHUNK};
 

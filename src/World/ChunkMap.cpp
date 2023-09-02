@@ -34,6 +34,8 @@ sf::Vector2u ChunkMap::size() const
 
 sf::Vector2i ChunkMap::computeChunkIndex(const sf::Vector2f &position) const
 {
+    assert(not isPositionOutsideBounds(position));
+
     sf::Vector2i chunkIndex(position.x/Chunk<void>::CHUNK_SIZE_X, position.y/Chunk<void>::CHUNK_SIZE_Y);
     return chunkIndex;
 }

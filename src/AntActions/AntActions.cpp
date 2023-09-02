@@ -60,11 +60,11 @@ void m_findClosestFood(Ant &r_ant, World &r_world)
     const float MAX_VALUE_Y = (float)r_world.size().y * Chunk<int>::CHUNK_SIZE_Y;
 
     //we clamp the bounds inside the world bound
-    float left = std::clamp(center.x - r_ant.viewRadius(), 0.0f, MAX_VALUE_X);
-    float right = std::clamp(center.x + r_ant.viewRadius(), 0.0f, MAX_VALUE_X);
+    float left = std::clamp(center.x - r_ant.viewRadius(), 0.0f, MAX_VALUE_X - 0.001f);
+    float right = std::clamp(center.x + r_ant.viewRadius(), 0.0f, MAX_VALUE_X - 0.001f);
 
-    float up = std::clamp(center.y - r_ant.viewRadius(), 0.0f, MAX_VALUE_Y);
-    float down = std::clamp(center.y + r_ant.viewRadius(), 0.0f, MAX_VALUE_Y);
+    float up = std::clamp(center.y - r_ant.viewRadius(), 0.0f, MAX_VALUE_Y - 0.001f);
+    float down = std::clamp(center.y + r_ant.viewRadius(), 0.0f, MAX_VALUE_Y - 0.001f);
 
     //as we computed the bounds of the coordinates, we see their respective chunks
     const sf::Vector2i centerChunk = r_world.map().computeChunkIndex(center);
