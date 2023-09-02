@@ -2,8 +2,8 @@
 #include "../AntActions/AntActions.h"
 #include "../Utils/Utils.h"
 
-static constexpr unsigned MOD = 15;
-static unsigned frameMod = 0;
+
+static unsigned frameCount = 0;
 void m_closeWindowIfEvent(sf::RenderWindow &window)
 {
     sf::Event event;
@@ -58,16 +58,18 @@ void m_prepareNextAntState(World &world, const sf::Vector2i &chunkIndex)
     for (size_t i = r_chunkAnt.objects.size() - 1; i < r_chunkAnt.objects.size() ; --i)
     {
         Ant &r_ant = world.ants()[r_chunkAnt.objects[i].index];
-        if (frameMod == 0)
-            world.makeAntSpawnPheromone(r_ant, world.pheromoneTypes.TRAIL_PHEROMONE);
         //world.moveBy(r_ant.genericObject(), direction);
         switch (r_ant.action())
         {
             case Ant::Action_e::SearchingFood:
-                AntActions::searchFood(r_ant, world, frameMod);
+                AntActions::searchFood(r_ant, world, frameCount);
                 break;
             case Ant::Action_e::GrabbingFood:
-                AntActions::grabFood(r_ant, world, frameMod);
+                AntActions::grabFood(r_ant, world, frameCount);
+                break;
+            case Ant::Action_e::BringingFood:
+                AntActions::bringFood(r_ant, world, frameCount);
+                break;
             default:
                 break;
         }
@@ -128,7 +130,7 @@ void startGameLoop(World& world)
 {
 
     sf::RenderWindow window(sf::VideoMode(world.size().x * Chunk<void>::CHUNK_SIZE_X + 1, world.size().y * Chunk<void>::CHUNK_SIZE_Y + 1), "Antlandia");
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(30);
 
 
     while (window.isOpen())
@@ -146,9 +148,7 @@ void startGameLoop(World& world)
         m_updateState(world, window);
         m_refreshScreen(world, window);
 
-        frameMod++;
-        if (frameMod >= MOD)
-            frameMod = 0;
+        frameCount++;
     }
     window.close();
 }

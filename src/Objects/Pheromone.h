@@ -14,7 +14,7 @@ private:
     float m_initialMass;
     unsigned char m_initialAlpha;
 public:
-    static constexpr float DEFAULT_HALF_LIFE = 90;
+    static constexpr float DEFAULT_HALF_LIFE = 128;
     enum class Type_e {
         Unknown,
         Trail,
