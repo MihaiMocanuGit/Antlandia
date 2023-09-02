@@ -77,7 +77,7 @@ bool ChunkMap::isPositionOutsideBounds(const sf::Vector2f &position) const
 
 CornerBounds ChunkMap::computeBoundarySubRegion(const sf::Vector2f origin, const float radiusSubRegion) const
 {
-    assert(not r_world.map().isPositionOutsideBounds(r_ant.body().getPosition()));
+    assert(not isPositionOutsideBounds(origin));
 
     //we need to check the chunks that intersect with the ant's interact radius,
     //so we compute the bounds of the zone of interaction

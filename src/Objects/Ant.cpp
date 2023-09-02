@@ -1,12 +1,13 @@
 #include "Ant.h"
 
-Ant::Ant(GenericObject<Ant> genericObject, Action_e action) : m_genericObject{std::move(genericObject)}, m_action{action}
+Ant::Ant(GenericObject<Ant> genericObject, Action_e action, sf::Vector2f home)
+    : m_genericObject{std::move(genericObject)}, m_action{std::move(action)}, m_home{std::move(home)}
 {
 
 }
 
-Ant::Ant(Body body, WorldKnowledge<Ant> worldKnowledge, Action_e action)
-: Ant(GenericObject<Ant>{std::move(body), std::move(worldKnowledge)}, action)
+Ant::Ant(Body body, WorldKnowledge<Ant> worldKnowledge, Action_e action, sf::Vector2f home)
+    : Ant(GenericObject<Ant>{std::move(body), std::move(worldKnowledge)}, action, home)
 {
 
 }
@@ -130,5 +131,15 @@ sf::Vector2f &Ant::foundFoodPosition()
 const sf::Vector2f &Ant::foundFoodPosition() const
 {
     return m_foundFoodPosition;
+}
+
+sf::Vector2f &Ant::home()
+{
+    return m_home;
+}
+
+const sf::Vector2f &Ant::home() const
+{
+    return m_home;
 }
 

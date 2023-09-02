@@ -42,6 +42,7 @@ void m_addObjects(World &world)
         const sf::Vector2f position = {x, y};
         Ant ant = world.antTypes.WORKER_ANT;
         ant.body().setPosition(position);
+        ant.home() = homeSpot;
         world.prepareAnt(ant);
     }
 

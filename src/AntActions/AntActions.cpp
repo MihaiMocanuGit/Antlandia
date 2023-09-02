@@ -198,9 +198,41 @@ void bringFood(Ant &r_ant, World &r_world, unsigned currentFrame)
 {
     assert(r_ant.action() == Ant::Action_e::BringingFood);
 
-    r_world.moveBy(r_ant.genericObject(), r_ant.velocity());
-    if (currentFrame % 10 == 0)
-        r_world.makeAntSpawnPheromone(r_ant, r_world.pheromoneTypes.FOOD_PHEROMONE);
+    sf::Vector2f distance = r_ant.home() - r_ant.body().getPosition();
+
+    //if we are close to home, reset ant behavior
+    if (m_norm(distance) <= r_ant.interactRadius())
+    {
+        r_ant.hasFoundFood() = false;
+        r_ant.hasGrabbedFood() = false;
+        r_ant.grabbedFood() = {};
+
+        r_ant.action() = Ant::Action_e::SearchingFood;
+    }
+    else
+    {
+        sf::Vector2f wantedDirection = distance;
+        m_clampVectorByNorm(wantedDirection, r_ant.maxVelocity());
+
+        const sf::Vector2f boundsOfChange = {1, 1};
+        sf::Vector2f randomDirection = {m_getRandomUniformly(r_ant.velocity().x - boundsOfChange.x, r_ant.velocity().x + boundsOfChange.x),
+                                        m_getRandomUniformly(r_ant.velocity().y - boundsOfChange.y, r_ant.velocity().y + boundsOfChange.y)};
+        m_clampVectorByNorm(randomDirection, r_ant.maxVelocity());
+
+        sf::Vector2f newVelocity = wantedDirection + 1.5f * randomDirection;
+
+
+        m_clampVectorByNorm(newVelocity, r_ant.maxVelocity());
+
+
+        r_ant.velocity() = newVelocity;
+        r_world.moveBy(r_ant.genericObject(), r_ant.velocity());
+
+        if (currentFrame % 10 == 0)
+            r_world.makeAntSpawnPheromone(r_ant, r_world.pheromoneTypes.FOOD_PHEROMONE);
+    }
+
+
 }
 
 } //end AntActions namespace

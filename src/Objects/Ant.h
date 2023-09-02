@@ -12,6 +12,7 @@ private:
     sf::Vector2f m_velocity = {0.0f, 0.0f};
     float m_maxVelocity = 1.0f;
 
+    sf::Vector2f m_home = {-1.0f, -1.0f};
     float m_viewRadius = 64.0f;
     float m_interactRadius = 16.0f;
 
@@ -35,8 +36,8 @@ public:
     };
 
     Ant() = default;
-    explicit Ant(GenericObject<Ant> genericObject, Action_e action = Action_e::Unknown);
-    Ant(Body body, WorldKnowledge<Ant> worldKnowledge, Action_e action = Action_e::Unknown);
+    explicit Ant(GenericObject<Ant> genericObject, Action_e action = Action_e::Unknown, sf::Vector2f home =  {-1.0f, -1.0f} );
+    Ant(Body body, WorldKnowledge<Ant> worldKnowledge, Action_e action = Action_e::Unknown, sf::Vector2f home =  {-1.0f, -1.0f} );
 
     Body &body();
     const Body &body() const;
@@ -52,6 +53,9 @@ public:
 
     sf::Vector2f &velocity();
     const sf::Vector2f &velocity() const;
+
+    sf::Vector2f &home();
+    const sf::Vector2f &home() const;
 
     float &viewRadius();
     const float &viewRadius() const;
