@@ -59,7 +59,7 @@ void m_prepareNextAntState(World &world, const sf::Vector2i &chunkIndex)
     {
         Ant &r_ant = world.ants()[r_chunkAnt.objects[i].index];
         if (frameMod == 0)
-            world.makeAntLeavePheromone(r_ant, world.pheromoneTypes.TRAIL_PHEROMONE);
+            world.makeAntSpawnPheromone(r_ant, world.pheromoneTypes.TRAIL_PHEROMONE);
         //world.moveBy(r_ant.genericObject(), direction);
         switch (r_ant.action())
         {

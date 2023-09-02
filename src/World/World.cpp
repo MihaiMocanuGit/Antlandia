@@ -105,14 +105,14 @@ Food &World::prepareFood(const Food &food)
 
 
 
-Pheromone &World::makeAntLeavePheromone(const Ant &ant, const Pheromone &pheromone)
+Pheromone &World::makeAntSpawnPheromone(const Ant &ant, const Pheromone &pheromone)
 {
     Pheromone pheromoneMovedIntoAnt = pheromone;
     pheromoneMovedIntoAnt.body().setPosition(ant.body().getPosition());
     return preparePheromone(pheromoneMovedIntoAnt);
 }
 
-Pheromone &World::makeAntLeavePheromone(const Ant &ant, const Body &pheromoneBody)
+Pheromone &World::makeAntSpawnPheromone(const Ant &ant, const Body &pheromoneBody)
 {
     Body pheromoneBodyMovedIntoAnt = pheromoneBody;
     pheromoneBodyMovedIntoAnt.setPosition(ant.body().getPosition());

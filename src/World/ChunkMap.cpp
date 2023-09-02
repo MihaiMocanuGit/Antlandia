@@ -75,6 +75,28 @@ bool ChunkMap::isPositionOutsideBounds(const sf::Vector2f &position) const
             or position.y < 0 or position.y >= (float)(m_size.y * Chunk<void>::CHUNK_SIZE_Y);
 }
 
+CornerBounds ChunkMap::computeBoundarySubRegion(const sf::Vector2f origin, const float radiusSubRegion) const
+{
+    assert(not r_world.map().isPositionOutsideBounds(r_ant.body().getPosition()));
+
+    //we need to check the chunks that intersect with the ant's interact radius,
+    //so we compute the bounds of the zone of interaction
+    const sf::Vector2f center = origin;
+    const float MAX_VALUE_X = (float)size().x * Chunk<int>::CHUNK_SIZE_X;
+    const float MAX_VALUE_Y = (float)size().y * Chunk<int>::CHUNK_SIZE_Y;
+
+    //we clamp the bounds inside the world bound
+    float left = std::clamp(center.x - radiusSubRegion, 0.0f, MAX_VALUE_X - 0.001f);
+    float right = std::clamp(center.x + radiusSubRegion, 0.0f, MAX_VALUE_X - 0.001f);
+
+    float up = std::clamp(center.y - radiusSubRegion, 0.0f, MAX_VALUE_Y - 0.001f);
+    float down = std::clamp(center.y + radiusSubRegion, 0.0f, MAX_VALUE_Y - 0.001f);
+
+    const sf::Vector2i upperLeft = computeChunkIndex({left, up});
+    const sf::Vector2i lowerRight = computeChunkIndex({right, down});
+
+    return {upperLeft, lowerRight};
+}
 ChunksPaired::ChunksPaired(Chunk<Ant> &ref_antChunk, Chunk<Pheromone> &ref_pheromoneChunk,
                            Chunk<Food> &ref_foodChunk)
         : ref_antChunk{ref_antChunk}, ref_pheromoneChunk{ref_pheromoneChunk}, ref_foodChunk{ref_foodChunk}

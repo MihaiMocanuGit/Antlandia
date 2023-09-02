@@ -1,7 +1,6 @@
 #pragma once
 #include "Chunk.h"
 
-
 struct ChunksPaired
 {
     Chunk<Ant> &ref_antChunk;
@@ -73,6 +72,7 @@ public:
     const PrimitiveChunkMaps &primitiveChunkMaps() const;
 
     sf::Vector2i computeChunkIndex(const sf::Vector2f &position) const;
+    CornerBounds computeBoundarySubRegion(const sf::Vector2f origin, const float radiusSubRegion) const;
     bool spotsAreInSameChunk(const sf::Vector2f &position1, const sf::Vector2f &position2) const;
     bool isPositionOutsideBounds(const sf::Vector2f &position) const;
     [[nodiscard]] sf::Vector2u size() const;

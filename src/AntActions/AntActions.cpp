@@ -49,30 +49,11 @@ void m_changeVelocity(Ant &r_ant)
     r_ant.velocity() = newVelocity;
 }
 
+
+
 void m_findClosestFood(Ant &r_ant, World &r_world)
 {
-    assert(not r_world.map().isPositionOutsideBounds(r_ant.body().getPosition()));
-
-    //we need to check the chunks that intersect with the ant's interact radius,
-    //so we compute the bounds of the zone of interaction
-    const sf::Vector2f center = r_ant.body().getPosition();
-    const float MAX_VALUE_X = (float)r_world.size().x * Chunk<int>::CHUNK_SIZE_X;
-    const float MAX_VALUE_Y = (float)r_world.size().y * Chunk<int>::CHUNK_SIZE_Y;
-
-    //we clamp the bounds inside the world bound
-    float left = std::clamp(center.x - r_ant.viewRadius(), 0.0f, MAX_VALUE_X - 0.001f);
-    float right = std::clamp(center.x + r_ant.viewRadius(), 0.0f, MAX_VALUE_X - 0.001f);
-
-    float up = std::clamp(center.y - r_ant.viewRadius(), 0.0f, MAX_VALUE_Y - 0.001f);
-    float down = std::clamp(center.y + r_ant.viewRadius(), 0.0f, MAX_VALUE_Y - 0.001f);
-
-    //as we computed the bounds of the coordinates, we see their respective chunks
-    const sf::Vector2i centerChunk = r_world.map().computeChunkIndex(center);
-    const sf::Vector2i leftChunk = r_world.map().computeChunkIndex({left, center.y});
-    const sf::Vector2i rightChunk = r_world.map().computeChunkIndex({right, center.y});
-    const sf::Vector2i upChunk = r_world.map().computeChunkIndex({center.x, up});
-    const sf::Vector2i downChunk = r_world.map().computeChunkIndex({center.x, down});
-
+    CornerBounds bounds = r_world.map().computeBoundarySubRegion(r_ant.body().getPosition(), r_ant.viewRadius());
 
     // we iterate through all chunk zone that would be contained inside the interact radius
     // we go through a rectangular zone, if needed, this could be sped up by going through
@@ -83,16 +64,16 @@ void m_findClosestFood(Ant &r_ant, World &r_world)
     float closestFoodDistance = MAXFLOAT;
     sf::Vector2i closestFoodChunk = {-1, -1};
     size_t closestFoodIndexInWorld = -1;
-    for (int y = upChunk.y; y <= downChunk.y; ++y)
+    for (int y = bounds.upperLeft.y; y <= bounds.lowerRight.y; ++y)
     {
-        for (int x = leftChunk.x; x <= rightChunk.x ; ++x)
+        for (int x = bounds.upperLeft.x; x <= bounds.lowerRight.x ; ++x)
         {
             auto &chunkFood = r_world.map().at(x,y).ref_foodChunk.objects;
 
             for (size_t i = 0; i < chunkFood.size(); ++i)
             {
                 const Food &food = r_world.food()[chunkFood[i].index];
-                const sf::Vector2f distanceVector = food.body().getPosition() - center;
+                const sf::Vector2f distanceVector = food.body().getPosition() - r_ant.body().getPosition();
                 const float distanceToFood = m_norm(distanceVector);
                 if (distanceToFood < r_ant.viewRadius())
                 {
