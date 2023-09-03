@@ -43,5 +43,7 @@ public:
 
     GenericObject<Pheromone> &genericObject();
     const GenericObject<Pheromone> &genericObject() const;
+
+    const Type_e &type() const;
 };
 

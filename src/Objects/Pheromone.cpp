@@ -62,3 +62,8 @@ bool Pheromone::decreasePotency(unsigned int noFramesPassed, float almostZero)
 
     return newMass > almostZero;
 }
+
+const Pheromone::Type_e &Pheromone::type() const
+{
+    return m_type;
+}

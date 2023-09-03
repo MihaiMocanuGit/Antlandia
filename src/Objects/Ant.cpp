@@ -143,3 +143,13 @@ const sf::Vector2f &Ant::home() const
     return m_home;
 }
 
+bool &Ant::followingFoodTrail()
+{
+    return m_followingFoodTrail;
+}
+
+const bool &Ant::followingFoodTrail() const
+{
+    return m_followingFoodTrail;
+}
+

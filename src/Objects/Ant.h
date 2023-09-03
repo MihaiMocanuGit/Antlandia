@@ -23,6 +23,8 @@ private:
     sf::Vector2f m_foundFoodPosition = {-1.0f, -1.0f};
     bool m_hasFoundFood = false;
     bool m_hasGrabbedFood = false;
+
+    bool m_followingFoodTrail = false;
 public:
     enum class Action_e {
         Unknown, //does nothing for now
@@ -77,5 +79,8 @@ public:
 
     sf::Vector2f &foundFoodPosition();
     const sf::Vector2f &foundFoodPosition() const;
+
+    bool &followingFoodTrail();
+    const bool &followingFoodTrail() const;
 };
 

@@ -130,7 +130,6 @@ void m_updateState(World &world)
 
 void m_drawScreen(sf::RenderWindow &window, std::vector<sf::CircleShape> &r_renderBuffer)
 {
-    static int DEBUG_count = 1;
     window.clear(sf::Color::White);
 
     while(not r_renderBuffer.empty())
@@ -140,7 +139,6 @@ void m_drawScreen(sf::RenderWindow &window, std::vector<sf::CircleShape> &r_rend
     }
 
     window.display();
-    DEBUG_count++;
 }
 
 

@@ -12,7 +12,7 @@ void m_addObjects(World &world)
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    constexpr float radius = 50;
+    constexpr float radius = 25;
     std::uniform_real_distribution<float> dist(-radius, radius);
 
 
@@ -21,17 +21,6 @@ void m_addObjects(World &world)
     queen.body().setPosition(homeSpot);
     world.prepareAnt(queen);
 
-    //add a few males at home
-    for (int i = 0; i < 10; ++i)
-    {
-        const float x = std::clamp(homeSpot.x + dist(gen), 0.0f, worldSize.x - 0.01f);
-        const float y =  std::clamp(homeSpot.y + dist(gen), 0.0f, worldSize.y - 0.01f);;
-
-        const sf::Vector2f position = {x, y};
-        Ant ant = world.antTypes.MALE_ANT;
-        ant.body().setPosition(position);
-        world.prepareAnt(ant);
-    }
 
     // add worker ants in the home spot
     for (int i = 0; i < 100; ++i)
