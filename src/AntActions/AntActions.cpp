@@ -50,22 +50,25 @@ void m_chooseDirection(Ant &r_ant, World &r_world)
                 const Pheromone &phero = r_world.pheromones()[chunkPhero[i].index];
                 if (phero.type() == Pheromone::Type_e::Food)
                 {
-                    const sf::Vector2f distanceVector = phero.body().getPosition() - r_ant.body().getPosition();
-                    const float distanceToFood = m_norm(distanceVector);
+                    const sf::Vector2f displacementVector = phero.body().getPosition() - r_ant.body().getPosition();
+                    const float distanceToFood = m_norm(displacementVector);
 
                     //if we found such phero, we need to see if we can actually see it (the searched region is a square
                     //instead of a circle)
                     if (distanceToFood < r_ant.viewRadius() and distanceToFood < closestFoodPheroDistance)
                     {
-                        //We now will only remember the closest pheromone that is in front of our ant.
-                        //the food pheromone is in front of the ant if the dot product is positive
-                        //(we consider that it has a FOV of 180)
-                        if (m_dotProduct(distanceVector, oldVelocity) > 0)
+
+                        // In order to not create death circles, we will want to get see only in front of our ant
+                        sf::Vector2f normalized1 = displacementVector, normalized2 = oldVelocity;
+                        m_clampVectorByNorm(normalized1, 1.0f);
+                        m_clampVectorByNorm(normalized2, 1.0f);
+                        if (m_dotProduct(normalized1, normalized2) > 0.3f)
                         {
+                            //see for more details https://www.desmos.com/calculator/dxvsuhsabu
                             closestFoodPheroDistance = distanceToFood;
 
                             foundValidPhero = true;
-                            velocityTowardsPhero = distanceVector;
+                            velocityTowardsPhero = displacementVector;
                         }
                     }
                 }
@@ -77,12 +80,16 @@ void m_chooseDirection(Ant &r_ant, World &r_world)
     if (foundValidPhero)
     {
         r_ant.followingFoodTrail() = true;
-        const sf::Vector2f boundsOfChange = {0.05f, 0.05f};
+        //we want different bounds of change when in a food trail
+        sf::Vector2f boundsOfChange = {0.7f, 0.7f};
+        if (m_dotProduct(boundsOfChange, velocityTowardsPhero) < 0)
+            boundsOfChange *= -1.0f;
         newVelocity = {m_getRandomUniformly(velocityTowardsPhero.x - boundsOfChange.x, oldVelocity.x + boundsOfChange.x),
                        m_getRandomUniformly(velocityTowardsPhero.y - boundsOfChange.y, velocityTowardsPhero.y + boundsOfChange.y)};
     }
     else
     {
+        r_ant.followingFoodTrail() = false;
         const sf::Vector2f boundsOfChange = {0.15f, 0.15f};
         newVelocity = {m_getRandomUniformly(oldVelocity.x - boundsOfChange.x, oldVelocity.x + boundsOfChange.x),
                        m_getRandomUniformly(oldVelocity.y - boundsOfChange.y, oldVelocity.y + boundsOfChange.y)};
@@ -176,10 +183,15 @@ void searchFood(Ant &r_ant, World &r_world, unsigned currentFrame)
     //we usually leave a pheromone once every 15 frames, but if we are in a food trail, path pheromones are
     //useless, so we leave less of them.
     //not that we won't leave food pheromone in case the food source disappears
-    if (r_ant.followingFoodTrail() and currentFrame % 180 == 0)
-        r_world.makeAntSpawnPheromone(r_ant, r_world.pheromoneTypes.TRAIL_PHEROMONE);
+    if (r_ant.followingFoodTrail())
+    {
+        if (currentFrame % 90 == 0)
+            r_world.makeAntSpawnPheromone(r_ant, r_world.pheromoneTypes.TRAIL_PHEROMONE);
+    }
     else if (currentFrame % 15 == 0)
+    {
         r_world.makeAntSpawnPheromone(r_ant, r_world.pheromoneTypes.TRAIL_PHEROMONE);
+    }
 
     r_world.moveBy(r_ant.genericObject(), r_ant.velocity());
 }
@@ -240,7 +252,7 @@ void grabFood(Ant &r_ant, World &r_world, unsigned currentFrame)
         m_clampVectorByNorm(displacementVector, r_ant.maxVelocity());
         r_ant.velocity() = displacementVector;
 
-        if (currentFrame % 10 == 0)
+        if (currentFrame % 7 == 0)
             r_world.makeAntSpawnPheromone(r_ant, r_world.pheromoneTypes.FOOD_PHEROMONE);
         if (currentFrame % 15 == 0)
             r_world.makeAntSpawnPheromone(r_ant, r_world.pheromoneTypes.TRAIL_PHEROMONE);
@@ -284,7 +296,7 @@ void bringFood(Ant &r_ant, World &r_world, unsigned currentFrame)
         r_ant.velocity() = newVelocity;
         r_world.moveBy(r_ant.genericObject(), r_ant.velocity());
 
-        if (currentFrame % 10 == 0)
+        if (currentFrame % 7 == 0)
             r_world.makeAntSpawnPheromone(r_ant, r_world.pheromoneTypes.FOOD_PHEROMONE);
     }
 
