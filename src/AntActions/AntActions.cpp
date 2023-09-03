@@ -62,7 +62,7 @@ void m_chooseDirection(Ant &r_ant, World &r_world)
                         sf::Vector2f normalized1 = displacementVector, normalized2 = oldVelocity;
                         m_clampVectorByNorm(normalized1, 1.0f);
                         m_clampVectorByNorm(normalized2, 1.0f);
-                        if (m_dotProduct(normalized1, normalized2) > 0.3f)
+                        if (m_dotProduct(normalized1, normalized2) > 0.1f)
                         {
                             //see for more details https://www.desmos.com/calculator/dxvsuhsabu
                             closestFoodPheroDistance = distanceToFood;
@@ -81,11 +81,12 @@ void m_chooseDirection(Ant &r_ant, World &r_world)
     {
         r_ant.followingFoodTrail() = true;
         //we want different bounds of change when in a food trail
-        sf::Vector2f boundsOfChange = {0.7f, 0.7f};
+        sf::Vector2f boundsOfChange = {0.0f, 0.0f};
         if (m_dotProduct(boundsOfChange, velocityTowardsPhero) < 0)
             boundsOfChange *= -1.0f;
         newVelocity = {m_getRandomUniformly(velocityTowardsPhero.x - boundsOfChange.x, oldVelocity.x + boundsOfChange.x),
                        m_getRandomUniformly(velocityTowardsPhero.y - boundsOfChange.y, velocityTowardsPhero.y + boundsOfChange.y)};
+
     }
     else
     {
