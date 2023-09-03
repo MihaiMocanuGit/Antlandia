@@ -1,3 +1,5 @@
+#include <thread>
+
 #include "AppLogic.h"
 #include "../AntActions/AntActions.h"
 #include "../Utils/Utils.h"
@@ -52,7 +54,8 @@ void m_getInput(World &world, sf::RenderWindow &window)
 
     direction = result;
 }
-void m_prepareNextAntState(World &world, const sf::Vector2i &chunkIndex)
+
+void m_prepareNextAntState(World &world, const sf::Vector2i &chunkIndex, std::vector<sf::CircleShape> &r_renderBuffer)
 {
     Chunk<Ant> &r_chunkAnt = world.map().at(chunkIndex).ref_antChunk;
     for (size_t i = r_chunkAnt.objects.size() - 1; i < r_chunkAnt.objects.size() ; --i)
@@ -75,9 +78,10 @@ void m_prepareNextAntState(World &world, const sf::Vector2i &chunkIndex)
         }
 
         assert((r_ant.knowledge().homeChunkIndexes() != sf::Vector2i{-1, -1}));
+        r_renderBuffer.push_back(getShape(r_ant.body()));
     }
 }
-void m_prepareNextPheromoneState(World &world, const sf::Vector2i &chunkIndex)
+void m_prepareNextPheromoneState(World &world, const sf::Vector2i &chunkIndex, std::vector<sf::CircleShape> &r_renderBuffer)
 {
     Chunk<Pheromone> &r_chunkPhero = world.map().at(chunkIndex).ref_pheromoneChunk;
     for (size_t i = r_chunkPhero.objects.size() - 1; i < r_chunkPhero.objects.size(); --i)
@@ -88,15 +92,26 @@ void m_prepareNextPheromoneState(World &world, const sf::Vector2i &chunkIndex)
             r_chunkPhero.objects.toBeRemoved(r_phero.knowledge().indexInHomeChunk());
             world.pheromones().toBeRemoved(r_phero.knowledge().indexInWorld());
         }
-
+        r_renderBuffer.push_back(getShape(r_phero.body()));
     }
 }
-void m_prepareNextState(World &world, const sf::Vector2i &chunkIndex)
+void m_prepareNextFoodState(World &world, const sf::Vector2i &chunkIndex, std::vector<sf::CircleShape> &r_renderBuffer)
 {
-    m_prepareNextAntState(world, chunkIndex);
-    m_prepareNextPheromoneState(world, chunkIndex);
+    Chunk<Food> &r_chunkFood = world.map().at(chunkIndex).ref_foodChunk;
+    for (size_t i = r_chunkFood.objects.size() - 1; i < r_chunkFood.objects.size(); --i)
+    {
+        Food &r_food = world.food()[r_chunkFood.objects[i].index];
+        r_renderBuffer.push_back(getShape(r_food.body()));
+    }
 }
-void m_updateState(World &world, sf::RenderWindow &window)
+void m_prepareNextState(World &world, const sf::Vector2i &chunkIndex, std::vector<sf::CircleShape> &r_renderBuffer)
+{
+    m_prepareNextPheromoneState(world, chunkIndex, r_renderBuffer);
+    m_prepareNextFoodState(world, chunkIndex, r_renderBuffer);
+    m_prepareNextAntState(world, chunkIndex, r_renderBuffer);
+
+}
+void m_updateState(World &world)
 {
     world.ants().finishChanges();
     world.pheromones().finishChanges();
@@ -113,13 +128,15 @@ void m_updateState(World &world, sf::RenderWindow &window)
     }
 }
 
-void m_refreshScreen(const World &world, sf::RenderWindow &window)
+void m_drawScreen(sf::RenderWindow &window, std::vector<sf::CircleShape> &r_renderBuffer)
 {
     window.clear(sf::Color::White);
 
-    m_drawPheromones(world, window);
-    m_drawFood(world, window);
-    m_drawAnts(world, window);
+    for (size_t i = r_renderBuffer.size() - 1; i < r_renderBuffer.size(); --i)
+    {
+        window.draw(r_renderBuffer[i]);
+        r_renderBuffer.pop_back();
+    }
 
     window.display();
 }
@@ -130,25 +147,29 @@ void startGameLoop(World& world)
 {
 
     sf::RenderWindow window(sf::VideoMode(world.size().x * Chunk<void>::CHUNK_SIZE_X + 1, world.size().y * Chunk<void>::CHUNK_SIZE_Y + 1), "Antlandia");
-    window.setFramerateLimit(30);
+    //window.setFramerateLimit(30);
 
-
+    window.setActive(false);
     while (window.isOpen())
     {
         m_closeWindowIfEvent(window);
-        m_getInput(world, window);
+        //m_getInput(world, window);
 
+        std::vector<sf::CircleShape> renderBuffer;
+        renderBuffer.reserve(world.pheromones().size() + world.ants().size() + world.food().size());
         for (unsigned y = 0; y < world.size().y; ++y)
         {
             for (unsigned  x = 0; x < world.size().x; ++x)
             {
-                m_prepareNextState(world, sf::Vector2i{ (int)x, (int)y });
+                m_prepareNextState(world, sf::Vector2i{ (int)x, (int)y }, renderBuffer);
             }
         }
-        m_updateState(world, window);
-        m_refreshScreen(world, window);
+        std::thread drawThread(m_drawScreen, std::ref(window), std::ref(renderBuffer));
+        m_updateState(world);
+
 
         frameCount++;
+        drawThread.join();
     }
     window.close();
 }
