@@ -130,15 +130,17 @@ void m_updateState(World &world)
 
 void m_drawScreen(sf::RenderWindow &window, std::vector<sf::CircleShape> &r_renderBuffer)
 {
+    static int DEBUG_count = 1;
     window.clear(sf::Color::White);
 
-    for (size_t i = r_renderBuffer.size() - 1; i < r_renderBuffer.size(); --i)
+    while(not r_renderBuffer.empty())
     {
-        window.draw(r_renderBuffer[i]);
+        window.draw(r_renderBuffer.back());
         r_renderBuffer.pop_back();
     }
 
     window.display();
+    DEBUG_count++;
 }
 
 
@@ -146,30 +148,37 @@ void m_drawScreen(sf::RenderWindow &window, std::vector<sf::CircleShape> &r_rend
 void startGameLoop(World& world)
 {
 
-    sf::RenderWindow window(sf::VideoMode(world.size().x * Chunk<void>::CHUNK_SIZE_X + 1, world.size().y * Chunk<void>::CHUNK_SIZE_Y + 1), "Antlandia");
+    const sf::Vector2u windowSize = {world.size().x * Chunk<void>::CHUNK_SIZE_X + 1,
+                                     world.size().y * Chunk<void>::CHUNK_SIZE_Y + 1};
+    sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), "Antlandia");
     //window.setFramerateLimit(30);
 
+    std::vector<sf::CircleShape> prevRenderBuffer;
     window.setActive(false);
     while (window.isOpen())
     {
         m_closeWindowIfEvent(window);
         //m_getInput(world, window);
 
-        std::vector<sf::CircleShape> renderBuffer;
-        renderBuffer.reserve(world.pheromones().size() + world.ants().size() + world.food().size());
+        std::thread drawThread(m_drawScreen, std::ref(window), std::ref(prevRenderBuffer));
+
+        std::vector<sf::CircleShape> nextRenderBuffer;
+        nextRenderBuffer.reserve(world.pheromones().size() + world.ants().size() + world.food().size());
         for (unsigned y = 0; y < world.size().y; ++y)
         {
             for (unsigned  x = 0; x < world.size().x; ++x)
             {
-                m_prepareNextState(world, sf::Vector2i{ (int)x, (int)y }, renderBuffer);
+                m_prepareNextState(world, sf::Vector2i{ (int)x, (int)y }, nextRenderBuffer);
             }
         }
-        std::thread drawThread(m_drawScreen, std::ref(window), std::ref(renderBuffer));
+
         m_updateState(world);
 
+        drawThread.join();
+        assert(prevRenderBuffer.empty());
+        prevRenderBuffer = std::move(nextRenderBuffer);
 
         frameCount++;
-        drawThread.join();
     }
     window.close();
 }
