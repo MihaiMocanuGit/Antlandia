@@ -58,9 +58,10 @@ void m_getInput(World &world, sf::RenderWindow &window)
 void m_prepareNextAntState(World &world, const sf::Vector2i &chunkIndex, std::vector<sf::CircleShape> &r_renderBuffer)
 {
     Chunk<Ant> &r_chunkAnt = world.map().at(chunkIndex).ref_antChunk;
-    for (size_t i = r_chunkAnt.objects.size() - 1; i < r_chunkAnt.objects.size() ; --i)
+    size_t size = r_chunkAnt.objects.size();
+    for (size_t i = 0; i < size ; ++i)
     {
-        Ant &r_ant = world.ants()[r_chunkAnt.objects[i].index];
+        Ant &r_ant = world.ants()[r_chunkAnt.objects[size - 1 - i].index];
         //world.moveBy(r_ant.genericObject(), direction);
         switch (r_ant.action())
         {
@@ -84,9 +85,10 @@ void m_prepareNextAntState(World &world, const sf::Vector2i &chunkIndex, std::ve
 void m_prepareNextPheromoneState(World &world, const sf::Vector2i &chunkIndex, std::vector<sf::CircleShape> &r_renderBuffer)
 {
     Chunk<Pheromone> &r_chunkPhero = world.map().at(chunkIndex).ref_pheromoneChunk;
-    for (size_t i = r_chunkPhero.objects.size() - 1; i < r_chunkPhero.objects.size(); --i)
+    size_t size = r_chunkPhero.objects.size();
+    for (size_t i = 0; i < size; ++i)
     {
-        Pheromone &r_phero = world.pheromones()[r_chunkPhero.objects[i].index];
+        Pheromone &r_phero = world.pheromones()[r_chunkPhero.objects[size - 1 - i].index];
         if (not r_phero.decreasePotency())
         {
             r_chunkPhero.objects.toBeRemoved(r_phero.knowledge().indexInHomeChunk());
@@ -98,9 +100,10 @@ void m_prepareNextPheromoneState(World &world, const sf::Vector2i &chunkIndex, s
 void m_prepareNextFoodState(World &world, const sf::Vector2i &chunkIndex, std::vector<sf::CircleShape> &r_renderBuffer)
 {
     Chunk<Food> &r_chunkFood = world.map().at(chunkIndex).ref_foodChunk;
-    for (size_t i = r_chunkFood.objects.size() - 1; i < r_chunkFood.objects.size(); --i)
+    size_t size = r_chunkFood.objects.size();
+    for (size_t i = 0; i < size; ++i)
     {
-        Food &r_food = world.food()[r_chunkFood.objects[i].index];
+        Food &r_food = world.food()[r_chunkFood.objects[size - 1 - i].index];
         r_renderBuffer.push_back(getShape(r_food.body()));
     }
 }
