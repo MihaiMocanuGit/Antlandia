@@ -35,10 +35,10 @@ void m_chooseDirection(Ant &r_ant, World &r_world)
 
     sf::Vector2f oldVelocity = r_ant.velocity();
 
-    //We are searching in the area an ant can see for food pheromones
-    float closestFoodPheroDistance = MAXFLOAT;
+    //We are searching in the area an ant can see for food pheromones.
+    //We add all the direction towards any seen pheromones and the resultant will be our wanted direction
     bool foundValidPhero = false;
-    sf::Vector2f velocityTowardsPhero = {-1.0f, -1.0f};
+    sf::Vector2f sumVector = {0, 0};
     for (int y = bounds.upperLeft.y; y <= bounds.lowerRight.y; ++y)
     {
         for (int x = bounds.upperLeft.x; x <= bounds.lowerRight.x ; ++x)
@@ -55,7 +55,7 @@ void m_chooseDirection(Ant &r_ant, World &r_world)
 
                     //if we found such phero, we need to see if we can actually see it (the searched region is a square
                     //instead of a circle)
-                    if (distanceToFood < r_ant.viewRadius() and distanceToFood < closestFoodPheroDistance)
+                    if (distanceToFood < r_ant.viewRadius())
                     {
 
                         // In order to not create death circles, we will want to get see only in front of our ant
@@ -65,10 +65,9 @@ void m_chooseDirection(Ant &r_ant, World &r_world)
                         if (m_dotProduct(normalized1, normalized2) > 0.1f)
                         {
                             //see for more details https://www.desmos.com/calculator/dxvsuhsabu
-                            closestFoodPheroDistance = distanceToFood;
 
                             foundValidPhero = true;
-                            velocityTowardsPhero = displacementVector;
+                            sumVector += normalized1;
                         }
                     }
                 }
@@ -76,16 +75,22 @@ void m_chooseDirection(Ant &r_ant, World &r_world)
         }
     }
 
+
+
+    m_clampVectorByNorm(sumVector, r_ant.maxVelocity());
     sf::Vector2f newVelocity;
     if (foundValidPhero)
     {
         r_ant.followingFoodTrail() = true;
-        //we want different bounds of change when in a food trail
-        sf::Vector2f boundsOfChange = {0.0f, 0.0f};
-        if (m_dotProduct(boundsOfChange, velocityTowardsPhero) < 0)
-            boundsOfChange *= -1.0f;
-        newVelocity = {m_getRandomUniformly(velocityTowardsPhero.x - boundsOfChange.x, oldVelocity.x + boundsOfChange.x),
-                       m_getRandomUniformly(velocityTowardsPhero.y - boundsOfChange.y, velocityTowardsPhero.y + boundsOfChange.y)};
+
+        sf::Vector2f wantedDirection = sumVector;
+
+        const sf::Vector2f boundsOfChange = {0.75, 0.75};
+        sf::Vector2f randomDirection = {m_getRandomUniformly(r_ant.velocity().x - boundsOfChange.x, r_ant.velocity().x + boundsOfChange.x),
+                                        m_getRandomUniformly(r_ant.velocity().y - boundsOfChange.y, r_ant.velocity().y + boundsOfChange.y)};
+        m_clampVectorByNorm(randomDirection, r_ant.maxVelocity());
+
+        newVelocity = wantedDirection + 1.5f * randomDirection;
 
     }
     else
