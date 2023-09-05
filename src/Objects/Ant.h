@@ -30,7 +30,8 @@ public:
         Unknown, //does nothing for now
         SearchingFood, //walks randomly in the world to search for food, stops when it founds one in viewable distance
         GrabbingFood, //after such food was found, go towards it and grab it
-        BringingFood, //goes back home after grabbing some food, it marks the way back with pheromones and also takes food home
+        BringingFood, //searches a trail to go back home after grabbing some food, it marks the way back with pheromones
+        SawHomeWhileBringingFood, //saw their home while wandering on a trail towards home. Wander off the trail and go directly home
         Male, // stays home, near queen, maybe they should leave home pheromones?
         Queen, //stays home, makes eggs, maybe should leave home pheromones?
         Egg, // don't know yet
