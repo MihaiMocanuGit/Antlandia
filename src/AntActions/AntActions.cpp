@@ -23,10 +23,11 @@ float m_norm(const sf::Vector2f &vector)
 
 /// \brief
 /// \param r_vector Non-zero vector
-/// \param clampNorm
-void m_clampVectorByNorm(sf::Vector2f &r_vector, float clampNorm)
+/// \param newNorm
+void m_changeNorm(sf::Vector2f &r_vector, float newNorm)
 {
-    r_vector = clampNorm / m_norm(r_vector) * r_vector;
+    assert(newNorm >= 0);
+    r_vector = newNorm / m_norm(r_vector) * r_vector;
 }
 
 void m_chooseDirection(Ant &r_ant, World &r_world)
@@ -60,14 +61,21 @@ void m_chooseDirection(Ant &r_ant, World &r_world)
 
                         // In order to not create death circles, we will want to get see only in front of our ant
                         sf::Vector2f normalized1 = displacementVector, normalized2 = oldVelocity;
-                        m_clampVectorByNorm(normalized1, 1.0f);
-                        m_clampVectorByNorm(normalized2, 1.0f);
+                        m_changeNorm(normalized1, 1.0f);
+                        m_changeNorm(normalized2, 1.0f);
                         if (m_dotProduct(normalized1, normalized2) > 0.1f)
                         {
                             //see for more details https://www.desmos.com/calculator/dxvsuhsabu
 
                             foundValidPhero = true;
-                            sumVector += normalized1;
+                            //TODO: Take into account the potency of the pheromone too
+
+                            //if the phero is close, we consider it more important in order not to lose details of the
+                            //trail (and cutting across curves)
+                            if (distanceToFood < r_ant.interactRadius())
+                                sumVector += 5.0f * normalized1;
+                            else
+                                sumVector += 1.0f * normalized1;
                         }
                     }
                 }
@@ -76,8 +84,7 @@ void m_chooseDirection(Ant &r_ant, World &r_world)
     }
 
 
-
-    m_clampVectorByNorm(sumVector, r_ant.maxVelocity());
+    m_changeNorm(sumVector, r_ant.maxVelocity());
     sf::Vector2f newVelocity;
     if (foundValidPhero)
     {
@@ -88,7 +95,7 @@ void m_chooseDirection(Ant &r_ant, World &r_world)
         const sf::Vector2f boundsOfChange = {0.75, 0.75};
         sf::Vector2f randomDirection = {m_getRandomUniformly(r_ant.velocity().x - boundsOfChange.x, r_ant.velocity().x + boundsOfChange.x),
                                         m_getRandomUniformly(r_ant.velocity().y - boundsOfChange.y, r_ant.velocity().y + boundsOfChange.y)};
-        m_clampVectorByNorm(randomDirection, r_ant.maxVelocity());
+        m_changeNorm(randomDirection, r_ant.maxVelocity());
 
         newVelocity = wantedDirection + 1.5f * randomDirection;
 
@@ -107,7 +114,7 @@ void m_chooseDirection(Ant &r_ant, World &r_world)
     }
 
     if (m_norm(newVelocity) > r_ant.maxVelocity())
-        m_clampVectorByNorm(newVelocity, r_ant.maxVelocity());
+        m_changeNorm(newVelocity, r_ant.maxVelocity());
 
 
     r_ant.velocity() = newVelocity;
@@ -255,7 +262,7 @@ void grabFood(Ant &r_ant, World &r_world, unsigned currentFrame)
     }
     else //we are too far to interact with it, so we just walk toward it
     {
-        m_clampVectorByNorm(displacementVector, r_ant.maxVelocity());
+        m_changeNorm(displacementVector, r_ant.maxVelocity());
         r_ant.velocity() = displacementVector;
 
         if (currentFrame % 7 == 0)
@@ -286,17 +293,17 @@ void bringFood(Ant &r_ant, World &r_world, unsigned currentFrame)
     else
     {
         sf::Vector2f wantedDirection = distance;
-        m_clampVectorByNorm(wantedDirection, r_ant.maxVelocity());
+        m_changeNorm(wantedDirection, r_ant.maxVelocity());
 
         const sf::Vector2f boundsOfChange = {1, 1};
         sf::Vector2f randomDirection = {m_getRandomUniformly(r_ant.velocity().x - boundsOfChange.x, r_ant.velocity().x + boundsOfChange.x),
                                         m_getRandomUniformly(r_ant.velocity().y - boundsOfChange.y, r_ant.velocity().y + boundsOfChange.y)};
-        m_clampVectorByNorm(randomDirection, r_ant.maxVelocity());
+        m_changeNorm(randomDirection, r_ant.maxVelocity());
 
         sf::Vector2f newVelocity = wantedDirection + 1.5f * randomDirection;
 
 
-        m_clampVectorByNorm(newVelocity, r_ant.maxVelocity());
+        m_changeNorm(newVelocity, r_ant.maxVelocity());
 
 
         r_ant.velocity() = newVelocity;
