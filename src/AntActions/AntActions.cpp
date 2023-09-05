@@ -239,9 +239,7 @@ void m_getFoodParticle(Ant &r_ant, World &r_world)
             chunkFood.toBeRemoved(r_food.knowledge().indexInHomeChunk());
             r_world.food().toBeRemoved(r_food.knowledge().indexInWorld());
 
-            //we got the food, so go back
-            r_ant.velocity() = -r_ant.velocity();
-            r_ant.action() = Ant::Action_e::BringingFood;
+
             return;
         }
     }
@@ -259,6 +257,10 @@ void grabFood(Ant &r_ant, World &r_world, unsigned currentFrame)
     if (m_norm(displacementVector) <= r_ant.interactRadius())
     {
         m_getFoodParticle(r_ant, r_world);
+
+        //we got the food, so go back
+        r_ant.velocity() = -r_ant.velocity();
+        r_ant.action() = Ant::Action_e::BringingFood;
     }
     else //we are too far to interact with it, so we just walk toward it
     {
@@ -281,7 +283,7 @@ void bringFood(Ant &r_ant, World &r_world, unsigned currentFrame)
     sf::Vector2f distance = r_ant.home() - r_ant.body().getPosition();
 
     //if we are close to home, reset ant behavior
-    if (m_norm(distance) <= r_ant.interactRadius())
+    if (m_norm(distance) <= (r_ant.interactRadius() + r_ant.viewRadius()) / 2.0f)
     {
         r_ant.hasFoundFood() = false;
         r_ant.hasGrabbedFood() = false;
@@ -290,21 +292,87 @@ void bringFood(Ant &r_ant, World &r_world, unsigned currentFrame)
         r_ant.followingFoodTrail() = false;
         r_ant.action() = Ant::Action_e::SearchingFood;
     }
-    else
+    else //try to follow trail back
     {
-        sf::Vector2f wantedDirection = distance;
-        m_changeNorm(wantedDirection, r_ant.maxVelocity());
 
-        const sf::Vector2f boundsOfChange = {1, 1};
-        sf::Vector2f randomDirection = {m_getRandomUniformly(r_ant.velocity().x - boundsOfChange.x, r_ant.velocity().x + boundsOfChange.x),
-                                        m_getRandomUniformly(r_ant.velocity().y - boundsOfChange.y, r_ant.velocity().y + boundsOfChange.y)};
-        m_changeNorm(randomDirection, r_ant.maxVelocity());
+        CornerBounds bounds = r_world.map().computeBoundarySubRegion(r_ant.body().getPosition(), r_ant.viewRadius());
 
-        sf::Vector2f newVelocity = wantedDirection + 1.5f * randomDirection;
+        sf::Vector2f oldVelocity = r_ant.velocity();
 
+        //We are searching in the area an ant can see for trails pheromones.
+        //We add all the direction towards any seen pheromones and the resultant will be our wanted direction
+        bool foundValidPhero = false;
+        sf::Vector2f sumVector = {0, 0};
+        for (int y = bounds.upperLeft.y; y <= bounds.lowerRight.y; ++y)
+        {
+            for (int x = bounds.upperLeft.x; x <= bounds.lowerRight.x ; ++x)
+            {
+                auto &chunkPhero = r_world.map().at(x, y).ref_pheromoneChunk.objects;
 
+                for (size_t i = 0; i < chunkPhero.size(); ++i)
+                {
+                    const Pheromone &phero = r_world.pheromones()[chunkPhero[i].index];
+                    if (phero.type() == Pheromone::Type_e::Trail)
+                    {
+                        const sf::Vector2f displacementVector = phero.body().getPosition() - r_ant.body().getPosition();
+                        const float distanceToPhero = m_norm(displacementVector);
+
+                        //if we found such phero, we need to see if we can actually see it (the searched region is a square
+                        //instead of a circle)
+                        if (2.0f * distanceToPhero < r_ant.viewRadius())
+                        {
+
+                            // In order to not create death circles, we will want to get see only in front of our ant
+                            sf::Vector2f normalized1 = displacementVector, normalized2 = oldVelocity;
+                            m_changeNorm(normalized1, 1.0f);
+                            m_changeNorm(normalized2, 1.0f);
+                            if (m_dotProduct(normalized1, normalized2) > 0.1f)
+                            {
+                                //see for more details https://www.desmos.com/calculator/dxvsuhsabu
+
+                                foundValidPhero = true;
+                                //TODO: Take into account the potency of the pheromone too
+
+                                //if the phero is close, we consider it more important in order not to lose details of the
+                                //trail (and cutting across curves)
+                                if (distanceToPhero < r_ant.interactRadius())
+                                    sumVector += 15.0f * normalized1;
+                                else
+                                    sumVector += 1.0f * normalized1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        sf::Vector2f newVelocity;
+        //if we did not wander away from the trail path
+        if (foundValidPhero)
+        {
+            sf::Vector2f wantedDirection = sumVector;
+
+            const sf::Vector2f boundsOfChange = {0.75, 0.75};
+            sf::Vector2f randomDirection = {m_getRandomUniformly(r_ant.velocity().x - boundsOfChange.x, r_ant.velocity().x + boundsOfChange.x),
+                                            m_getRandomUniformly(r_ant.velocity().y - boundsOfChange.y, r_ant.velocity().y + boundsOfChange.y)};
+            m_changeNorm(randomDirection, r_ant.maxVelocity());
+
+            newVelocity = wantedDirection + 1.5f * randomDirection;
+        }
+        else //if we lost the trail, wander randomly
+        {
+            sf::Vector2f wantedDirection = distance;
+            m_changeNorm(wantedDirection, r_ant.maxVelocity());
+
+            const sf::Vector2f boundsOfChange = {1, 1};
+            sf::Vector2f randomDirection = {m_getRandomUniformly(r_ant.velocity().x - boundsOfChange.x, r_ant.velocity().x + boundsOfChange.x),
+                                            m_getRandomUniformly(r_ant.velocity().y - boundsOfChange.y, r_ant.velocity().y + boundsOfChange.y)};
+            m_changeNorm(randomDirection, r_ant.maxVelocity());
+
+            newVelocity = wantedDirection + 1.5f * randomDirection;
+
+        }
         m_changeNorm(newVelocity, r_ant.maxVelocity());
-
 
         r_ant.velocity() = newVelocity;
         r_world.moveBy(r_ant.genericObject(), r_ant.velocity());
