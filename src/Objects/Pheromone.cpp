@@ -52,7 +52,7 @@ bool Pheromone::decreasePotency(unsigned int noFramesPassed, float almostZero)
     const float newMass = oldMass - ((oldMass / 2.0f) * (float)noFramesPassed) / m_massHalfLife;
     m_genericObject.body().setMass(newMass);
 
-    const float minimumValue = 50;
+    const float minimumValue = 25;
     const float newAlpha = newMass / m_initialMass * (m_initialAlpha+minimumValue) + minimumValue;
 
     sf::Color newColor = m_genericObject.body().getColor();

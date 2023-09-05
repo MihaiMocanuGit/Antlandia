@@ -152,7 +152,7 @@ void startGameLoop(World& world)
     const sf::Vector2u windowSize = {world.size().x * Chunk<void>::CHUNK_SIZE_X + 1,
                                      world.size().y * Chunk<void>::CHUNK_SIZE_Y + 1};
     sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), "Antlandia");
-    //window.setFramerateLimit(30);
+    window.setFramerateLimit(30);
 
     std::vector<sf::CircleShape> prevRenderBuffer;
     window.setActive(false);
