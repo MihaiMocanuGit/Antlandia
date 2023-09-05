@@ -57,7 +57,7 @@ void m_getInput(World &world, sf::RenderWindow &window)
 
 void m_prepareNextAntState(World &world, const sf::Vector2i &chunkIndex, std::vector<sf::CircleShape> &r_renderBuffer)
 {
-    Chunk<Ant> &r_chunkAnt = world.map().at(chunkIndex).ref_antChunk;
+    Chunk<Ant> &r_chunkAnt = world.map().at(chunkIndex).r_antChunk;
     size_t size = r_chunkAnt.objects.size();
     for (size_t i = 0; i < size ; ++i)
     {
@@ -84,7 +84,7 @@ void m_prepareNextAntState(World &world, const sf::Vector2i &chunkIndex, std::ve
 }
 void m_prepareNextPheromoneState(World &world, const sf::Vector2i &chunkIndex, std::vector<sf::CircleShape> &r_renderBuffer)
 {
-    Chunk<Pheromone> &r_chunkPhero = world.map().at(chunkIndex).ref_pheromoneChunk;
+    Chunk<Pheromone> &r_chunkPhero = world.map().at(chunkIndex).r_pheromoneChunk;
     size_t size = r_chunkPhero.objects.size();
     for (size_t i = 0; i < size; ++i)
     {
@@ -99,7 +99,7 @@ void m_prepareNextPheromoneState(World &world, const sf::Vector2i &chunkIndex, s
 }
 void m_prepareNextFoodState(World &world, const sf::Vector2i &chunkIndex, std::vector<sf::CircleShape> &r_renderBuffer)
 {
-    Chunk<Food> &r_chunkFood = world.map().at(chunkIndex).ref_foodChunk;
+    Chunk<Food> &r_chunkFood = world.map().at(chunkIndex).r_foodChunk;
     size_t size = r_chunkFood.objects.size();
     for (size_t i = 0; i < size; ++i)
     {
@@ -124,9 +124,9 @@ void m_updateState(World &world)
     {
         for (unsigned x = 0;  x < world.size().x ; x++)
         {
-            world.map().at(x, y).ref_antChunk.objects.finishChanges();
-            world.map().at(x, y).ref_pheromoneChunk.objects.finishChanges();
-            world.map().at(x, y).ref_foodChunk.objects.finishChanges();
+            world.map().at(x, y).r_antChunk.objects.finishChanges();
+            world.map().at(x, y).r_pheromoneChunk.objects.finishChanges();
+            world.map().at(x, y).r_foodChunk.objects.finishChanges();
         }
     }
 }

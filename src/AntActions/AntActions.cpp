@@ -44,7 +44,7 @@ void m_chooseDirection(Ant &r_ant, World &r_world)
     {
         for (int x = bounds.upperLeft.x; x <= bounds.lowerRight.x ; ++x)
         {
-            auto &chunkPhero = r_world.map().at(x, y).ref_pheromoneChunk.objects;
+            auto &chunkPhero = r_world.map().at(x, y).r_pheromoneChunk.objects;
 
             for (size_t i = 0; i < chunkPhero.size(); ++i)
             {
@@ -140,7 +140,7 @@ void m_findClosestFood(Ant &r_ant, World &r_world)
     {
         for (int x = bounds.upperLeft.x; x <= bounds.lowerRight.x ; ++x)
         {
-            auto &chunkFood = r_world.map().at(x,y).ref_foodChunk.objects;
+            auto &chunkFood = r_world.map().at(x,y).r_foodChunk.objects;
 
             for (size_t i = 0; i < chunkFood.size(); ++i)
             {
@@ -218,7 +218,7 @@ void m_getFoodParticle(Ant &r_ant, World &r_world)
     //we already know the position of the food, so we only search in a very small area;
     sf::Vector2i chunkIndexes = r_world.map().computeChunkIndex(r_ant.foundFoodPosition());
 
-    auto &chunkFood = r_world.map().at(chunkIndexes).ref_foodChunk.objects;
+    auto &chunkFood = r_world.map().at(chunkIndexes).r_foodChunk.objects;
 
     for (size_t i = 0; i < chunkFood.size(); ++i)
     {
@@ -326,7 +326,7 @@ void bringFood(Ant &r_ant, World &r_world, unsigned currentFrame)
         {
             for (int x = bounds.upperLeft.x; x <= bounds.lowerRight.x ; ++x)
             {
-                auto &chunkPhero = r_world.map().at(x, y).ref_pheromoneChunk.objects;
+                auto &chunkPhero = r_world.map().at(x, y).r_pheromoneChunk.objects;
 
                 for (size_t i = 0; i < chunkPhero.size(); ++i)
                 {

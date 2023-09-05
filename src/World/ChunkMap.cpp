@@ -99,5 +99,5 @@ CornerBounds ChunkMap::computeBoundarySubRegion(const sf::Vector2f origin, const
 }
 ChunksPaired::ChunksPaired(Chunk<Ant> &ref_antChunk, Chunk<Pheromone> &ref_pheromoneChunk,
                            Chunk<Food> &ref_foodChunk)
-        : ref_antChunk{ref_antChunk}, ref_pheromoneChunk{ref_pheromoneChunk}, ref_foodChunk{ref_foodChunk}
+        : r_antChunk{ref_antChunk}, r_pheromoneChunk{ref_pheromoneChunk}, r_foodChunk{ref_foodChunk}
 {}
