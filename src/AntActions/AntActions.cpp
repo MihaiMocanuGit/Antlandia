@@ -72,8 +72,8 @@ void m_chooseDirection(Ant &r_ant, World &r_world)
 
                             //if the phero is close, we consider it more important in order not to lose details of the
                             //trail (and cutting across curves)
-                            if (distanceToFood < r_ant.interactRadius())
-                                sumVector += 5.0f * normalized1;
+                            if (distanceToFood <= r_ant.interactRadius())
+                                sumVector += 10.0f * normalized1;
                             else
                                 sumVector += 1.0f * normalized1;
                         }
@@ -199,7 +199,7 @@ void searchFood(Ant &r_ant, World &r_world, unsigned currentFrame)
     //not that we won't leave food pheromone in case the food source disappears
     if (r_ant.followingFoodTrail())
     {
-        if (currentFrame % 30 == 0)
+        if (currentFrame % 15 == 0)
             r_world.makeAntSpawnPheromone(r_ant, r_world.pheromoneTypes.TRAIL_PHEROMONE);
     }
     else if (currentFrame % 5 == 0)
@@ -281,17 +281,31 @@ void bringFood(Ant &r_ant, World &r_world, unsigned currentFrame)
 {
     assert(r_ant.action() == Ant::Action_e::BringingFood);
 
-    sf::Vector2f distance = r_ant.home() - r_ant.body().getPosition();
+    sf::Vector2f homeDistance = r_ant.home() - r_ant.body().getPosition();
 
-    //if we are close to home, reset ant behavior
-    if (m_norm(distance) <= r_ant.viewRadius())
+
+    //if we are close to home, go directly towards it
+    if (m_norm(homeDistance) <= r_ant.viewRadius())
     {
-        r_ant.hasFoundFood() = false;
-        r_ant.hasGrabbedFood() = false;
-        r_ant.grabbedFood() = {};
+        //if we are close enough, "release food" (does nothing) and go back to searching food
+        if (m_norm(homeDistance) <= r_ant.interactRadius())
+        {
+            r_ant.hasFoundFood() = false;
+            r_ant.hasGrabbedFood() = false;
+            r_ant.grabbedFood() = {};
 
-        r_ant.followingFoodTrail() = false;
-        r_ant.action() = Ant::Action_e::SearchingFood;
+            r_ant.followingFoodTrail() = false;
+            r_ant.action() = Ant::Action_e::SearchingFood;
+            r_ant.velocity() *= -1.0f; //go back towards the trail
+
+            return;
+        }
+        else
+        {
+            m_changeNorm(homeDistance, r_ant.maxVelocity());
+            r_ant.velocity() = homeDistance;
+        }
+
     }
     else //try to follow trail back
     {
@@ -300,12 +314,14 @@ void bringFood(Ant &r_ant, World &r_world, unsigned currentFrame)
 
         sf::Vector2f oldVelocity = r_ant.velocity();
 
+        bool foundValidPhero = false;
+        sf::Vector2f homeDirection = homeDistance;
+        m_changeNorm(homeDirection, 1.0f);
+        sf::Vector2f sumVector = 2.0f * homeDirection;  //make the ant a bit more inclide to choose a direction towards
+                                                        // its home
+
         //We are searching in the area an ant can see for trails pheromones.
         //We add all the direction towards any seen pheromones and the resultant will be our wanted direction
-        bool foundValidPhero = false;
-        sf::Vector2f homeDirection = r_ant.home() - r_ant.body().getPosition();
-        m_changeNorm(homeDirection, 1.0f);
-        sf::Vector2f sumVector = homeDirection;
         for (int y = bounds.upperLeft.y; y <= bounds.lowerRight.y; ++y)
         {
             for (int x = bounds.upperLeft.x; x <= bounds.lowerRight.x ; ++x)
@@ -339,7 +355,7 @@ void bringFood(Ant &r_ant, World &r_world, unsigned currentFrame)
                                 //if the phero is close, we consider it more important in order not to lose details of the
                                 //trail (and cutting across curves)
                                 if (distanceToPhero <= r_ant.interactRadius())
-                                    sumVector += 7.0f * normalized1;
+                                    sumVector += 10.0f * normalized1;
                                 else
                                     sumVector += 1.0f * normalized1;
                             }
@@ -355,7 +371,7 @@ void bringFood(Ant &r_ant, World &r_world, unsigned currentFrame)
         {
             sf::Vector2f wantedDirection = sumVector;
             m_changeNorm(wantedDirection, r_ant.maxVelocity());
-
+            //TODO: add randomness back after I get the path behavior working ok
 
             newVelocity = wantedDirection;
             m_changeNorm(newVelocity, r_ant.maxVelocity());
@@ -376,14 +392,15 @@ void bringFood(Ant &r_ant, World &r_world, unsigned currentFrame)
 
 
         r_ant.velocity() = newVelocity;
-        r_world.moveBy(r_ant.genericObject(), r_ant.velocity());
-
-        if (currentFrame % 7 == 0)
-            r_world.makeAntSpawnPheromone(r_ant, r_world.pheromoneTypes.FOOD_PHEROMONE);
-        if (currentFrame % 45 == 0)
-            r_world.makeAntSpawnPheromone(r_ant, r_world.pheromoneTypes.TRAIL_PHEROMONE);
-
     }
+
+    r_world.moveBy(r_ant.genericObject(), r_ant.velocity());
+    if (currentFrame % 7 == 0)
+        r_world.makeAntSpawnPheromone(r_ant, r_world.pheromoneTypes.FOOD_PHEROMONE);
+    if (currentFrame % 45 == 0)
+        r_world.makeAntSpawnPheromone(r_ant, r_world.pheromoneTypes.TRAIL_PHEROMONE);
+
+
 
 
 }
