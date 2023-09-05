@@ -92,9 +92,9 @@ void m_addObjects(World &world)
     {
         for (unsigned x = 0; x < world.size().x; ++x)
         {
-            world.map().at(x, y).ref_antChunk.objects.finishChanges();
-            world.map().at(x, y).ref_pheromoneChunk.objects.finishChanges();
-            world.map().at(x, y).ref_foodChunk.objects.finishChanges();
+            world.map().at(x, y).r_antChunk.objects.finishChanges();
+            world.map().at(x, y).r_pheromoneChunk.objects.finishChanges();
+            world.map().at(x, y).r_foodChunk.objects.finishChanges();
         }
     }
 }

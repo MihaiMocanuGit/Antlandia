@@ -1,11 +1,12 @@
 #pragma once
 #include "Chunk.h"
 
+/// \brief Helper struct used to get all the different types of chunks at a given position.
 struct ChunksPaired
 {
-    Chunk<Ant> &ref_antChunk;
-    Chunk<Pheromone> &ref_pheromoneChunk;
-    Chunk<Food> &ref_foodChunk;
+    Chunk<Ant> &r_antChunk;
+    Chunk<Pheromone> &r_pheromoneChunk;
+    Chunk<Food> &r_foodChunk;
 
     ChunksPaired() = delete;
     ChunksPaired(Chunk<Ant> &ref_antChunk, Chunk<Pheromone> &ref_pheromoneChunk, Chunk<Food> &ref_foodChunk);
@@ -13,7 +14,8 @@ struct ChunksPaired
 };
 
 
-
+/// \brief Helper struct used to get all the different types of chunk-map primitives. A primitive refers
+/// to a std::vector of Chunk<T> which is considered to be a 2-D vector of size: size.x * size.y
 struct PrimitiveChunkMaps
 {
 
@@ -21,12 +23,15 @@ struct PrimitiveChunkMaps
     PrimitiveChunkMap_t<Pheromone> pheromoneMap = {};
     PrimitiveChunkMap_t<Food> foodMap = {};
 
+    /// \brief Get all the different types of chunks at the given index
+    /// \param index Must be valid as this function does not check bounds.
+    /// \return The chunks
     ChunksPaired at(int index)
     {
         return ChunksPaired{antMap[index], pheromoneMap[index], foodMap[index]};
     }
 };
-
+/// \brief Helper struct used to get all the different types of chunk vectors.
 struct SpecializedVectorAllTypes
 {
     SpecializedVector<Ant> &r_worldAnts;
@@ -38,6 +43,7 @@ struct SpecializedVectorAllTypes
     {}
 };
 
+/// \brief Represents the structure of the world chunks
 class ChunkMap
 {
 private:
