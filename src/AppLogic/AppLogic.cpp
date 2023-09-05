@@ -109,9 +109,9 @@ void m_prepareNextFoodState(World &world, const sf::Vector2i &chunkIndex, std::v
 }
 void m_prepareNextState(World &world, const sf::Vector2i &chunkIndex, std::vector<sf::CircleShape> &r_renderBuffer)
 {
-    m_prepareNextPheromoneState(world, chunkIndex, r_renderBuffer);
-    m_prepareNextFoodState(world, chunkIndex, r_renderBuffer);
     m_prepareNextAntState(world, chunkIndex, r_renderBuffer);
+    m_prepareNextFoodState(world, chunkIndex, r_renderBuffer);
+    m_prepareNextPheromoneState(world, chunkIndex, r_renderBuffer);
 
 }
 void m_updateState(World &world)
