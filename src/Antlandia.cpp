@@ -47,8 +47,9 @@ void m_addObjects(World &world)
         world.preparePheromone(pheromone);
     }
 
-    const sf::Vector2f foodSpot = {( 2.0f * (float)world.size().x * Chunk<int>::CHUNK_SIZE_X + middle.x) / 3,
-                                   ( 2.0f * (float)world.size().y * Chunk<int>::CHUNK_SIZE_Y + middle.y) / 3};
+    //const sf::Vector2f foodSpot = {( 2.0f * worldSize.x + middle.x) / 3,
+    //                               ( 2.0f * worldSize.y + middle.y) / 3};
+    const sf::Vector2f foodSpot = {middle.x, middle.y};
     //fill the food spot with food
     for (int i = 0; i < 400; ++i)
     {
