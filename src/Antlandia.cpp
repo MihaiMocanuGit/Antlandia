@@ -1,10 +1,14 @@
 #include <random>
 #include "Antlandia.h"
 
+namespace Antlandia
+{
+/// \brief Initializes the demo world
+/// \param world The world to be init
 void m_addObjects(World &world)
 {
-    const sf::Vector2f worldSize = {(float)world.size().x * Chunk<int>::CHUNK_SIZE_X,
-                                    (float)world.size().y * Chunk<int>::CHUNK_SIZE_Y};
+    const sf::Vector2f worldSize = {(float) world.size().x * Chunk<int>::CHUNK_SIZE_X,
+                                    (float) world.size().y * Chunk<int>::CHUNK_SIZE_Y};
     const sf::Vector2f middle = worldSize / 2.0f;
 
     const sf::Vector2f homeSpot = middle;
@@ -25,7 +29,7 @@ void m_addObjects(World &world)
     for (int i = 0; i < 100; ++i)
     {
         const float x = std::clamp(homeSpot.x + dist(gen), 0.0f, worldSize.x - 0.01f);
-        const float y =  std::clamp(homeSpot.y + dist(gen), 0.0f, worldSize.y - 0.01f);;
+        const float y = std::clamp(homeSpot.y + dist(gen), 0.0f, worldSize.y - 0.01f);;
 
         const sf::Vector2f position = {x, y};
         Ant ant = world.antTypes.WORKER_ANT;
@@ -38,7 +42,7 @@ void m_addObjects(World &world)
     for (int i = 0; i < 400; ++i)
     {
         const float x = std::clamp(homeSpot.x + dist(gen), 0.0f, worldSize.x - 0.01f);
-        const float y =  std::clamp(homeSpot.y + dist(gen), 0.0f, worldSize.y - 0.01f);;
+        const float y = std::clamp(homeSpot.y + dist(gen), 0.0f, worldSize.y - 0.01f);;
 
         const sf::Vector2f position = {x, y};
         Pheromone pheromone = world.pheromoneTypes.HOME_PHEROMONE;
@@ -53,7 +57,7 @@ void m_addObjects(World &world)
     for (int i = 0; i < 400; ++i)
     {
         const float x = std::clamp(foodSpot1.x + dist(gen), 0.0f, worldSize.x - 0.01f);
-        const float y =  std::clamp(foodSpot1.y + dist(gen), 0.0f, worldSize.y - 0.01f);
+        const float y = std::clamp(foodSpot1.y + dist(gen), 0.0f, worldSize.y - 0.01f);
 
         const sf::Vector2f position = {x, y};
         world.prepareFood(position);
@@ -64,7 +68,7 @@ void m_addObjects(World &world)
     for (int i = 0; i < 400; ++i)
     {
         const float x = std::clamp(foodSpot2.x + dist(gen), 0.0f, worldSize.x - 0.01f);
-        const float y =  std::clamp(foodSpot2.y + dist(gen), 0.0f, worldSize.y - 0.01f);
+        const float y = std::clamp(foodSpot2.y + dist(gen), 0.0f, worldSize.y - 0.01f);
 
         const sf::Vector2f position = {x, y};
         world.prepareFood(position);
@@ -75,7 +79,7 @@ void m_addObjects(World &world)
     for (int i = 0; i < 400; ++i)
     {
         const float x = std::clamp(foodSpot3.x + dist(gen), 0.0f, worldSize.x - 0.01f);
-        const float y =  std::clamp(foodSpot3.y + dist(gen), 0.0f, worldSize.y - 0.01f);
+        const float y = std::clamp(foodSpot3.y + dist(gen), 0.0f, worldSize.y - 0.01f);
 
         const sf::Vector2f position = {x, y};
         world.prepareFood(position);
@@ -95,10 +99,11 @@ void m_addObjects(World &world)
     }
 }
 
-void startApp()
+void startApp(unsigned sizeX, unsigned sizeY)
 {
-    World world(60, 60);
+    World world(sizeX, sizeY);
     m_addObjects(world);
 
     startGameLoop(world);
+}
 }

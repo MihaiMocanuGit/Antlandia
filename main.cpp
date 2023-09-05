@@ -3,6 +3,6 @@
 
 int main()
 {
-    startApp();
+    Antlandia::startApp(60, 60);
     return 0;
 }
