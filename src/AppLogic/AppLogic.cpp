@@ -15,46 +15,6 @@ void m_closeWindowIfEvent(sf::RenderWindow &window)
             window.close();
     }
 }
-
-void m_drawAnts(const World &world, sf::RenderWindow &window)
-{
-    for (size_t i = 0; i < world.ants().size(); ++i)
-        window.draw(getShape(world.ants()[i].body()));
-}
-
-void m_drawPheromones(const World &world, sf::RenderWindow &window)
-{
-    for (size_t i = 0; i < world.pheromones().size(); ++i)
-        window.draw(getShape(world.pheromones()[i].body()));
-}
-
-void m_drawFood(const World &world, sf::RenderWindow &window)
-{
-    for (size_t i = 0; i < world.food().size(); ++i)
-        window.draw(getShape(world.food()[i].body()));
-}
-//TODO: Delete after debug
-sf::Vector2f direction = {0, 0};
-void m_getInput(World &world, sf::RenderWindow &window)
-{
-    const sf::Vector2f UPWARDS = {0, -1};
-    const sf::Vector2f DOWNWARDS = -UPWARDS;
-    const sf::Vector2f RIGHT = {1, 0};
-    const sf::Vector2f LEFT = -RIGHT;
-
-    sf::Vector2f result = {0, 0};
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-        result += UPWARDS;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-        result += DOWNWARDS;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-        result += LEFT;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-        result += RIGHT;
-
-    direction = result;
-}
-
 void m_prepareNextAntState(World &world, const sf::Vector2i &chunkIndex, std::vector<sf::CircleShape> &r_renderBuffer)
 {
     Chunk<Ant> &r_chunkAnt = world.map().at(chunkIndex).r_antChunk;
@@ -62,7 +22,6 @@ void m_prepareNextAntState(World &world, const sf::Vector2i &chunkIndex, std::ve
     for (size_t i = 0; i < size ; ++i)
     {
         Ant &r_ant = world.ants()[r_chunkAnt.objects[size - 1 - i].index];
-        //world.moveBy(r_ant.genericObject(), direction);
         switch (r_ant.action())
         {
             case Ant::Action_e::SearchingFood:
